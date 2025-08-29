@@ -17,7 +17,7 @@ const uploadOnCloudinary = async (localFilePath, folderName = "resources") => {
     if (!localFilePath) return null;
 
     const response = await cloudinary.uploader.upload(localFilePath, {
-      resource_type: "raw", // important for PDFs
+      resource_type: "auto", // important for PDFs
       folder: folderName,
     });
 

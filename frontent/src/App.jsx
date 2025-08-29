@@ -11,6 +11,7 @@ import Login from "./pages/auth/Login.jsx";
 import SignUp from "./pages/auth/SignUp.jsx";
 import Roadmap from "./pages/Roadmap/Roadmap.jsx";
 import RoadmapList from "./pages/Roadmap/RoadmapList.jsx";
+import Profile from "./component/Profil.jsx";
 function App() {
   return (
     <>
@@ -25,6 +26,7 @@ function App() {
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/roadmap" element={<RoadmapList />} />
         <Route path="/roadmap/:id" element={<Roadmap />} />
+        <Route path="/profile" element={<Profile />} />
 
       </Routes>
       <Footer />
