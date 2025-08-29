@@ -1,76 +1,91 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaRegDotCircle } from "react-icons/fa";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+// import axios from "axios";
+// import { useEffect } from "react";
 
 // -------- DATA --------
-const roadmapData = [
-  {
-    month: "Month 1 — Java & DSA Foundation",
-    steps: [
-      { day: "Day 1–5", topic: "Java Basics", details: ["Syntax", "Variables", "Data Types", "Loops", "Conditions", "Practice Problems"] },
-      { day: "Day 6–10", topic: "OOP in Java", details: ["Classes & Objects", "Constructors", "Encapsulation", "Inheritance", "Polymorphism", "Abstraction"] },
-      { day: "Day 11–15", topic: "DSA: Recursion", details: ["Introduction", "Basic Problems", "Recursion Tree", "Backtracking Basics"] },
-      { day: "Day 16–20", topic: "Arrays & Strings", details: ["1D & 2D Arrays", "String Handling", "Sliding Window", "Problems on Arrays & Strings"] },
-      { day: "Day 21–25", topic: "Linked List", details: ["Singly LL", "Doubly LL", "Cycle Detection", "Problems"] },
-      { day: "Day 26–30", topic: "Stack & Queue", details: ["Stack Implementation", "Queue Implementation", "Problems", "Applications"] },
-    ],  
-  },
-  {
-    month: "Month 2 — Advanced DSA + Core Java",
-    steps: [
-      { day: "Day 31–35", topic: "Sorting & Searching", details: ["Bubble", "Selection", "Insertion", "Merge", "Quick", "Binary Search Applications"] },
-      { day: "Day 36–40", topic: "Hashing & Maps", details: ["HashMap", "HashSet", "Problems", "Frequency Maps"] },
-      { day: "Day 41–45", topic: "Trees", details: ["Binary Tree Basics", "Traversals", "Binary Search Tree", "Problems"] },
-      { day: "Day 46–50", topic: "Graph Basics", details: ["Representation", "DFS", "BFS", "Topological Sort"] },
-      { day: "Day 51–55", topic: "Java Advanced Features", details: ["Exception Handling", "Generics", "Collections Framework", "Streams & Lambda"] },
-      { day: "Day 56–60", topic: "Mini Project (Console)", details: ["Library System / ATM Simulation", "Plan", "Code", "Test", "Refactor"] },
-    ],
-  },
-  {
-    month: "Month 3 — SQL, JDBC & Backend Basics",
-    steps: [
-      { day: "Day 61–65", topic: "Databases & SQL", details: ["RDBMS Basics", "DDL", "DML", "Joins", "Indexes", "Subqueries"] },
-      { day: "Day 66–70", topic: "Advanced SQL", details: ["Stored Procedures", "Views", "Triggers", "Transactions"] },
-      { day: "Day 71–75", topic: "JDBC", details: ["JDBC Setup", "Connecting Java with MySQL/Postgres", "CRUD Operations"] },
-      { day: "Day 76–80", topic: "Servlets & JSP", details: ["Servlet Lifecycle", "JSP Basics", "Session Handling", "Mini App"] },
-      { day: "Day 81–90", topic: "Spring Core", details: ["IoC", "Dependency Injection", "Spring Beans", "Configuration", "Practice Examples"] },
-    ],
-  },
-  {
-    month: "Month 4 — Spring Boot & REST APIs",
-    steps: [
-      { day: "Day 91–95", topic: "Spring Boot Basics", details: ["Setup Project", "Annotations", "Spring Boot Starters", "Configuration"] },
-      { day: "Day 96–100", topic: "REST APIs", details: ["Controller", "Request Mapping", "CRUD REST API", "Postman Testing"] },
-      { day: "Day 101–105", topic: "Spring Data JPA", details: ["Entity Mapping", "Repositories", "JPQL Queries", "Relationships"] },
-      { day: "Day 106–110", topic: "Security Basics", details: ["Spring Security", "JWT Authentication", "Role-Based Access"] },
-      { day: "Day 111–120", topic: "Mini Project (Backend)", details: ["Employee Management System / Blog API", "Plan", "Code", "Test"] },
-    ],
-  },
-  {
-    month: "Month 5 — Frontend (React + Basics)",
-    steps: [
-      { day: "Day 121–125", topic: "HTML, CSS, JS Basics", details: ["HTML5", "Flex/Grid", "JavaScript ES6+", "DOM Manipulation"] },
-      { day: "Day 126–130", topic: "React Basics", details: ["Components", "Props & State", "Events", "Conditional Rendering"] },
-      { day: "Day 131–135", topic: "React Advanced", details: ["Hooks", "Context API", "Routing", "Forms & Validation"] },
-      { day: "Day 136–140", topic: "Integration", details: ["Fetching API Data", "Axios/Fetch", "Connecting with Spring Boot API"] },
-      { day: "Day 141–150", topic: "Mini Project (Frontend)", details: ["UI Design", "React CRUD App", "Test", "Refactor"] },
-    ],
-  },
-  {
-    month: "Month 6 — Full Stack Projects & Deployment",
-    steps: [
-      { day: "Day 151–160", topic: "Full Stack Integration", details: ["Connect React Frontend with Spring Boot Backend", "API Calls", "CORS", "Testing"] },
-      { day: "Day 161–165", topic: "Final Project Setup", details: ["Choose Idea (E-Commerce, Blog, Task Manager)", "Database Design", "Architecture"] },
-      { day: "Day 166–175", topic: "Full Stack Project Development", details: ["Frontend", "Backend", "API Integration", "Auth", "Role Management"] },
-      { day: "Day 176–180", topic: "Testing & Deployment", details: ["JUnit Tests", "Postman Tests", "Docker Basics", "Deploy on AWS/Heroku/Render"] },
-    ],
-  },
-];
+// const roadmapData = [
+//   {
+//     month: "Month 1 — Java & DSA Foundation",
+//     steps: [
+//       { day: "Day 1–5", topic: "Java Basics", details: ["Syntax", "Variables", "Data Types", "Loops", "Conditions", "Practice Problems"] },
+//       { day: "Day 6–10", topic: "OOP in Java", details: ["Classes & Objects", "Constructors", "Encapsulation", "Inheritance", "Polymorphism", "Abstraction"] },
+//       { day: "Day 11–15", topic: "DSA: Recursion", details: ["Introduction", "Basic Problems", "Recursion Tree", "Backtracking Basics"] },
+//       { day: "Day 16–20", topic: "Arrays & Strings", details: ["1D & 2D Arrays", "String Handling", "Sliding Window", "Problems on Arrays & Strings"] },
+//       { day: "Day 21–25", topic: "Linked List", details: ["Singly LL", "Doubly LL", "Cycle Detection", "Problems"] },
+//       { day: "Day 26–30", topic: "Stack & Queue", details: ["Stack Implementation", "Queue Implementation", "Problems", "Applications"] },
+//     ],  
+//   },
+//   {
+//     month: "Month 2 — Advanced DSA + Core Java",
+//     steps: [
+//       { day: "Day 31–35", topic: "Sorting & Searching", details: ["Bubble", "Selection", "Insertion", "Merge", "Quick", "Binary Search Applications"] },
+//       { day: "Day 36–40", topic: "Hashing & Maps", details: ["HashMap", "HashSet", "Problems", "Frequency Maps"] },
+//       { day: "Day 41–45", topic: "Trees", details: ["Binary Tree Basics", "Traversals", "Binary Search Tree", "Problems"] },
+//       { day: "Day 46–50", topic: "Graph Basics", details: ["Representation", "DFS", "BFS", "Topological Sort"] },
+//       { day: "Day 51–55", topic: "Java Advanced Features", details: ["Exception Handling", "Generics", "Collections Framework", "Streams & Lambda"] },
+//       { day: "Day 56–60", topic: "Mini Project (Console)", details: ["Library System / ATM Simulation", "Plan", "Code", "Test", "Refactor"] },
+//     ],
+//   },
+//   {
+//     month: "Month 3 — SQL, JDBC & Backend Basics",
+//     steps: [
+//       { day: "Day 61–65", topic: "Databases & SQL", details: ["RDBMS Basics", "DDL", "DML", "Joins", "Indexes", "Subqueries"] },
+//       { day: "Day 66–70", topic: "Advanced SQL", details: ["Stored Procedures", "Views", "Triggers", "Transactions"] },
+//       { day: "Day 71–75", topic: "JDBC", details: ["JDBC Setup", "Connecting Java with MySQL/Postgres", "CRUD Operations"] },
+//       { day: "Day 76–80", topic: "Servlets & JSP", details: ["Servlet Lifecycle", "JSP Basics", "Session Handling", "Mini App"] },
+//       { day: "Day 81–90", topic: "Spring Core", details: ["IoC", "Dependency Injection", "Spring Beans", "Configuration", "Practice Examples"] },
+//     ],
+//   },
+//   {
+//     month: "Month 4 — Spring Boot & REST APIs",
+//     steps: [
+//       { day: "Day 91–95", topic: "Spring Boot Basics", details: ["Setup Project", "Annotations", "Spring Boot Starters", "Configuration"] },
+//       { day: "Day 96–100", topic: "REST APIs", details: ["Controller", "Request Mapping", "CRUD REST API", "Postman Testing"] },
+//       { day: "Day 101–105", topic: "Spring Data JPA", details: ["Entity Mapping", "Repositories", "JPQL Queries", "Relationships"] },
+//       { day: "Day 106–110", topic: "Security Basics", details: ["Spring Security", "JWT Authentication", "Role-Based Access"] },
+//       { day: "Day 111–120", topic: "Mini Project (Backend)", details: ["Employee Management System / Blog API", "Plan", "Code", "Test"] },
+//     ],
+//   },
+//   {
+//     month: "Month 5 — Frontend (React + Basics)",
+//     steps: [
+//       { day: "Day 121–125", topic: "HTML, CSS, JS Basics", details: ["HTML5", "Flex/Grid", "JavaScript ES6+", "DOM Manipulation"] },
+//       { day: "Day 126–130", topic: "React Basics", details: ["Components", "Props & State", "Events", "Conditional Rendering"] },
+//       { day: "Day 131–135", topic: "React Advanced", details: ["Hooks", "Context API", "Routing", "Forms & Validation"] },
+//       { day: "Day 136–140", topic: "Integration", details: ["Fetching API Data", "Axios/Fetch", "Connecting with Spring Boot API"] },
+//       { day: "Day 141–150", topic: "Mini Project (Frontend)", details: ["UI Design", "React CRUD App", "Test", "Refactor"] },
+//     ],
+//   },
+//   {
+//     month: "Month 6 — Full Stack Projects & Deployment",
+//     steps: [
+//       { day: "Day 151–160", topic: "Full Stack Integration", details: ["Connect React Frontend with Spring Boot Backend", "API Calls", "CORS", "Testing"] },
+//       { day: "Day 161–165", topic: "Final Project Setup", details: ["Choose Idea (E-Commerce, Blog, Task Manager)", "Database Design", "Architecture"] },
+//       { day: "Day 166–175", topic: "Full Stack Project Development", details: ["Frontend", "Backend", "API Integration", "Auth", "Role Management"] },
+//       { day: "Day 176–180", topic: "Testing & Deployment", details: ["JUnit Tests", "Postman Tests", "Docker Basics", "Deploy on AWS/Heroku/Render"] },
+//     ],
+//   },
+// ];
 
 
 // -----------------------
 
 export default function Roadmap() {
+
+   const [roadmapData, setRoadmaps] = useState([]);
+   const [title, setTitle] = useState("");
+   const { id } = useParams();
+
+  useEffect(()=>{
+    axios.get(`http://localhost:8000/api/roadmap/title/${id}`).then((res)=>{
+      setRoadmaps(res.data?.months);
+      setTitle(res.data?.title);
+   })},[]);
+
   const [completed, setCompleted] = useState({});
   const [expanded, setExpanded] = useState({});
 
@@ -103,7 +118,7 @@ export default function Roadmap() {
         {/* Header */}
         <div className="mb-12 text-center">
           <h1 className="z-60 relative text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-pink-400 via-sky-400 to-emerald-400 bg-clip-text text-transparent">
-            6-Month Java Full Stack  Roadmap
+            {title}
           </h1>
           <div className="mt-4 w-full max-w-sm mx-auto h-3 rounded-full bg-white/10 overflow-hidden">
             <div

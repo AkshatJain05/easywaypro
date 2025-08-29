@@ -20,8 +20,11 @@ app.use(express.static("public"));
 
 import userRouter from "./routes/user.route.js"
 import resouceRouter from "./routes/resursce.route.js"
+import roadmapRouter from "./routes/roadmap.route.js"
 app.use("/api/auth",userRouter);
 app.use("/api/resources",resouceRouter);
+app.use("/api/roadmap",roadmapRouter)
+
 
 app.get("/", (req, res) => {
   res.send("API is running...");

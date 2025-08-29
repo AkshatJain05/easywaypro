@@ -10,6 +10,7 @@ import Courses from "./pages/Courses/Courses.jsx";
 import Login from "./pages/auth/Login.jsx";
 import SignUp from "./pages/auth/SignUp.jsx";
 import Roadmap from "./pages/Roadmap/Roadmap.jsx";
+import RoadmapList from "./pages/Roadmap/RoadmapList.jsx";
 function App() {
   return (
     <>
@@ -22,7 +23,9 @@ function App() {
         <Route path="/courses" element={<Courses />} />
         <Route path="/login" element={<Login />} />
         <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/roadmap" element={<Roadmap />} />
+        <Route path="/roadmap" element={<RoadmapList />} />
+        <Route path="/roadmap/:id" element={<Roadmap />} />
+
       </Routes>
       <Footer />
     </>

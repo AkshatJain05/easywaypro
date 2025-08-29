@@ -1,47 +1,20 @@
 import mongoose from "mongoose";
 
-// Step Schema
 const StepSchema = new mongoose.Schema({
-  day: {
-    type: String,
-    trim: true,
-    required: true,
-  },
-  topic: {
-    type: String,
-    trim: true,
-    required: true,
-  },
-  details: {
-    type: [String], // Array of strings ✅
-    required: true,
-  },
+  day: { type: String, required: true },
+  topic: { type: String, required: true },
+  details: { type: [String], required: true },
 });
 
-// RoadMap Schema
-const RoadMapSchema = new mongoose.Schema(
-  {
-    month: {
-      type: String,
-      trim: true,
-      required: true,
-    },
-    steps: [StepSchema], // Array of step objects
-  },
-  { timestamps: true }
-);
+const MonthSchema = new mongoose.Schema({
+  month: { type: String, required: true },
+  steps: { type: [StepSchema], required: true },
+});
 
-// Main Schema
-const RoadMapsSchema = new mongoose.Schema(
-  {
-    title: {
-      type: String,
-      trim: true,
-      required: true,
-    },
-    roadmap: [RoadMapSchema],
-  },
-  { timestamps: true }
-);
+const RoadmapSchema = new mongoose.Schema({
+  title: { type: String, required: true, unique: true }, // e.g., "Java Full Stack Roadmap"
+  description: { type: String },
+  months: { type: [MonthSchema], required: true },
+}, { timestamps: true });
 
-export const RoadMap = mongoose.model("RoadMap", RoadMapsSchema);
+export default mongoose.model("Roadmap", RoadmapSchema);
