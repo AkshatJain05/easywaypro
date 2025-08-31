@@ -1,72 +1,101 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaRegDotCircle } from "react-icons/fa";
-import { useParams } from "react-router-dom";
+import { FaRegDotCircle, FaArrowLeft } from "react-icons/fa";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { FaArrowLeft } from "react-icons/fa"; // Back icon
 import Loading from "../../component/Loading";
 
-
 export default function Roadmap() {
+  const { id } = useParams(); // roadmapId from URL
+  const navigate = useNavigate();
 
-   const [roadmapData, setRoadmaps] = useState([]);
-   const [title, setTitle] = useState("");
-   const { id } = useParams();
-const navigate = useNavigate();
-  useEffect(()=>{
-    axios.get(`http://localhost:8000/api/roadmap/title/${id}`).then((res)=>{
-      setRoadmaps(res.data?.months);
-      setTitle(res.data?.title);
-      setLoading(false);
-   })},[]);
-
+  const [roadmapData, setRoadmapData] = useState([]);
+  const [title, setTitle] = useState("");
   const [completed, setCompleted] = useState({});
   const [expanded, setExpanded] = useState({});
   const [loading, setLoading] = useState(true);
 
-  // Load progress
+  // Load roadmap data
   useEffect(() => {
-    const saved = localStorage.getItem("roadmap-progress-v3");
-    if (saved) setCompleted(JSON.parse(saved));
-  }, []);
+    if (!id) return;
+    setLoading(true);
+    axios
+      .get(`http://localhost:8000/api/roadmap/title/${id}`)
+      .then((res) => {
+        setRoadmapData(res.data?.months || []);
+        setTitle(res.data?.title || "");
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [id]);
 
-  // Save progress
+  // Load progress from backend
   useEffect(() => {
-    localStorage.setItem("roadmap-progress-v3", JSON.stringify(completed));
-  }, [completed]);
+    if (!id) return;
+    axios
+      .get(`http://localhost:8000/api/roadmap/progress/${id}`, {
+        withCredentials: true,
+      })
+      .then((res) => setCompleted(res.data.completed || {}))
+      .catch(() => setCompleted({}));
+  }, [id]);
+
+  // Save progress to backend
+  useEffect(() => {
+    if (!id) return;
+    if (Object.keys(completed).length > 0) {
+      axios
+        .post(
+          `http://localhost:8000/api/roadmap/progress/${id}`,
+          { completed },
+          { withCredentials: true }
+        )
+        .catch((err) => console.error("Save failed", err));
+    }
+  }, [completed, id]);
 
   // Progress calculation
-  const totalSteps = useMemo(() => roadmapData.reduce((acc, m) => acc + m.steps.length, 0), [roadmapData]);
-  const doneCount = useMemo(() => Object.values(completed).reduce((acc, v) => (v ? acc + 1 : acc), 0), [completed]);
-  const progressPct = totalSteps ? Math.round((doneCount / totalSteps) * 100) : 0;
+  const totalSteps = useMemo(
+    () => roadmapData.reduce((acc, m) => acc + m.steps.length, 0),
+    [roadmapData]
+  );
+  const doneCount = useMemo(
+    () => Object.values(completed).reduce((acc, v) => (v ? acc + 1 : acc), 0),
+    [completed]
+  );
+  const progressPct = totalSteps
+    ? Math.round((doneCount / totalSteps) * 100)
+    : 0;
 
-  const toggleDone = (key) => setCompleted((prev) => ({ ...prev, [key]: !prev[key] }));
-  const toggleExpand = (key) => setExpanded((prev) => ({ ...prev, [key]: !prev[key] }));
+  // Toggle step done
+  const toggleDone = (key) =>
+    setCompleted((prev) => ({ ...prev, [key]: !prev[key] }));
 
- if(loading){
-  return <Loading/>
- }
+  // Toggle expand details
+  const toggleExpand = (key) =>
+    setExpanded((prev) => ({ ...prev, [key]: !prev[key] }));
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="relative w-full flex justify-center py-6 px-4 bg-gradient-to-b from-gray-950 via-gray-900 to-black text-white overflow-hidden">
-     
       {/* glowing backgrounds */}
       <div className="pointer-events-none absolute top-0 left-1/3 w-96 h-96 bg-fuchsia-500/20 blur-3xl rounded-full" />
       <div className="pointer-events-none absolute bottom-0 right-1/3 w-96 h-96 bg-sky-500/20 blur-3xl rounded-full" />
-       
-     
+
       <div className="relative w-full max-w-6xl">
-         {/* Back Button */}
-      <button
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-1 px-3 py-1.5 mb-6
+        {/* Back Button */}
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-1 px-3 py-1.5 mb-6
                    bg-gray-800 hover:bg-gray-700 text-gray-200 
-                   rounded-lg text-sm shadow-md transition-all"
-      >
-        <FaArrowLeft className="text-sm" />
-        <span>Back</span>
-      </button>
+                   rounded-lg text-sm shadow-md transition-all cursor-pointer"
+        >
+          <FaArrowLeft className="text-sm" />
+          <span>Back</span>
+        </button>
 
         {/* Header */}
         <div className="mb-12 text-center">
@@ -89,7 +118,7 @@ const navigate = useNavigate();
         </div>
 
         {/* Timeline line */}
-        <div className="absolute z-1 top-49 left-1/2 -translate-x-1/2 w-1.5 h-full bg-slate-700/50 rounded-full">
+        <div className="absolute top-63 z-1  left-1/2 -translate-x-1/2 w-1.5 h-full bg-slate-700/50 rounded-full opacity-30 md:opacity-80">
           {/* Progress overlay */}
           <div
             className="absolute top-0 left-0 w-full transition-all duration-700 
@@ -98,6 +127,7 @@ const navigate = useNavigate();
           />
         </div>
 
+        {/* Steps */}
         <div className="relative flex flex-col gap-20">
           {roadmapData.map((section, mIdx) => (
             <section key={mIdx}>
@@ -110,7 +140,9 @@ const navigate = useNavigate();
                 className="mx-auto w-fit mb-10"
               >
                 <div className="z-20 relative px-6 py-3 rounded-2xl shadow-lg bg-gradient-to-r from-fuchsia-500/20 to-sky-500/20 border border-white/20">
-                  <span className="font-semibold tracking-wide">{section.month}</span>
+                  <span className="font-semibold tracking-wide">
+                    {section.month}
+                  </span>
                 </div>
               </motion.div>
 
@@ -128,20 +160,26 @@ const navigate = useNavigate();
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true, amount: 0.4 }}
                       transition={{ duration: 0.5 }}
-                      className={`relative flex ${isLeft ? "justify-start" : "justify-end"}`}
+                      className={`relative flex ${
+                        isLeft ? "justify-start" : "justify-end"
+                      }`}
                     >
-                      {/* Connector line to box */}
+                      {/* Connector line */}
                       <div
-                        className={`hidden md:block absolute top-1/2 w-[11%] h-0.5 bg-slate-600/50 
-                          ${isLeft ?"right-1/2":"left-1/2"} 
-                          ${isDone ? "bg-gradient-to-r from-sky-400 to-emerald-400 shadow-[0_0_10px_rgba(56,189,248,0.7)]" : ""}
+                        className={`hidden md:block absolute z-2 top-1/2 w-[11%] h-0.5 bg-slate-600/50 
+                          ${isLeft ? "right-1/2" : "left-1/2"} 
+                          ${
+                            isDone
+                              ? "bg-gradient-to-r from-sky-400 to-emerald-400 shadow-[0_0_10px_rgba(56,189,248,0.7)]"
+                              : ""
+                          }
                         `}
                       />
 
                       {/* Marker */}
                       <button
                         onClick={() => toggleDone(key)}
-                        className="absolute left-1/2 -translate-x-1/2 z-10 cursor-pointer"
+                        className="absolute left-1/2 -translate-x-1/2 z-70 cursor-pointer"
                       >
                         <span
                           className={`grid place-items-center w-7 h-7 rounded-full border-4 transition-all duration-300 ${
@@ -154,10 +192,12 @@ const navigate = useNavigate();
                         </span>
                       </button>
 
-                      {/* Card */}
+                      {/* Step Card */}
                       <div
                         onClick={() => toggleExpand(key)}
-                        className={`cursor-pointer relative max-w-md w-full md:w-[40%] z-60 ${isLeft ? "mr-auto" : "ml-auto"}`}
+                        className={`cursor-pointer relative max-w-md w-full md:w-[40%] z-60 ${
+                          isLeft ? "mr-auto" : "ml-auto"
+                        }`}
                       >
                         <div
                           className={`rounded-2xl p-5 border shadow-xl transition-all duration-300
@@ -168,14 +208,18 @@ const navigate = useNavigate();
                           }`}
                         >
                           <div className="flex justify-between items-center">
-                            <h3 className="text-sm font-semibold text-gray-300">{step.day}</h3>
+                            <h3 className="text-sm font-semibold text-gray-300">
+                              {step.day}
+                            </h3>
                             {isDone && (
                               <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
                                 Done
                               </span>
                             )}
                           </div>
-                          <p className="mt-2 text-lg font-bold text-white">{step.topic}</p>
+                          <p className="mt-2 text-lg font-bold text-white">
+                            {step.topic}
+                          </p>
 
                           {/* Details expand */}
                           <AnimatePresence>

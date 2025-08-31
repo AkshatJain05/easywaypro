@@ -116,6 +116,7 @@ export default function UserMenu() {
               onClick={() => {
                 setOpen(false);
                 dispatch(logout());
+                navigate("/");
               }}
             >
               Logout

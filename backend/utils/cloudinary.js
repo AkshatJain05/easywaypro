@@ -11,7 +11,7 @@ cloudinary.config({
   secure: true, // force HTTPS
 });
 
-// ✅ Upload file (PDF / Docs / Images / Videos)
+// Upload file (PDF / Docs / Images / Videos)
 const uploadOnCloudinary = async (localFilePath, folderName = "resources") => {
   try {
     if (!localFilePath) return null;
@@ -31,12 +31,12 @@ const uploadOnCloudinary = async (localFilePath, folderName = "resources") => {
     };
   } catch (error) {
     if (fs.existsSync(localFilePath)) fs.unlinkSync(localFilePath);
-    console.error("❌ Cloudinary Upload Error:", error.message);
+    console.error("Cloudinary Upload Error:", error.message);
     return null;
   }
 };
 
-// ✅ Delete from Cloudinary
+//Delete from Cloudinary
 const deleteFromCloudinary = async (publicId) => {
   try {
     const result = await cloudinary.uploader.destroy(publicId, {
@@ -44,7 +44,7 @@ const deleteFromCloudinary = async (publicId) => {
     });
     return result;
   } catch (error) {
-    console.error("❌ Cloudinary Delete Error:", error.message);
+    console.error("Cloudinary Delete Error:", error.message);
     return null;
   }
 };

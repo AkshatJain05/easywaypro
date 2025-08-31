@@ -28,7 +28,7 @@ export default function RoadmapList() {
         onClick={() => navigate(-1)}
         className="flex items-center gap-1 px-3 py-1.5 mb-6
                    bg-gray-800 hover:bg-gray-700 text-gray-200 
-                   rounded-lg text-sm shadow-md transition-all"
+                   rounded-lg text-sm shadow-md transition-all cursor-pointer"
       >
         <FaArrowLeft className="text-sm" />
         <span>Back</span>
@@ -46,10 +46,10 @@ export default function RoadmapList() {
             <Link
               key={r._id}
               to={`/roadmap/${r._id}`}
-              className="bg-gray-900/80 p-6 md:p-8 rounded-2xl 
+              className="bg-gray-900/80 p-6 md:p-8 rounded-xl 
                          shadow-md hover:shadow-xl hover:-translate-y-2 
-                         transition-transform duration-300 border border-gray-500
-                         flex flex-col justify-between"
+                         transition-transform duration-300 border border-gray-300
+                         flex flex-col justify-between hover:border-yellow-500"
             >
               <h2 className="text-lg md:text-xl font-bold mb-3">{r.title}</h2>
               <p className="text-gray-400 text-sm md:text-base leading-relaxed line-clamp-4">

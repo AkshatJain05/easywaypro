@@ -1,7 +1,7 @@
 import express from "express";
 import Roadmap from "../models/roadmap.model.js";
-import Progress from "../models/Progress.model.js";
 import {protect} from "../middlewares/auth.middlerware.js";
+import { Progress } from "../models/Progress.model.js";
 
 const router = express.Router();
 
@@ -46,37 +46,69 @@ router.get("/step/:topic", async (req, res) => {
 /* --- Progress routes (protected, needs login) --- */
 
 // Save/update progress
-router.post("/progress/:roadmapId", protect, async (req, res) => {
-  try {
-    const { roadmapId } = req.params;
-    const { completed } = req.body;
-    const userId = req.user.id;
+// router.post("/progress/:roadmapId", protect, async (req, res) => {
+//   try {
+//     const { roadmapId } = req.params;
+//     const { completed } = req.body;
+//     const userId = req.user.id;
 
-    let progress = await Progress.findOne({ userId, roadmapId });
-    if (progress) {
-      progress.completed = completed;
-      await progress.save();
-    } else {
-      progress = new Progress({ userId, roadmapId, completed });
-      await progress.save();
-    }
-    res.json(progress);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
+//     let progress = await Progress.findOne({ userId, roadmapId });
+//     if (progress) {
+//       progress.completed = completed;
+//       await progress.save();
+//     } else {
+//       progress = new Progress({ userId, roadmapId, completed });
+//       await progress.save();
+//     }
+//     res.json(progress);
+//   } catch (err) {
+//     res.status(400).json({ error: err.message });
+//   }
+// });
 
-// Get progress for logged-in user
+// // Get progress for logged-in user
+// router.get("/progress/:roadmapId", protect, async (req, res) => {
+//   try {
+//     const { roadmapId } = req.params;
+//     const userId = req.user.id;
+
+//     const progress = await Progress.findOne({ userId, roadmapId });
+//     res.json(progress || { userId, roadmapId, completed: {} });
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// });
+
+
+// Get roadmap progress
 router.get("/progress/:roadmapId", protect, async (req, res) => {
-  try {
-    const { roadmapId } = req.params;
-    const userId = req.user.id;
-
-    const progress = await Progress.findOne({ userId, roadmapId });
-    res.json(progress || { userId, roadmapId, completed: {} });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  const progress = await Progress.findOne({
+    userId: req.user._id,
+    roadmapId: req.params.roadmapId,
+  });
+  res.json(progress || { completed: {} });
 });
 
+// Save progress
+router.post("/progress/:roadmapId", protect, async (req, res) => {
+  const { completed } = req.body;
+  let progress = await Progress.findOne({
+    userId: req.user._id,
+    roadmapId: req.params.roadmapId,
+  });
+   console.log("Request body:", req.user._id)
+
+  if (!progress) {
+    progress = new Progress({
+      userId: req.user._id,
+      roadmapId: req.params.roadmapId,
+      completed,
+    });
+  } else {
+    progress.completed = completed;
+  }
+
+  await progress.save();
+  res.json(progress);
+});
 export default router;

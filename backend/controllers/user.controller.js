@@ -1,7 +1,7 @@
 import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
-// 📌 Get user profile
+// Get user profile
 export const getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select("-password");
@@ -12,7 +12,7 @@ export const getProfile = async (req, res) => {
   }
 };
 
-// 📌 Update user profile
+// Update user profile
 export const updateProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
@@ -34,7 +34,7 @@ export const updateProfile = async (req, res) => {
       }
     }
 
-    // ✅ Update allowed fields
+    // Update allowed fields
     user.name = req.body.name || user.name;
     user.phoneNo = req.body.phoneNo || user.phoneNo;
     user.profilePhoto = uploaded?.fileUrl || user.profilePhoto;
@@ -43,7 +43,7 @@ export const updateProfile = async (req, res) => {
     user.BranchName = req.body.BranchName || user.BranchName;
     user.YearOfStudy = req.body.YearOfStudy || user.YearOfStudy;
 
-    // ✅ If password is provided, hash automatically (handled in schema middleware)
+    // If password is provided, hash automatically (handled in schema middleware)
     if (req.body.password) {
       user.password = req.body.password;
     }

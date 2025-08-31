@@ -34,7 +34,7 @@ function Nav() {
             className="h-7 sm:h-9 md:h-10 w-auto"
           />
           <h1 className="font-bold text-lg sm:text-xl md:text-2xl tracking-wide">
-            Easyway Classes 2.0
+            Easyway Classes
           </h1>
         </NavLink>
 

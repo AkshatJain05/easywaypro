@@ -1,10 +1,22 @@
+// models/progress.model.js
 import mongoose from "mongoose";
 
-const ProgressSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  roadmapId: { type: mongoose.Schema.Types.ObjectId, ref: "Roadmap", required: true },
-  completed: { type: Map, of: Boolean, default: {} }, 
-  // Example: { "0-0": true, "0-1": false } (monthIndex-stepIndex)
+const progressSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  roadmapId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Roadmap", // ✅ link to roadmap collection
+    required: true,
+  },
+  completed: {
+    type: Map,       // stores progress like { "0-0": true, "1-2": false }
+    of: Boolean,
+    default: {},
+  },
 }, { timestamps: true });
 
-export default mongoose.model("Progress", ProgressSchema);
+export const Progress = mongoose.model("Progress", progressSchema);

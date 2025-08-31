@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo2Img from "../assets/easywayLogo.png";
+import logoEasyway from "../assets/logoEasyway.png";
 
 function Footer() {
   const quickLinks = [
@@ -23,12 +23,22 @@ function Footer() {
         
         {/* Logo + About */}
         <div className="flex-1 text-center md:text-left space-y-6 max-w-lg">
-          <img
+          {/* <img
             src={logo2Img}
             alt="Easyway Logo"
             className="h-16 sm:h-20 md:h-24 mx-auto md:mx-0 rounded-2xl border-2 border-yellow-400 shadow-lg"
-          />
-          <p className="text-sm sm:text-base md:text-lg text-slate-300 text-center md:text-justify">
+          /> */}
+          <div className="flex flex-col items-center md:flex-row md:items-center gap-3">
+  <img
+    src={logoEasyway}
+    alt="Easyway Logo"
+    className="h-12  sm:h-12 md:h-12 rounded-2xl border-2 border-yellow-400 shadow-lg"
+  />
+  <span className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-yellow-400 via-orange-400 to-pink-500 bg-clip-text text-transparent drop-shadow-md">
+    Easyway Classes
+  </span>
+</div>
+          <p className="text-sm  md:text-lg text-slate-300 text-center md:text-justify">
             Easyway Classes is your smart learning companion, offering tools like AI chatbot,
             code analyzer, quizzes, and study material to make learning effortless and engaging.
           </p>
