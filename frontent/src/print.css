@@ -1,0 +1,47 @@
+@media print {
+  /* 1. Reset the body for a clean print slate */
+  body {
+    background: #fff !important; /* Force white background */
+   -webkit-print-color-adjust: exact;
+    print-color-adjust: exact; 
+ 
+  }
+
+  /* 2. Hide everything by default */
+  body * {
+    visibility: hidden;
+  }
+
+  /* 3. Forcefully hide the form and other UI elements */
+  .print-hide {
+    display: none !important;
+  }
+
+  /* 4. Fix the sticky positioning issue */
+  .print-static {
+    position: static !important;
+  }
+  
+  /* 5. Make ONLY the resume preview and its content visible */
+  #resume-preview, #resume-preview * {
+    visibility: visible;
+  }
+  
+  /*
+   * 6. This is the key part for a 1-to-1 match.
+   *    It tells the browser to simply place the resume at the top of the page.
+   *    The browser will automatically handle scaling it to fit the paper width.
+   */
+
+   
+  #resume-preview {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    transform: scale(1);
+    box-shadow: inherit !important; /* Force the shadow to print */
+  }
+}

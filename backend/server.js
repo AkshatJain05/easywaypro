@@ -21,10 +21,11 @@ app.use(express.static("public"));
 import userRouter from "./routes/user.route.js"
 import resouceRouter from "./routes/resursce.route.js"
 import roadmapRouter from "./routes/roadmap.route.js"
+import aiChatRouter from "./routes/aichat.route.js"
 app.use("/api/auth",userRouter);
 app.use("/api/resources",resouceRouter);
-app.use("/api/roadmap",roadmapRouter)
-
+app.use("/api/roadmap",roadmapRouter);
+app.use("/api/chat", aiChatRouter);
 
 app.get("/", (req, res) => {
   res.send("API is running...");

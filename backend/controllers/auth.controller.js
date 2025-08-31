@@ -69,7 +69,7 @@ const authMe =  async(req, res) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("decoded", decoded);
+    // console.log("decoded", decoded);
     const user = await User.findById(decoded?.userId).select("-password");
     res.json({ user: user });
 
