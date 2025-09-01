@@ -5,7 +5,8 @@ import pyq from "../../assets/pyqImg.png";
 import onlineLecture from "../../assets/onlineLecture.png";
 import roadmap from "../../assets/roadMap.png";
 import syllabus from "../../assets/syllabusImg.png";
-import {Link} from "react-router-dom"
+import {Link} from "react-router-dom";
+
 function StudyMaterial() {
   const studyMaterialList = [
     { name: "AKTU PYQ's", link: "/pyq", img: pyq },
@@ -36,7 +37,7 @@ function StudyMaterial() {
               <Link to={list.link}>
               <div
                 className="w-full max-w-[170px] sm:max-w-[200px] md:max-w-[220px] 
-                           bg-slate-900/70 border border-slate-700 rounded-xl overflow-hidden
+                           bg-gradient-to-br from-gray-950 to-black border-1 border-slate-500 rounded-xl overflow-hidden
                            shadow-[0_0_10px_rgba(255,255,255,0.15)]
                            hover:shadow-[0_0_18px_rgba(255,255,255,0.35)]
                            transition-all duration-300 hover:scale-[1.05] mx-auto"
@@ -52,7 +53,7 @@ function StudyMaterial() {
                 </div>
 
                 {/* Title */}
-                <p className="py-2 sm:py-3 text-sm sm:text-base md:text-lg text-center font-medium text-slate-100 bg-slate-950/90">
+                <p className="py-2 sm:py-3 text-sm sm:text-base md:text-lg text-center font-medium text-slate-100 bg-gradient-to-br from-gray-950 to-black">
                   {list.name}
                 </p>
               </div>

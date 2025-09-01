@@ -17,7 +17,7 @@ function Footer() {
   ];
 
   return (
-    <footer className="w-full bg-gray-950 opacity-98 text-white">
+    <footer className="w-full bg-gradient-to-br from-gray-950 to-black border-t-1 border-gray-800 opacity-98 text-white ">
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-12 flex flex-col md:flex-row justify-between gap-12">
         
@@ -35,7 +35,7 @@ function Footer() {
     className="h-12  sm:h-12 md:h-12 rounded-2xl border-2 border-yellow-400 shadow-lg"
   />
   <span className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-yellow-400 via-orange-400 to-pink-500 bg-clip-text text-transparent drop-shadow-md">
-    Easyway Classes
+    Easyway Pro
   </span>
 </div>
           <p className="text-sm  md:text-lg text-slate-300 text-center md:text-justify">

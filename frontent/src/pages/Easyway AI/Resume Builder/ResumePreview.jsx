@@ -120,7 +120,7 @@ const ResumePreview = ({ resumeData }) => {
                 </p>
               </div>
               <p className="text-sm font-medium text-gray-800">
-                {exp.role || "Role"}
+                {exp.position || "Role"}
               </p>
 
               {exp.points?.length > 0 ? (
@@ -141,22 +141,31 @@ const ResumePreview = ({ resumeData }) => {
         </section>
       )}
 
-      {/* --- SKILLS --- */}
-      {skills && Object.keys(skills).length > 0 && (
-        <section className="mb-5">
-          <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-300 pb-1 mb-2">
-            SKILLS
-          </h2>
-          <div className="space-y-1 text-sm">
-            {Object.keys(skills).map((category) => (
-              <p key={category}>
-                <span className="font-medium text-gray-900">{category}:</span>{" "}
-                {skills[category].join(", ")}
-              </p>
-            ))}
-          </div>
-        </section>
-      )}
+   {/* --- SKILLS --- */}
+    {skills && skills.length > 0 && (
+      <section className="mb-5">
+        <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-300 pb-1 mb-2">
+          SKILLS
+        </h2>
+        <div className="space-y-1 text-sm">
+          {Object.entries(
+            resumeData.skills.reduce((acc, skill) => {
+              if (!acc[skill.category]) acc[skill.category] = [];
+              acc[skill.category].push(skill.value);
+              return acc;
+            }, {})
+          ).map(([category, skillList]) => (
+            <p key={category}>
+              <span className="font-[550] text-gray-800">{category}:</span>{" "}
+              <span className="font-medium">{skillList.join(", ")}</span>
+            </p>
+          ))}
+        </div>
+      </section>
+    )}
+
+
+      
 
       {/* --- PROJECTS --- */}
       {projects && projects.length > 0 && (

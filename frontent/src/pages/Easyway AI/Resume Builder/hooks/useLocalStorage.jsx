@@ -11,6 +11,9 @@ function useLocalStorage(key, initialValue) {
     }
   });
 
+
+  console.log("storedValue", storedValue);
+
   const setValue = (value) => {
     try {
       const valueToStore =

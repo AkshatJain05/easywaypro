@@ -35,7 +35,7 @@ export default function RoadmapList() {
       </button>
 
       {/* Title */}
-      <h1 className="text-2xl md:text-4xl font-extrabold mb-10 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+      <h1 className="text-2xl md:text-4xl font-extrabold mb-10 text-center text-gray-200">
          Explore Available Roadmaps
       </h1>
 
@@ -46,9 +46,9 @@ export default function RoadmapList() {
             <Link
               key={r._id}
               to={`/roadmap/${r._id}`}
-              className="bg-gray-900/80 p-6 md:p-8 rounded-xl 
+              className="bg-gradient-to-br from-gray-950 to-black p-6 md:p-8 rounded-xl 
                          shadow-md hover:shadow-xl hover:-translate-y-2 
-                         transition-transform duration-300 border border-gray-300
+                         transition-transform duration-300 border border-gray-800
                          flex flex-col justify-between hover:border-yellow-500"
             >
               <h2 className="text-lg md:text-xl font-bold mb-3">{r.title}</h2>

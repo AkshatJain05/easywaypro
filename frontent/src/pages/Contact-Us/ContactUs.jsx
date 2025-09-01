@@ -42,7 +42,7 @@ function ContactUs() {
         {/* Form */}
         <form
           
-          className="mt-10 w-full max-w-3xl bg-gray-950 opacity-95 p-8 md:p-10 rounded-2xl shadow-xl border border-gray-800"
+          className="mt-10 w-full max-w-3xl bg-gradient-to-br from-gray-950 to-black opacity-95 p-8 md:p-10 rounded-2xl shadow-xl border border-gray-800"
         >
           {/* Name + Email */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -58,7 +58,7 @@ function ContactUs() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="mt-2 h-12 px-4 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                className="mt-2 h-12 px-4 rounded-lg  border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               />
             </div>
 
@@ -74,7 +74,7 @@ function ContactUs() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="mt-2 h-12 px-4 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                className="mt-2 h-12 px-4 rounded-lg  border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500"
               />
             </div>
           </div>
@@ -91,7 +91,7 @@ function ContactUs() {
               value={formData.message}
               onChange={handleChange}
               required
-              className="mt-2 h-40 p-4 rounded-lg bg-gray-900 border border-gray-700 text-white placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              className="mt-2 h-40 p-4 rounded-lg border-1 border-gray-700 text-white placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-yellow-500"
             ></textarea>
           </div>
 

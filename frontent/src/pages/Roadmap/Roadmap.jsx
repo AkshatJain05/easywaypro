@@ -80,7 +80,7 @@ export default function Roadmap() {
   }
 
   return (
-    <div className="relative w-full flex justify-center py-6 px-4 bg-gradient-to-b from-gray-950 via-gray-900 to-black text-white overflow-hidden">
+    <div className="relative  w-full flex justify-center py-6 px-4  text-white overflow-hidden">
       {/* glowing backgrounds */}
       <div className="pointer-events-none absolute top-0 left-1/3 w-96 h-96 bg-fuchsia-500/20 blur-3xl rounded-full" />
       <div className="pointer-events-none absolute bottom-0 right-1/3 w-96 h-96 bg-sky-500/20 blur-3xl rounded-full" />
@@ -99,7 +99,7 @@ export default function Roadmap() {
 
         {/* Header */}
         <div className="mb-12 text-center">
-          <h1 className="z-60 relative text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-pink-400 via-sky-400 to-emerald-400 bg-clip-text text-transparent">
+          <h1 className="z-60 relative text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-pink-400 via-sky-400 to-emerald-400 bg-clip-text text-transparent py-3">
             {title}
           </h1>
           <div className="mt-4 w-full max-w-sm mx-auto h-3 rounded-full bg-white/10 overflow-hidden">
@@ -203,8 +203,8 @@ export default function Roadmap() {
                           className={`rounded-2xl p-5 border shadow-xl transition-all duration-300
                           ${
                             isDone
-                              ? "border-emerald-400/50 bg-gradient-to-r from-emerald-900/40 to-sky-900/40"
-                              : "border-white/20 bg-gradient-to-r from-gray-800/60 to-gray-900/60"
+                              ? "border-emerald-400/90 bg-gradient-to-r from-emerald-900/40 to-sky-900/60"
+                              : "border-white/60 bg-gradient-to-r from-gray-800/60 to-gray-900/80"
                           }`}
                         >
                           <div className="flex justify-between items-center">

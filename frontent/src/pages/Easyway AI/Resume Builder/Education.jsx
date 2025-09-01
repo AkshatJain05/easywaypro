@@ -1,39 +1,34 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaPlus, FaTrash } from 'react-icons/fa';
+import { motion, AnimatePresence } from "framer-motion";
+import { FaPlus, FaTrash } from "react-icons/fa";
 
-const Education = ({ resumeData, setResumeData }) => {
+const Education = ({ resumeData, updateResumeData }) => {
   const handleAddEducation = () => {
-    setResumeData((prev) => ({
-      ...prev,
-      education: [
-        ...prev.education,
-        {
-          id: Date.now(),
-          school: '',
-          degree: '',
-          startDate: '',
-          endDate: '',
-          marks: '', // Marks field is present
-        },
-      ],
-    }));
+    const newEdu = {
+      id: Date.now(),
+      school: "",
+      degree: "",
+      startDate: "",
+      endDate: "",
+      marks: "",
+    };
+    updateResumeData("education", [...resumeData.education, newEdu]);
   };
 
   const handleRemoveEducation = (id) => {
-    setResumeData((prev) => ({
-      ...prev,
-      education: prev.education.filter((edu) => edu.id !== id),
-    }));
+    updateResumeData(
+      "education",
+      resumeData.education.filter((edu) => edu.id !== id)
+    );
   };
 
   const handleChange = (id, e) => {
     const { name, value } = e.target;
-    setResumeData((prev) => ({
-      ...prev,
-      education: prev.education.map((edu) =>
+    updateResumeData(
+      "education",
+      resumeData.education.map((edu) =>
         edu.id === id ? { ...edu, [name]: value } : edu
-      ),
-    }));
+      )
+    );
   };
 
   return (
@@ -41,6 +36,7 @@ const Education = ({ resumeData, setResumeData }) => {
       <h2 className="text-xl font-semibold text-gray-800 dark:text-white border-b pb-2 dark:border-gray-600">
         Education
       </h2>
+
       <AnimatePresence>
         {resumeData.education.map((edu) => (
           <motion.div
@@ -48,7 +44,7 @@ const Education = ({ resumeData, setResumeData }) => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, x: -100, transition: { duration: 0.3 } }}
-            className="p-4 border rounded-lg space-y-3 bg-gray-50 dark:bg-gray-700/50 dark:border-gray-600 relative"
+            className="p-4 border rounded-lg space-y-3 bg-gradient-to-br from-gray-950 to-black dark:border-gray-600 relative"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <input
@@ -57,7 +53,7 @@ const Education = ({ resumeData, setResumeData }) => {
                 placeholder="School/University"
                 value={edu.school}
                 onChange={(e) => handleChange(edu.id, e)}
-                className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                className="w-full p-2 border rounded  dark:border-gray-600 dark:text-white"
               />
               <input
                 type="text"
@@ -65,7 +61,7 @@ const Education = ({ resumeData, setResumeData }) => {
                 placeholder="Degree/Certificate"
                 value={edu.degree}
                 onChange={(e) => handleChange(edu.id, e)}
-                className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                className="w-full p-2 border rounded dark:border-gray-600 dark:text-white"
               />
               <input
                 type="text"
@@ -73,7 +69,7 @@ const Education = ({ resumeData, setResumeData }) => {
                 placeholder="Start Date (e.g., Sept 2020)"
                 value={edu.startDate}
                 onChange={(e) => handleChange(edu.id, e)}
-                className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                className="w-full p-2 border rounded  dark:border-gray-600 dark:text-white"
               />
               <input
                 type="text"
@@ -81,16 +77,15 @@ const Education = ({ resumeData, setResumeData }) => {
                 placeholder="End Date (e.g., May 2024)"
                 value={edu.endDate}
                 onChange={(e) => handleChange(edu.id, e)}
-                className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                className="w-full p-2 border rounded  dark:border-gray-600 dark:text-white"
               />
-              {/* This is the Marks/GPA input. There is no Location input. */}
               <input
                 type="text"
                 name="marks"
                 placeholder="Marks/GPA (e.g., CGPA: 8.5/10)"
                 value={edu.marks}
                 onChange={(e) => handleChange(edu.id, e)}
-                className="md:col-span-2 w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                className="md:col-span-2 w-full p-2 border rounded dark:border-gray-600 dark:text-white"
               />
             </div>
             <button
@@ -103,6 +98,7 @@ const Education = ({ resumeData, setResumeData }) => {
           </motion.div>
         ))}
       </AnimatePresence>
+
       <button
         onClick={handleAddEducation}
         className="flex items-center space-x-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors"

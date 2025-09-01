@@ -12,7 +12,7 @@ function Nav() {
   const navList = [
     { name: "Home", link: "/" },
     { name: "Study Material", link: "/study-material" },
-    { name: "Courses", link: "/courses" },
+    { name: "Resume Builder", link: "/resume-builder" },
     { name: "Easyway AI", link: "/easyway-ai" },
     { name: "Contact Us", link: "/contact-us" },
   ];
@@ -33,8 +33,8 @@ function Nav() {
             alt="Easyway Logo"
             className="h-7 sm:h-9 md:h-10 w-auto"
           />
-          <h1 className="font-bold text-lg sm:text-xl md:text-2xl tracking-wide">
-            Easyway Classes
+          <h1 className="font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl tracking-wide">
+            Easyway Pro
           </h1>
         </NavLink>
 
@@ -47,7 +47,7 @@ function Nav() {
               className={({ isActive }) =>
                 `px-3 py-1 rounded-md transition ${
                   isActive
-                    ? "bg-slate-800  border-1 border-white"
+                    ? "bg-gradient-to-br from-gray-950 to-black  border-1 border-white"
                     : "hover:text-yellow-400"
                 }`
               }

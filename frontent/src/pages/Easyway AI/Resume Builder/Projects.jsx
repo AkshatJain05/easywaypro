@@ -1,79 +1,63 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaPlus, FaTrash } from 'react-icons/fa';
+import { motion, AnimatePresence } from "framer-motion";
+import { FaPlus, FaTrash } from "react-icons/fa";
 
-const Projects = ({ resumeData, setResumeData }) => {
+const Projects = ({ resumeData, updateResumeData }) => {
   const handleAddProject = () => {
-    setResumeData((prev) => ({
-      ...prev,
-      projects: [
-        ...prev.projects,
-        {
-          id: Date.now(),
-          name: '',
-          technologies: '',
-          link: '',
-          points: [], // bullet points
-        },
-      ],
-    }));
+    const newProject = {
+      id: Date.now(),
+      name: "",
+      technologies: "",
+      link: "",
+      points: [],
+    };
+    const updatedProjects = [...resumeData.projects, newProject];
+    updateResumeData("projects", updatedProjects);
   };
 
   const handleRemoveProject = (id) => {
-    setResumeData((prev) => ({
-      ...prev,
-      projects: prev.projects.filter((proj) => proj.id !== id),
-    }));
+    const updatedProjects = resumeData.projects.filter((proj) => proj.id !== id);
+    updateResumeData("projects", updatedProjects);
   };
 
   const handleChange = (id, e) => {
     const { name, value } = e.target;
-    setResumeData((prev) => ({
-      ...prev,
-      projects: prev.projects.map((proj) =>
-        proj.id === id ? { ...proj, [name]: value } : proj
-      ),
-    }));
+    const updatedProjects = resumeData.projects.map((proj) =>
+      proj.id === id ? { ...proj, [name]: value } : proj
+    );
+    updateResumeData("projects", updatedProjects);
   };
 
   const handleAddPoint = (projectId) => {
-    setResumeData((prev) => ({
-      ...prev,
-      projects: prev.projects.map((proj) =>
-        proj.id === projectId
-          ? { ...proj, points: [...proj.points, ""] }
-          : proj
-      ),
-    }));
+    const updatedProjects = resumeData.projects.map((proj) =>
+      proj.id === projectId ? { ...proj, points: [...proj.points, ""] } : proj
+    );
+    updateResumeData("projects", updatedProjects);
   };
 
   const handleRemovePoint = (projectId, index) => {
-    setResumeData((prev) => ({
-      ...prev,
-      projects: prev.projects.map((proj) =>
-        proj.id === projectId
-          ? { ...proj, points: proj.points.filter((_, i) => i !== index) }
-          : proj
-      ),
-    }));
+    const updatedProjects = resumeData.projects.map((proj) =>
+      proj.id === projectId
+        ? { ...proj, points: proj.points.filter((_, i) => i !== index) }
+        : proj
+    );
+    updateResumeData("projects", updatedProjects);
   };
 
   const handlePointChange = (projectId, index, value) => {
-    setResumeData((prev) => ({
-      ...prev,
-      projects: prev.projects.map((proj) =>
-        proj.id === projectId
-          ? {
-              ...proj,
-              points: proj.points.map((p, i) => (i === index ? value : p)),
-            }
-          : proj
-      ),
-    }));
+    const updatedProjects = resumeData.projects.map((proj) =>
+      proj.id === projectId
+        ? {
+            ...proj,
+            points: proj.points.map((p, i) => (i === index ? value : p)),
+          }
+        : proj
+    );
+    updateResumeData("projects", updatedProjects);
   };
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold text-gray-800 dark:text-white border-b pb-2 dark:border-gray-600">
+      <h2 className="text-xl font-semibold bg-gradient-to-br from-gray-950 to-black text-gray-800 dark:text-white border-b pb-2 dark:border-gray-600">
         Projects
       </h2>
       <AnimatePresence>
@@ -83,7 +67,7 @@ const Projects = ({ resumeData, setResumeData }) => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, x: -100, transition: { duration: 0.3 } }}
-            className="p-4 border rounded-lg space-y-3 bg-gray-50 dark:bg-gray-700/50 dark:border-gray-600 relative"
+            className="p-4  rounded-lg space-y-3 bg-gradient-to-br from-gray-950 to-black  relative border-1 border-gray-700"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <input
@@ -92,7 +76,7 @@ const Projects = ({ resumeData, setResumeData }) => {
                 placeholder="Project Name"
                 value={proj.name}
                 onChange={(e) => handleChange(proj.id, e)}
-                className="md:col-span-2 w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                className="md:col-span-2 w-full p-2 border-1 rounded border-gray-700"
               />
               <input
                 type="text"
@@ -100,19 +84,19 @@ const Projects = ({ resumeData, setResumeData }) => {
                 placeholder="Technologies Used (e.g., React, Node.js)"
                 value={proj.technologies}
                 onChange={(e) => handleChange(proj.id, e)}
-                className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                className="w-full p-2 border-1 rounded border-gray-700"
               />
               <input
                 type="text"
                 name="link"
-                placeholder="Project Link (e.g., GitHub, Live Demo)"
+                placeholder="Project Link (GitHub / Live Demo)"
                 value={proj.link}
                 onChange={(e) => handleChange(proj.id, e)}
-                className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                className="w-full p-2 border-1 rounded border-gray-700"
               />
             </div>
 
-            {/* Bullet Points Section */}
+            {/* Bullet Points */}
             <div className="space-y-2">
               <h3 className="font-medium text-gray-700 dark:text-gray-300">Project Highlights</h3>
               {proj.points.map((point, index) => (
@@ -121,11 +105,9 @@ const Projects = ({ resumeData, setResumeData }) => {
                   <input
                     type="text"
                     value={point}
-                    onChange={(e) =>
-                      handlePointChange(proj.id, index, e.target.value)
-                    }
+                    onChange={(e) => handlePointChange(proj.id, index, e.target.value)}
                     placeholder="Add a highlight / achievement"
-                    className="flex-1 p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    className="flex-1 p-2 border rounded border-gray-700"
                   />
                   <button
                     onClick={() => handleRemovePoint(proj.id, index)}
