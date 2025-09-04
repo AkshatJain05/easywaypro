@@ -6,16 +6,17 @@ export default function Users() {
   const [userCount, setUserCount] = useState(0);
   const [users, setUsers] = useState([]);
   const [loading,setLoading] =useState(true);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Get total users count
-        const countRes = await axios.get("http://localhost:8000/api/admin/users/count");
+        const countRes = await axios.get(`${API_URL}/admin/users/count`);
         setUserCount(countRes.data.count);
 
         // Get all users
-        const usersRes = await axios.get("http://localhost:8000/api/admin/users");
+        const usersRes = await axios.get(`${API_URL}/admin/users`);
         setUsers(usersRes.data);
       } catch (err) {
         console.error(err);

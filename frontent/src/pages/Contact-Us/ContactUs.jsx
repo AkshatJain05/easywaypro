@@ -4,6 +4,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 function ContactUs() {
+
+  const API_URL = import.meta.env.VITE_API_URL;
   // ---------- State ----------
   const [formData, setFormData] = useState({
     name: "",
@@ -22,7 +24,7 @@ function ContactUs() {
 const onSumbit = (e)=>{ 
   e.preventDefault()
 
-   axios.post("http://localhost:8000/api/contacts", formData, {
+   axios.post(`${API_URL}/contacts`, formData, {
     withCredentials: true,
   })
   .then((response) => {

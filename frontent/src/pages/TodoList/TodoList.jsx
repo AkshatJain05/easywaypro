@@ -10,10 +10,11 @@ export default function TodoList() {
   const [tasks, setTasks] = useState([]);
   const [input, setInput] = useState("");
   const [loading,setLoading] = useState(true);
+  const API_URL = import.meta.env.VITE_API_URL;
  const navigate = useNavigate();
   // Fetch tasks from backend
   useEffect(() => {
-    axios.get("http://localhost:8000/api/tasks").then((res) => {
+    axios.get(`${API_URL}/tasks`).then((res) => {
       setTasks(res.data);
       setLoading(false);
     });
@@ -22,20 +23,20 @@ export default function TodoList() {
   // Add Task
   const addTask = async () => {
     if (!input.trim()) return;
-    const res = await axios.post("http://localhost:8000/api/tasks", { text: input });
+    const res = await axios.post(`${API_URL}/tasks`, { text: input });
     setTasks([...tasks, res.data]);
     setInput("");
   };
 
   // Toggle Task
   const toggleTask = async (id) => {
-    const res = await axios.put(`http://localhost:8000/api/tasks/${id}`);
+    const res = await axios.put(`${API_URL}/tasks/${id}`);
     setTasks(tasks.map((t) => (t._id === id ? res.data : t)));
   };
 
   // Delete Task
   const deleteTask = async (id) => {
-    await axios.delete(`http://localhost:8000/api/tasks/${id}`);
+    await axios.delete(`${API_URL}/tasks/${id}`);
     setTasks(tasks.filter((t) => t._id !== id));
   };
 

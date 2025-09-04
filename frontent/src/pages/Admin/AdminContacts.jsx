@@ -7,11 +7,12 @@ import toast from "react-hot-toast";
 export default function AdminContacts() {
   const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const fetchContacts = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:8000/api/contacts");
+      const res = await axios.get(`${API_URL}/contacts`);
       setContacts(res.data);
       setLoading(false);
     } catch (err) {
@@ -23,7 +24,7 @@ export default function AdminContacts() {
   const deleteContact = async (id) => {
     if (!window.confirm("Are you sure you want to delete this contact?")) return;
     try {
-      await axios.delete(`http://localhost:8000/api/contacts/${id}`);
+      await axios.delete(`${API_URL}/contacts/${id}`);
       fetchContacts();
     } catch (err) {
       console.error(err);

@@ -14,13 +14,14 @@ function SignUp() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:8000/api/auth/register", {
+      const res = await axios.post(`${API_URL}/auth/register`, {
         name,
         email,
         password,

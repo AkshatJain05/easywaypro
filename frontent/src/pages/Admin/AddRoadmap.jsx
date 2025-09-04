@@ -4,6 +4,7 @@ import { FaPlus, FaTrash } from "react-icons/fa";
 import toast from "react-hot-toast";
 
 export default function AddRoadmap() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [months, setMonths] = useState([{ month: "", steps: [{ day: "", topic: "", details: [""] }] }]);
@@ -74,7 +75,7 @@ export default function AddRoadmap() {
 
     setLoading(true);
     try {
-      await axios.post("http://localhost:8000/api/roadmap", { title, description, months });
+      await axios.post(`${API_URL}/roadmap`, { title, description, months });
       setTitle(""); setDescription(""); setMonths([{ month: "", steps: [{ day: "", topic: "", details: [""] }] }]);
       toast.success("Roadmap added successfully");
     } catch (err) {

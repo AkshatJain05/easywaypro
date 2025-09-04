@@ -16,7 +16,6 @@ import Loading from "../../../component/Loading";
 
 // Axios global config for cookie-based auth
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://localhost:8000/api";
 
 const initialResumeData = {
   personalInfo: {
@@ -41,12 +40,13 @@ const ResumeBuilder = () => {
   const [resumeId, setResumeId] = useState(null);
   const [loading, setLoading] = useState(true);
   const debounceTimer = useRef(null);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   // Load resume on mount
   useEffect(() => {
     const fetchResume = async () => {
       try {
-        const res = await axios.get("/resumes",{withCredentials: true}); // cookie sent automatically
+        const res = await axios.get(`${API_URL}/resumes`,{withCredentials: true}); // cookie sent automatically
         if (res.data) {
           setResumeData(res.data);
           setResumeId(res.data._id);
@@ -70,7 +70,7 @@ const ResumeBuilder = () => {
           const res = await axios.post("/resumes", data,{withCredentials: true});
           setResumeId(res.data._id);
         } else {
-          await axios.put(`/resumes/${resumeId}`, data,{withCredentials: true});
+          await axios.put(`${API_URL}/resumes/${resumeId}`, data,{withCredentials: true});
         }
         // toast.success("Auto-saved ", { duration: 1200 });
       } catch (err) {
@@ -102,7 +102,7 @@ const ResumeBuilder = () => {
         className="ml-3 px-3 py-1 bg-green-500 text-white rounded"
         onClick={async () => {
           try {
-            const { data } = await axios.post("/resumes/reset",{withCredentials: true});
+            const { data } = await axios.post(`${API_URL}/resumes/reset`,{withCredentials: true});
             setResumeData(data.data);
             toast.dismiss(t.id);
             toast.success("All fields reset")

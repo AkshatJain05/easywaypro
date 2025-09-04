@@ -3,16 +3,18 @@ import axios from "axios";
 import { FaFolder, FaVideo } from "react-icons/fa";
 import Loading from "../../component/Loading";
 
+
 export default function VideoLectures() {
   const [subjects, setSubjects] = useState([]);
   const [openSubjects, setOpenSubjects] = useState({});
   const [loading, setLoading] = useState(true);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   // Fetch video lectures from backend
   const fetchVideos = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:8000/api/resources?type=video"); // type=video
+      const res = await axios.get(`${API_URL}/resources?type=video`); // type=video
       // Group videos by subject
       const grouped = res.data.reduce((acc, video) => {
         const subject = video.subject || "General";

@@ -1,4 +1,3 @@
-import React from "react";
 import TypingCode from "./TypingCode";
 import { FaExclamationCircle, FaCode } from "react-icons/fa";
 

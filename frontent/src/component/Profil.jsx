@@ -7,6 +7,7 @@ import defaultPhoto from "../assets/photo.png";
 import Loading from "./Loading";
 
 export default function Profile() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [user, setUser] = useState(null);
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -17,7 +18,7 @@ export default function Profile() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const { data } = await axios.get("http://localhost:8000/api/auth/profile", {
+        const { data } = await axios.get(`${API_URL}/auth/profile`, {
           withCredentials: true,
         });
         setUser(data);
@@ -52,7 +53,7 @@ export default function Profile() {
       }
 
       const { data } = await axios.put(
-        "http://localhost:8000/api/auth/profile",
+        `${API_URL}/auth/profile`,
         formDataToSend,
         {
           headers: { "Content-Type": "multipart/form-data" },

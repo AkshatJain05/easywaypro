@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { FaFolder, FaFileAlt } from "react-icons/fa";
 import Loading from "../../component/Loading";
@@ -7,12 +7,13 @@ export default function PYQ() {
   const [subjects, setSubjects] = useState([]);
   const [openSubjects, setOpenSubjects] = useState({});
   const [loading, setLoading] = useState(true);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   // Fetch all PYQs from backend
   const fetchPYQs = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:8000/api/resources?type=pyq");
+      const res = await axios.get(`${API_URL}/resources?type=pyq`);
       // Group by subject
       const grouped = res.data.reduce((acc, pyq) => {
         const subject = pyq.subject || "General";

@@ -7,10 +7,11 @@ import Loading from "../../component/Loading";
 export default function RoadmapList() {
   const [roadmaps, setRoadmaps] = useState([]);
   const [loading, setLoading] = useState(true);
+  const API_URL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get("http://localhost:8000/api/roadmap/")
+    axios.get(`${API_URL}/roadmap/`)
       .then((res) => {
         setRoadmaps(res.data);
         setLoading(false);

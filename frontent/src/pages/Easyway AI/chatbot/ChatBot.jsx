@@ -6,6 +6,7 @@ import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import axios from "axios";
 
 export default function ChatBot() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [messages, setMessages] = useState([]);
   console.log(messages);
   const [input, setInput] = useState("");
@@ -18,7 +19,7 @@ export default function ChatBot() {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const res = await axios.get(`http://localhost:8000/api/chat/history`);
+        const res = await axios.get(`${API_URL}/chat/history`);
         if (res.data.messages?.length > 0) {
           setMessages(res.data.messages);
         } else {

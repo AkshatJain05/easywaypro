@@ -1,6 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-import Nav from "./component/Nav.jsx";
-import Footer from "./component/Footer";
 
 import Home from "./pages/Home/Home.jsx";
 import StudyMaterial from "./pages/Study Material/StudyMaterial.jsx";

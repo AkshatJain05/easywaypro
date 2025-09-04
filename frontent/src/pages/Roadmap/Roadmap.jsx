@@ -8,6 +8,7 @@ import Loading from "../../component/Loading";
 export default function Roadmap() {
   const { id } = useParams(); // roadmapId from URL
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const [roadmapData, setRoadmapData] = useState([]);
   const [title, setTitle] = useState("");
@@ -20,7 +21,7 @@ export default function Roadmap() {
     if (!id) return;
     setLoading(true);
     axios
-      .get(`http://localhost:8000/api/roadmap/title/${id}`)
+      .get(`${API_URL}/roadmap/title/${id}`)
       .then((res) => {
         setRoadmapData(res.data?.months || []);
         setTitle(res.data?.title || "");
@@ -33,7 +34,7 @@ export default function Roadmap() {
   useEffect(() => {
     if (!id) return;
     axios
-      .get(`http://localhost:8000/api/roadmap/progress/${id}`, {
+      .get(`${API_URL}/roadmap/progress/${id}`, {
         withCredentials: true,
       })
       .then((res) => setCompleted(res.data.completed || {}))
@@ -46,7 +47,7 @@ export default function Roadmap() {
     if (Object.keys(completed).length > 0) {
       axios
         .post(
-          `http://localhost:8000/api/roadmap/progress/${id}`,
+          `${API_URL}/roadmap/progress/${id}`,
           { completed },
           { withCredentials: true }
         )

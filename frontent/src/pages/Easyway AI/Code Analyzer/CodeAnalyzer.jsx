@@ -9,6 +9,7 @@ export default function CodeAnalyzer() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleRun = async (code, language) => {
     setLoading(true);
@@ -16,7 +17,7 @@ export default function CodeAnalyzer() {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:8000/api/code/analyze-code",
+        `${API_URL}/code/analyze-code`,
         { code, language },
         { headers: { "Content-Type": "application/json" } }
       );

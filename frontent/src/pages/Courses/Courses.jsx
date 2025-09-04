@@ -1,6 +1,5 @@
 import ScrollReveal from "../../component/ScllorAnimation";
 import { useNavigate } from "react-router-dom";
-
 import java from "../../assets/java.png"
 import python from "../../assets/python.png"
 

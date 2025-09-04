@@ -6,6 +6,9 @@ import "../App.css";
 
 // ✅ Pass "context" prop (resume, roadmap, notes, code, general)
 export default function ChatBot({ context = "general" }) {
+
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const greetings = {
     resume: "Hi 👋, I’m Easyway AI! Want me to help you build or improve your resume?",
     roadmap: "Hey 🚀, I can guide you with your learning roadmap step by step. What topic are you focusing on?",
@@ -74,7 +77,7 @@ const formatMessage = (text) => {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:8000/api/chat", { message: input });
+      const res = await axios.post(`${API_URL}/chat`, { message: input });
       setMessages((prev) => [
         ...prev,
         { sender: "bot", text: res.data.reply, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) }

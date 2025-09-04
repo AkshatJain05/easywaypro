@@ -1,17 +1,17 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
+const API_URL = import.meta.env.VITE_API_URL;
 axios.defaults.withCredentials = true;
 
 export const fetchUser = createAsyncThunk("auth/fetchUser", async () => {
-  const res = await axios.get("http://localhost:8000/api/auth/me", { withCredentials: true });
+  const res = await axios.get(`${API_URL}/auth/me`, { withCredentials: true });
   return res.data.user;
 });
 
 
 export const login = createAsyncThunk("auth/login", async ({ email, password }) => {
   const res = await axios.post(
-    "http://localhost:8000/api/auth/login",
+    `${API_URL}/api/auth/login`,
     { email, password },
     { withCredentials: true }
   );
@@ -19,7 +19,7 @@ export const login = createAsyncThunk("auth/login", async ({ email, password }) 
 });
 
 export const logout = createAsyncThunk("auth/logout", async () => {
-  await axios.post("http://localhost:8000/api/auth/logout", {}, { withCredentials: true });
+  await axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true });
   return null;
 });
 

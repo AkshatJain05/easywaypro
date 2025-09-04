@@ -10,7 +10,8 @@ export default function ManageResources() {
   const [type, setType] = useState("notes");
   const [subject, setSubject] = useState("");
   const [loading, setLoading] = useState(false);
-  const [fetchLoading , setFetchLoading] = useState(true)
+  const [fetchLoading , setFetchLoading] = useState(true);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,7 +19,7 @@ export default function ManageResources() {
 
   const fetchResources = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/resources");
+      const res = await axios.get(`${API_URL}/resources`);
       setResources(res.data);
     } catch (err) {
       console.error(err);
@@ -39,7 +40,7 @@ export default function ManageResources() {
     }
     setLoading(true);
     try {
-      await axios.post("http://localhost:8000/api/resources", { title, link, type, subject });
+      await axios.post(`${API_URL}/resources`, { title, link, type, subject });
       setTitle(""); setLink(""); setType("notes"); setSubject("");
       fetchResources();
     } catch (err) {
@@ -52,7 +53,7 @@ export default function ManageResources() {
   const deleteResource = async (id) => {
     if (!window.confirm("Are you sure you want to delete this resource?")) return;
     try {
-      await axios.delete(`http://localhost:8000/api/resources/${id}`);
+      await axios.delete(`${API_URL}/resources/${id}`);
       fetchResources();
     } catch (err) {
       console.error(err);
