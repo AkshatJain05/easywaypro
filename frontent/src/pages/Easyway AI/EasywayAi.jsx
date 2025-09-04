@@ -3,7 +3,6 @@ import chatBot from "../../assets/chatBot.png"
 import codeAnalyzer from "../../assets/codeAnalyzer.png"
 import todo from "../../assets/todo.png"
 import resumeBuilder from "../../assets/resumeBuilder.png"
-import chatWithMentor from "../../assets/chatWithTeacher.png"
 import roadmap from "../../assets/roadMap.png";
 import { Link } from "react-router-dom";
 

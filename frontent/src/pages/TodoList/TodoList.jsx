@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { FaPlus, FaTrash, FaCheckCircle, FaRegCircle } from "react-icons/fa";
 import { FaArrowLeft } from "react-icons/fa";

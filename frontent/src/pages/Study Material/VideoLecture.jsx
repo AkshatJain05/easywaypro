@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { FaFolder, FaVideo } from "react-icons/fa";
 import Loading from "../../component/Loading";
