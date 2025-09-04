@@ -37,9 +37,6 @@ app.use("/api/tasks", taskRouter);
 app.use("/api/contacts", contactRouter);
 app.use("/api/admin",adminRouter)
 
-app.get("/", (req, res) => {
-  res.send("API is running...");
-});
 
 // Connect DB first, then start server
 const startServer = async () => {
