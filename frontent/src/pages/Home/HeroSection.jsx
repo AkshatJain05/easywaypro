@@ -64,7 +64,7 @@ function HeroSection() {
               src={student1Img}
               alt="Students"
               className="h-72 sm:h-96 md:h-[28rem] lg:h-[32rem] relative z-10 
-              drop-shadow-[0_0_25px_rgba(59,100,206,0.35)]"
+              drop-shadow-[0_0_25px_rgba(59,100,155,0.35)]"
             />
           </div>
         </ScrollReveal>

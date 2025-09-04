@@ -24,6 +24,13 @@ import NotFound from "./component/NotFound.jsx";
 import PYQ from "./pages/Study Material/PYQ.jsx";
 import Notes from "./pages/Study Material/Notes.jsx";
 import VideoLectures from "./pages/Study Material/VideoLecture.jsx";
+import ManageResources from "./pages/Admin/ManageResources.jsx";
+import AdminContacts from "./pages/Admin/AdminContacts.jsx";
+import AdminRoadmap from "./pages/Admin/AddRoadmap.jsx";
+import AdminLayout from "./component/AdminLayout.jsx";
+import Users from "./pages/Admin/Users.jsx";
+import AdminLogin from "./pages/auth/AdminLogin.jsx";
+import AdminProtectedRoute from "./component/AdminProtectedRoute.jsx";
 
 function App() {
   return (
@@ -42,9 +49,9 @@ function App() {
           <Route path="/roadmap/:id" element={<Roadmap />} />
           <Route path="/syllabus" element={<Syllabus />} />
           <Route path="/quiz" element={<QuizPlacement />} />
-          <Route path="/notes" element={<Notes/>}/>
-          <Route path="/pyq" element={<PYQ/>}/>
-          <Route path="video-lectures" element={<VideoLectures/>}/>
+          <Route path="/notes" element={<Notes />} />
+          <Route path="/pyq" element={<PYQ />} />
+          <Route path="/video-lectures" element={<VideoLectures />} />
 
           {/* Protected routes */}
           <Route element={<ProtectedRoute />}>
@@ -53,6 +60,19 @@ function App() {
             <Route path="/chatbot" element={<ChatBot />} />
             <Route path="/code-analyzer" element={<CodeAnalyzer />} />
             <Route path="/todo-list" element={<TodoList />} />
+          </Route>
+        </Route>
+
+        <Route path="/admin/login" element={<AdminLogin />} />
+
+        <Route element={<AdminLayout />}>
+          <Route element={<AdminProtectedRoute />}>
+            <Route path="/admin">
+              <Route path="users" element={<Users />} />
+              <Route path="manage-resource" element={<ManageResources />} />
+              <Route path="contacts" element={<AdminContacts />} />
+              <Route path="add-roadmap" element={<AdminRoadmap />} />
+            </Route>
           </Route>
         </Route>
 

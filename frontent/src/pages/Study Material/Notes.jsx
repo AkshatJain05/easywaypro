@@ -4,15 +4,19 @@ import { FaFolder, FaStickyNote } from "react-icons/fa";
 import Loading from "../../component/Loading";
 
 export default function Notes() {
+  
   const [subjects, setSubjects] = useState([]);
   const [openSubjects, setOpenSubjects] = useState({});
   const [loading, setLoading] = useState(true);
+
+  
+const API_URL = import.meta.env.VITE_API_URL;
 
   // Fetch all notes from backend
   const fetchNotes = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:8000/api/resources?type=notes");
+      const res = await axios.get(`${API_URL}/resources?type=notes`);
       const grouped = res.data.reduce((acc, note) => {
         const subject = note.subject || "General";
         if (!acc[subject]) acc[subject] = [];

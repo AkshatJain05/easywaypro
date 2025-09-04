@@ -1,7 +1,7 @@
 import express from "express";
 import { aiChat } from "../controllers/aichat.controller.js";
 import { protect } from "../middlewares/auth.middlerware.js";
-import { chatWithAI, deleteChatHistory, getChatHistory } from "../controllers/chatController.js";
+import { chatWithAI, deleteChatHistory, getChatHistory } from "../controllers/chat.controller.js";
 
 const router = express.Router();
 

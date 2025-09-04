@@ -5,8 +5,8 @@ function FeatureBox() {
   const featureList = [
     { name: "Easyway Classes 2.0", featureLink: "https://www.youtube.com/@EasywayClasses2.0" },
     { name: "Todo-List", featureLink: "/todo-list" },
-    { name: "Notes", featureLink: "#" },
-    { name: "PYQ", featureLink: "#" },
+    { name: "Notes", featureLink: "/notes" },
+    { name: "PYQ", featureLink: "/pyq" },
     { name: "Roadmap", featureLink: "/roadmap" },
     { name: "ChatBot AI", featureLink: "/chatbot" },
     { name: "Code Analyzer", featureLink: "/code-analyzer" },

@@ -1,85 +1,42 @@
 import { Resource } from "../models/resource.model.js";
-import { uploadOnCloudinary, deleteFromCloudinary } from "../utils/cloudinary.js";
 
-// 📌 Upload Resource (Notes / PYQ / Roadmap / VideoLecture)
-export const uploadResource = async (req, res) => {
+export const getAllResources = async (req, res) => {
   try {
-    const { title, subject, category, description } = req.body;
-
-    // multer gives file path
-    const filePath = req.file?.path;
-    if (!filePath) {
-      return res.status(400).json({ error: "File is required" });
-    }
-
-    // Upload to Cloudinary
-    const uploaded = await uploadOnCloudinary(filePath, category);
-    if (!uploaded) {
-      return res.status(500).json({ error: "Cloudinary upload failed" });
-    }
-
-    // Save in DB
-    const resource = await Resource.create({
-      title,
-      subject,
-      category,
-      description,
-      fileUrl: uploaded.fileUrl,  // ✅ secure https URL
-      publicId: uploaded.publicId, // ✅ for deletion
-      uploadedBy: req.user?._id || null, // if you use auth
-    });
-
-    return res.status(201).json({
-      message: "✅ Resource uploaded successfully",
-      resource,
-    });
-  } catch (error) {
-    console.error("❌ Upload Resource Error:", error);
-    return res.status(500).json({ error: error.message });
+    const { type } = req.query; // type = notes | pyq | video
+    const filter = type ? { type } : {};
+    const resources = await Resource.find(filter).sort({ createdAt: -1 });
+    res.json(resources);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch resources" });
   }
 };
 
-// 📌 Get All Resources (filter + pagination optional)
-export const getResources = async (req, res) => {
+export const addNewResources = async (req, res) => {
   try {
-    const { category, subject, limit = 20, page = 1 } = req.query;
-
-    const filter = {};
-    if (category) filter.category = category;
-    if (subject) filter.subject = subject;
-
-    const resources = await Resource.find(filter)
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(Number(limit));
-
-    return res.json(resources);
-  } catch (error) {
-    console.error("❌ Get Resources Error:", error);
-    return res.status(500).json({ error: error.message });
+    const { title, type, subject, link } = req.body;
+    if (!title || !type || !subject || !link) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+    const newResource = new Resource({ title, type, subject, link });
+    await newResource.save();
+    res.status(201).json(newResource);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to create resource" });
   }
 };
 
-// 📌 Delete Resource (from DB + Cloudinary)
-export const deleteResource = async (req, res) => {
+export const deleteResources = async (req, res) => {
   try {
-    const { id } = req.params;
+    // Option 1: Using findByIdAndDelete directly
+    const resource = await Resource.findByIdAndDelete(req.params.id);
 
-    // Find resource
-    const resource = await Resource.findById(id);
     if (!resource) {
       return res.status(404).json({ error: "Resource not found" });
     }
 
-    // Delete from Cloudinary
-    await deleteFromCloudinary(resource.publicId);
-
-    // Delete from MongoDB
-    await resource.deleteOne();
-
-    return res.json({ message: "✅ Resource deleted successfully" });
-  } catch (error) {
-    console.error("❌ Delete Resource Error:", error);
-    return res.status(500).json({ error: error.message });
+    res.json({ message: "Resource deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to delete resource" });
   }
 };

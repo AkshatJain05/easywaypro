@@ -26,6 +26,7 @@ import resumeRouter from "./routes/resume.route.js"
 import codeAnalyzerRouter from "./routes/codeAnalyze.route.js"
 import taskRouter from "./routes/task.routes.js"  
 import contactRouter from "./routes/contact.route.js"
+import adminRouter from "./routes/admin.route.js"
 app.use("/api/auth",userRouter);
 app.use("/api/resources",resouceRouter);
 app.use("/api/roadmap",roadmapRouter);
@@ -34,6 +35,7 @@ app.use("/api/resumes", resumeRouter);
 app.use("/api/code",codeAnalyzerRouter);
 app.use("/api/tasks", taskRouter);
 app.use("/api/contacts", contactRouter);
+app.use("/api/admin",adminRouter)
 
 app.get("/", (req, res) => {
   res.send("API is running...");
