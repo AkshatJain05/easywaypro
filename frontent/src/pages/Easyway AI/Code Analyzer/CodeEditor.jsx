@@ -44,6 +44,8 @@ export default function CodeEditor({ initialCode = "", defaultLanguage = "javasc
           <option value="python">Python</option>
           <option value="java">Java</option>
           <option value="cpp">C++</option>
+          <option value="cpp">C</option>
+
         </select>
 
         {/* Toolbar Buttons */}
