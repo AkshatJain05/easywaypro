@@ -42,6 +42,7 @@ export default function TypingMotion() {
         font-bold 
         bg-clip-text text-transparent 
         bg-gradient-to-r from-blue-400 via-sky-500 to-blue-600
+        pt-2 md:pt-0.5
       "
     >
       {`${words[index].substring(0, subIndex)}${blink ? "|" : " "}`}

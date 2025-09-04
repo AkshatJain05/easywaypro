@@ -19,10 +19,9 @@ function HeroSection() {
             </h1>
 
             {/* Desktop Description */}
-            <p className="hidden md:block text-slate-300 mt-9 mb-3 text-lg lg:text-xl tracking-wide text-justify">
-              Easyway Classes helps students learn smarter with AI-powered tools. 
-              From chatbot for instant answers to code analyzer, notes, and 
-              task management — everything you need in one place.
+            <p className="hidden md:block text-slate-300 mt-9 mb-3 text-lg lg:text-xl  text-justify">
+             Easyway Pro helps students learn smarter with AI-powered tools.
+ From Todo, roadmap, and notes to PYQs, quizzes, resume builder, chatbot, and code analyzer — everything you need in one place.
             </p>
 
             {/* Mobile Description */}

@@ -10,7 +10,7 @@ import {Link} from "react-router-dom";
 function StudyMaterial() {
   const studyMaterialList = [
     { name: "AKTU PYQ's", link: "/pyq", img: pyq },
-    { name: "Quizzes", link: "/quizs", img: quiz },
+    { name: "Quizzes", link: "/quiz", img: quiz },
     { name: "Notes", link: "/notes", img: notes },
     { name: "Video Lectures", link: "/video-lectures", img: onlineLecture },
     { name: "Roadmaps", link: "/roadmap", img: roadmap },

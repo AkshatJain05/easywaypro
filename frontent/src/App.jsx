@@ -13,10 +13,17 @@ import Roadmap from "./pages/Roadmap/Roadmap.jsx";
 import RoadmapList from "./pages/Roadmap/RoadmapList.jsx";
 import Profile from "./component/Profil.jsx";
 import ResumeBuilder from "./pages/Easyway AI/Resume Builder/ResumeBuilder.jsx";
+import Syllabus from "./pages/Study Material/Syllabus.jsx";
+import QuizPlacement from "./pages/Study Material/Quiz/QuizPlacement.jsx";
+import ChatBot from "./pages/Easyway AI/chatbot/ChatBot.jsx";
+import CodeAnalyzer from "./pages/Easyway AI/Code Analyzer/CodeAnalyzer.jsx";
+import TodoList from "./pages/TodoList/TodoList.jsx"
+
 function App() {
   return (
     <>
-      <Nav className="transition-linear" />
+    <Nav className="transition-linear" />
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/study-material" element={<StudyMaterial />} />
@@ -29,7 +36,12 @@ function App() {
         <Route path="/roadmap/:id" element={<Roadmap />} />
         <Route path="/resume-builder" element={<ResumeBuilder />} />
         <Route path="/profile" element={<Profile />} />
-
+        <Route path="/syllabus" element={<Syllabus />} />
+        <Route path="/quiz" element={<QuizPlacement />} />
+        <Route path="/chatbot" element={<ChatBot />} /> 
+        <Route path="/code-analyzer" element={<CodeAnalyzer />} />
+        <Route path="/todo-list" element={<TodoList />} />
+        {/* <Route path="/upload" element={<UploadSection />} /> */}
       </Routes>
       <Footer />
     </>

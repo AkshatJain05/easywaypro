@@ -2,6 +2,7 @@ import ScrollReveal from "../../component/ScllorAnimation";
 import chatBot from "../../assets/chatBot.png"
 import codeAnalyzer from "../../assets/codeAnalyzer.png"
 import todo from "../../assets/todo.png"
+import resumeBuilder from "../../assets/resumeBuilder.png"
 import chatWithMentor from "../../assets/chatWithTeacher.png"
 
 function EasywayAI(){
@@ -21,14 +22,12 @@ function EasywayAI(){
         name:"Todo List",
         link:"/todo-list",
         img:todo
-      },
+      }, 
       {
-        name:"Chat with Mentor",
-        link:"/chat",
-        img:chatWithMentor
-      },
-       
-       
+        name:"Resume Builder",
+        link:"/resume-builder",
+        img:resumeBuilder
+      }
      ]   
 
     return<>

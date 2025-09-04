@@ -3,14 +3,14 @@ import { Link } from "react-router-dom";
 
 function FeatureBox() {
   const featureList = [
-    { name: "Easyway Classes 2.0", featureLink: "/login" },
-    { name: "Todo-List", featureLink: "#" },
+    { name: "Easyway Classes 2.0", featureLink: "https://www.youtube.com/@EasywayClasses2.0" },
+    { name: "Todo-List", featureLink: "/todo-list" },
     { name: "Notes", featureLink: "#" },
     { name: "PYQ", featureLink: "#" },
-    { name: "Course", featureLink: "#" },
-    { name: "ChatBot AI", featureLink: "#" },
-    { name: "Code Analyzer", featureLink: "#" },
-    { name: "Live Mentor Chat", featureLink: "#" },
+    { name: "Roadmap", featureLink: "/roadmap" },
+    { name: "ChatBot AI", featureLink: "/chatbot" },
+    { name: "Code Analyzer", featureLink: "/code-analyzer" },
+    { name: "Quiz", featureLink: "/quiz" },
   ];
 
   return (
@@ -19,12 +19,12 @@ function FeatureBox() {
                     overflow-x-hidden">
       {/* Section Header */}
       <div className="text-center mb-12 px-2">
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold 
+        <h2 className="text-3xl md:text-4xl font-bold 
                        bg-clip-text text-gray-50 drop-shadow-md">
           Features
         </h2>
         <p className="mt-3 text-sm sm:text-base lg:text-lg text-gray-400 leading-relaxed 
-                      max-w-2xl mx-auto font-semibold">
+                      max-w-2xl mx-auto font-medium">
           Explore powerful tools designed to simplify your workflow and boost productivity
         </p>
       </div>

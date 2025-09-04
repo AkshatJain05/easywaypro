@@ -35,9 +35,10 @@ export default function RoadmapList() {
       </button>
 
       {/* Title */}
-      <h1 className="text-2xl md:text-4xl font-extrabold mb-10 text-center text-gray-200">
+      <h1 className="text-2xl md:text-4xl font-bold mb-2 text-center text-gray-100">
          Explore Available Roadmaps
       </h1>
+      <p className="text-sm md:text-lg font-bold mb-10 text-center text-gray-300">After login, you can mark your roadmap progress and save it for future access.</p>
 
       {/* Roadmap Grid */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
