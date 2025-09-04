@@ -207,7 +207,7 @@ export default function ChatBot() {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:8000/api/chat/aichat", {
+      const res = await axios.post(`${API_URL}/chat/aichat`, {
         message: input,
       });
       const botReply = res.data.reply;
