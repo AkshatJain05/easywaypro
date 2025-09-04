@@ -4,7 +4,7 @@ import logoEasyway from "../assets/logoEasyway.png";
 function Footer() {
   const quickLinks = [
     { to: "/notes", label: "Notes" },
-    { to: "/quizs", label: "Quizzes" },
+    { to: "/quiz", label: "Quizzes" },
     { to: "/video-lectures", label: "Video Lectures" },
     { to: "/pyq", label: "PYQs" },
   ];

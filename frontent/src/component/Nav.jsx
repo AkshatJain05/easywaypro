@@ -13,7 +13,7 @@ function Nav() {
     { name: "Home", link: "/" },
     { name: "Study Material", link: "/study-material" },
     { name: "Resume Builder", link: "/resume-builder" },
-    { name: "Easyway AI", link: "/easyway-ai" },
+    { name: "AI Tools", link: "/easyway-ai" },
     { name: "Contact Us", link: "/contact-us" },
   ];
 

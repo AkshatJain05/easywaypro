@@ -24,7 +24,7 @@ function StudyMaterial() {
         <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-100">
           Study Material
         </h2>
-        <div className="flex justify-center mt-2">
+        <div className="flex justify-center mt-1">
           <hr className="bg-orange-500 h-1 rounded-full w-32 md:w-40 lg:w-52 border-0" />
         </div>
       </div>

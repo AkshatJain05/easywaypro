@@ -35,14 +35,14 @@ function HeroSection() {
                 onClick={() => navigate("/courses")}
                 className="px-3 py-2 lg:px-7 lg:py-3 rounded-2xl bg-gradient-to-r from-slate-950 to-slate-900 border border-white text-white font-semibold shadow-md hover:from-slate-900 hover:to-slate-800 transition-all"
               >
-                Explore Courses
+                 Explore AI Tools
               </button>
 
               <button
                 onClick={() => navigate("/login")}
                 className="px-3 py-2 lg:px-7 lg:py-3 rounded-2xl bg-gradient-to-r from-slate-950 to-slate-900 border border-white text-white font-semibold shadow-md hover:from-slate-900 hover:to-slate-800 transition-all"
               >
-                Login
+                Explore Study Material
               </button>
             </div>
           </div>

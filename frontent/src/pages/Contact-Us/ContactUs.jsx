@@ -1,5 +1,7 @@
 import { useState } from "react";
 import ScrollReveal from "../../component/ScllorAnimation";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 function ContactUs() {
   // ---------- State ----------
@@ -17,9 +19,21 @@ function ContactUs() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
- 
+const onSumbit = (e)=>{ 
+  e.preventDefault()
 
-    
+   axios.post("http://localhost:8000/api/contacts", formData, {
+    withCredentials: true,
+  })
+  .then((response) => {
+    toast.success("Contact message sent successfully!");
+  })
+  .catch((error) => {
+    console.error("Error sending contact message:", error);
+    toast.error("Failed to send contact message.");
+  });
+
+}
 
   return (
     <ScrollReveal from="bottom">
@@ -30,7 +44,7 @@ function ContactUs() {
           <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-100">
           Contact Us
         </h2>
-        <div className="flex justify-center mt-2">
+        <div className="flex justify-center mt-1">
           <hr className="bg-orange-500 h-1 rounded-full w-26 md:w-32 lg:w-38 border-0" />
         </div>
           <p className="mt-6 text-gray-300 text-base md:text-lg leading-relaxed">
@@ -41,7 +55,7 @@ function ContactUs() {
 
         {/* Form */}
         <form
-          
+          onSubmit={onSumbit}
           className="mt-10 w-full max-w-3xl bg-gradient-to-br from-gray-950 to-black opacity-95 p-8 md:p-10 rounded-2xl shadow-xl border border-gray-800"
         >
           {/* Name + Email */}

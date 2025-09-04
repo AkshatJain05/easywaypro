@@ -23,7 +23,7 @@ function FeatureBox() {
                        bg-clip-text text-gray-50 drop-shadow-md">
           Features
         </h2>
-        <p className="mt-3 text-sm sm:text-base lg:text-lg text-gray-400 leading-relaxed 
+        <p className="mt-3  text-gray-400 leading-relaxed 
                       max-w-2xl mx-auto font-medium">
           Explore powerful tools designed to simplify your workflow and boost productivity
         </p>
