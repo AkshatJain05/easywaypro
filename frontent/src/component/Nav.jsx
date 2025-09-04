@@ -31,9 +31,9 @@ function Nav() {
           <img
             src={logoEasyway}
             alt="Easyway Logo"
-            className="h-7 sm:h-9 md:h-10 w-auto"
+            className="h-9 md:h-10 w-auto"
           />
-          <h1 className="font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl tracking-wide">
+          <h1 className="font-bold text-xl md:text-2xl lg:text-3xl tracking-wide">
             Easyway Pro
           </h1>
         </NavLink>
