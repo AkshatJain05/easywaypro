@@ -231,7 +231,7 @@ export default function ChatBot() {
   const deleteHistory = async () => {
     setFetching(true);
     try {
-      await axios.delete(`http://localhost:8000/api/chat/history`);
+      await axios.delete(`${API_URL}/chat/history`);
       setMessages([
         {
           sender: "bot",
