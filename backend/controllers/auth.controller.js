@@ -34,7 +34,7 @@ const login = async (req, res) => {
     const token = generateToken(user._id);
       res.cookie("jwt", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV !== "production", // only https in prod
+      secure: process.env.NODE_ENV === "production", // only https in prod
       sameSite: "strict",
       maxAge: 24 * 60 * 60 * 1000, // 1 days
     });
@@ -57,7 +57,7 @@ const login = async (req, res) => {
 const logout = async(req,res)=>{
     res.clearCookie("jwt", {
         httpOnly: true,
-        secure: process.env.NODE_ENV !== "production",
+        secure: process.env.NODE_ENV === "production",
         sameSite: "strict"
     });
     res.json({ message: "Logout successful" });
