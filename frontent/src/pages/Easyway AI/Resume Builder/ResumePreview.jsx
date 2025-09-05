@@ -19,7 +19,7 @@ const ResumePreview = ({ resumeData }) => {
       {/* --- HEADER --- */}
       <header className="text-center mb-6">
         <h1 className="text-5xl font-bold text-gray-900 tracking-wide pb-1">
-          {personalInfo.name || "Your Name"}
+          {personalInfo.name}
         </h1>
         <div className="flex justify-center flex-wrap gap-4 text-sm mt-2 text-gray-700">
           {personalInfo.email && (
