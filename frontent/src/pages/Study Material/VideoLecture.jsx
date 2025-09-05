@@ -81,7 +81,7 @@ export default function VideoLectures() {
                   href={unit.link} // YouTube playlist link
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 p-3 pl-16 bg-gray-800 hover:bg-gray-700 transition border-b border-gray-700 rounded-b-lg last:border-b-0"
+                  className="flex items-center gap-3 p-3 pl-5 lg:pl-16 bg-gray-800 hover:bg-gray-700 transition border-b border-gray-700 rounded-b-lg last:border-b-0"
                 >
                   <FaVideo className="text-yellow-400" />
                   <span className="text-gray-200 font-medium">{unit.title}</span>
