@@ -88,7 +88,7 @@ const Skills = ({ resumeData, updateResumeData }) => {
           onClick={handleAddCategory}
           className="px-4 py-2 bg-green-700 text-white rounded hover:bg-green-700 flex items-center gap-1"
         >
-          <FaPlus /> Add
+           Add
         </button>
       </div>
 
