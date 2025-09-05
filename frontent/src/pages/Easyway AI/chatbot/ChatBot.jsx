@@ -340,7 +340,7 @@ export default function ChatBot() {
       </div>
 
       {loading && (
-        <div className="flex justify-start px-2">
+        <div className="flex justify-start p-2 my-2">
           <div className="bg-gray-700 text-white rounded-2xl p-3 max-w-[60%] flex items-center gap-1 animate-pulse">
             <span className="h-2 w-2 bg-white rounded-full animate-bounce"></span>
             <span className="h-2 w-2 bg-white rounded-full animate-bounce delay-150"></span>
