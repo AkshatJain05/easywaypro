@@ -57,7 +57,7 @@ export default function CodeEditor({ initialCode = "", defaultLanguage = "javasc
               copied ? "text-green-400" : "text-gray-300 hover:text-white"
             }`}
           >
-            {copied ? <FaCheck size={14} /> : <FaCopy size={14} />}
+            {copied ? <FaCheck size={14} className="hidden sm:block"/> : <FaCopy size={14} className="hidden sm:block"/>}
             {copied ? "Copied!" : "Copy"}
           </button>
 
@@ -66,7 +66,7 @@ export default function CodeEditor({ initialCode = "", defaultLanguage = "javasc
             disabled={loading}
             className="flex items-center gap-1 text-gray-300 hover:text-red-400 transition text-sm"
           >
-            <FaTrash size={14} /> Clear
+            <FaTrash size={14} className="hidden sm:block"/> Clear
           </button>
 
           <button
@@ -80,7 +80,7 @@ export default function CodeEditor({ initialCode = "", defaultLanguage = "javasc
               </>
             ) : (
               <>
-                <FaPlay size={14} /> Analyze
+                <FaPlay size={14} className="hidden sm:block"/> Analyze
               </>
             )}
           </button>
