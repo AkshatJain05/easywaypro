@@ -76,7 +76,7 @@ const ResumePreview = ({ resumeData }) => {
       {personalInfo.summary && (
         <section className="mb-6">
           <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-300 pb-1 mb-2">
-            OBJECTIVE
+           CAREER OBJECTIVE
           </h2>
           <p className="text-sm text-gray-800 text-justify">{personalInfo.summary}</p>
         </section>
