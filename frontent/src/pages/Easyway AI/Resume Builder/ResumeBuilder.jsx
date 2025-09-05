@@ -95,33 +95,39 @@ const ResumeBuilder = () => {
 
   // Reset all fields
   const handleReset = () => {
-  toast((t) => (
-    <span>
-       Reset all fields?
-      <button
-        className="ml-3 px-3 py-1 bg-green-500 text-white rounded"
-        onClick={async () => {
-          try {
-            const { data } = await axios.post(`${API_URL}/resumes/reset`,{withCredentials: true});
-            setResumeData(data.data);
-            toast.dismiss(t.id);
-            toast.success("All fields reset")
-          } catch (error) {
-            toast.error("Failed to reset resume");
-          }
-        }}
-      >
-        Yes
-      </button>
-      <button
-        className="ml-2 px-3 py-1 bg-gray-500 text-white rounded"
-        onClick={() => toast.dismiss(t.id)}
-      >
-        No
-      </button>
-    </span>
-  ));
-};
+    toast((t) => (
+      <span>
+        Reset all fields?
+        <button
+          className="ml-3 px-3 py-1 bg-green-500 text-white rounded"
+          onClick={async () => {
+            try {
+              const { data } = await axios.post(`${API_URL}/resumes/reset`, {
+                withCredentials: true,
+              });
+              setResumeData(data.data);
+              toast.dismiss(t.id);
+              toast.success("All fields reset", {
+                duration: 3000,
+              });
+            } catch (error) {
+              toast.error("Failed to reset resume", {
+                duration: 3000,
+              });
+            }
+          }}
+        >
+          Yes
+        </button>
+        <button
+          className="ml-2 px-3 py-1 bg-gray-500 text-white rounded"
+          onClick={() => toast.dismiss(t.id)}
+        >
+          No
+        </button>
+      </span>
+    ));
+  };
 
 
   if(loading){
