@@ -104,7 +104,7 @@ export default function TodoList() {
                     className={`flex items-center justify-between p-3 rounded-xl shadow-md transition-colors duration-200
                       ${
                         task.completed
-                          ? "bg-green-900/40 hover:bg-green-800/50"
+                          ? "bg-green-600/40 hover:bg-green-800/50"
                           : "bg-gray-800/50 hover:bg-gray-700"
                       }`}
                   >

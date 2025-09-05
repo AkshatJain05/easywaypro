@@ -11,7 +11,7 @@ export const fetchUser = createAsyncThunk("auth/fetchUser", async () => {
 
 export const login = createAsyncThunk("auth/login", async ({ email, password }) => {
   const res = await axios.post(
-    `${API_URL}/api/auth/login`,
+    `${API_URL}/auth/login`,
     { email, password },
     { withCredentials: true }
   );
