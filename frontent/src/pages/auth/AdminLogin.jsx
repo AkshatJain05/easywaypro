@@ -4,7 +4,7 @@ import { RiLockPasswordFill } from "react-icons/ri";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { login } from "../../redux/authSlice";
+import { adminLogin } from "../../redux/authSlice";
 import { toast } from "react-hot-toast";
 
 function Login() {
@@ -19,17 +19,17 @@ function Login() {
     e.preventDefault();
     setLoading(true);
 
-    try {
-      const resultAction = await dispatch(login({ email, password }));
+     try {
+      const resultAction = await dispatch(adminLogin({ email, password }));
       // Check if login was successful
-      if (login.fulfilled.match(resultAction)) {
+      if (adminLogin.fulfilled.match(resultAction)) {
         toast.success("Login successful!");
         navigate("/admin/add-roadmap"); // redirect after login
       } else {
-        toast.error(resultAction.payload || "Login failed");
+        toast.error(resultAction.payload || "Admin Login failed");
       }
     } catch (err) {
-      toast.error("Login failed");
+      toast.error("Admin Login failed");
       console.log(err);
     } finally {
       setLoading(false);
