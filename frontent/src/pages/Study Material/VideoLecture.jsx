@@ -50,7 +50,7 @@ export default function VideoLectures() {
        {/* Back button */}
        <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-1 px-3 py-1.5 mb-1
+        className="flex items-center gap-1 px-3 py-1.5 mb-2
                                  bg-gray-800 hover:bg-gray-700 text-gray-200 
                                  rounded-lg text-sm shadow-md transition-all cursor-pointer"
       >
@@ -81,7 +81,7 @@ export default function VideoLectures() {
                   href={unit.link} // YouTube playlist link
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 p-3 pl-5 lg:pl-16 bg-gray-800 hover:bg-gray-700 transition border-b border-gray-700 rounded-b-lg last:border-b-0"
+                  className="flex items-center gap-3 p-3 pl-5 lg:pl-10 bg-gray-800 hover:bg-gray-700 transition border-b border-gray-700 rounded-b-lg last:border-b-0"
                 >
                   <FaVideo className="text-yellow-400" />
                   <span className="text-gray-200 font-medium">{unit.title}</span>
