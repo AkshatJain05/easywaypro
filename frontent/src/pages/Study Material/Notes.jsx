@@ -50,7 +50,7 @@ const API_URL = import.meta.env.VITE_API_URL;
        {/* Back button */}
        <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-1 px-3 py-1.5 mb-1
+        className="flex items-center gap-1 px-3 py-1.5 mb-2
                                  bg-gray-800 hover:bg-gray-700 text-gray-200 
                                  rounded-lg text-sm shadow-md transition-all cursor-pointer"
       >
