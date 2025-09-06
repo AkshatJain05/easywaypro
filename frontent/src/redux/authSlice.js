@@ -18,6 +18,18 @@ export const login = createAsyncThunk("auth/login", async ({ email, password }) 
   return res.data.user;
 });
 
+export const adminLogin = createAsyncThunk(
+  "auth/adminLogin",
+  async ({ email, password }) => {
+    const res = await axios.post(
+      `${API_URL}/auth/admin/login`,
+      { email, password },
+      { withCredentials: true }
+    );
+    return res.data.user;
+  }
+);
+
 export const logout = createAsyncThunk("auth/logout", async () => {
   await axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true });
   return null;
@@ -57,6 +69,18 @@ const authSlice = createSlice({
 
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
+      })
+      .addCase(adminLogin.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(adminLogin.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.status = "succeeded";
+        state.initialized = true;
+      })
+      .addCase(adminLogin.rejected, (state) => {
+        state.user = null;
+        state.status = "failed";
       });
   },
 });
