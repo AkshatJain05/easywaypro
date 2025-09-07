@@ -71,7 +71,7 @@ export default function UserMenu() {
 
   // 🔹 User is logged in → show avatar + dropdown
   return (
-    <div className="relative">
+    <div className="relative z-160">
      <button
   ref={btnRef}
   onClick={() => setOpen((v) => !v)}
