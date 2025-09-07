@@ -32,14 +32,14 @@ function HeroSection() {
             {/* Buttons */}
             <div className="mt-10 flex flex-wrap justify-center lg:justify-start gap-4">
               <button
-                onClick={() => navigate("/courses")}
+                onClick={() => navigate("/easyway-ai")}
                 className="px-3 py-2 lg:px-7 lg:py-3 rounded-2xl bg-gradient-to-r from-slate-950 to-slate-900 border border-white text-white font-semibold shadow-md hover:from-slate-900 hover:to-slate-800 transition-all"
               >
                  Explore AI Tools
               </button>
 
               <button
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/study-material")}
                 className="px-3 py-2 lg:px-7 lg:py-3 rounded-2xl bg-gradient-to-r from-slate-950 to-slate-900 border border-white text-white font-semibold shadow-md hover:from-slate-900 hover:to-slate-800 transition-all"
               >
                 Explore Study Material
