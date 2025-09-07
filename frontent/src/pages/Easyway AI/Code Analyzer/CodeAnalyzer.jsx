@@ -64,7 +64,7 @@ export default function CodeAnalyzer() {
     </div>
     <div className="p-6 space-y-6">
       <CodeEditor
-        initialCode="// Write your code here..."
+        initialCode=""
         onRun={handleRun}
       />
 

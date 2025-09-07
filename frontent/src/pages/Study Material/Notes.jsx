@@ -11,6 +11,10 @@ export default function Notes() {
   const [openSubjects, setOpenSubjects] = useState({});
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+<<<<<<< HEAD
+=======
+
+>>>>>>> fbcd73d17be362ee68a9a92f8e48d3c696f0d5ac
   
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -46,16 +50,27 @@ const API_URL = import.meta.env.VITE_API_URL;
 
   return (
     <div className="max-w-6xl mx-auto p-4">
+<<<<<<< HEAD
       {/* Back button */}
        <button
         onClick={() => navigate(-1)}
         className="flex items-center gap-1 px-3 py-1.5 mb-1
+=======
+       {/* Back button */}
+       <button
+        onClick={() => navigate(-1)}
+        className="flex items-center gap-1 px-3 py-1.5 mb-2
+>>>>>>> fbcd73d17be362ee68a9a92f8e48d3c696f0d5ac
                                  bg-gray-800 hover:bg-gray-700 text-gray-200 
                                  rounded-lg text-sm shadow-md transition-all cursor-pointer"
       >
         <FaArrowLeft className="text-sm" />
         <span>Back</span>
       </button>
+<<<<<<< HEAD
+=======
+      
+>>>>>>> fbcd73d17be362ee68a9a92f8e48d3c696f0d5ac
       <h1 className="text-3xl font-bold text-center mb-6 text-white">Notes</h1>
 
       <div className="space-y-4">
@@ -77,7 +92,7 @@ const API_URL = import.meta.env.VITE_API_URL;
                   href={unit.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 p-3 pl-16 bg-gray-800 hover:bg-gray-700 transition border-b border-gray-700 rounded-b-lg last:border-b-0"
+                  className="flex items-center gap-3 p-3 pl-5 lg:pl-10 bg-gray-800 hover:bg-gray-700 transition border-b border-gray-700 rounded-b-lg last:border-b-0"
                 >
                   <FaStickyNote className="text-yellow-400" />
                   <span className="text-gray-200 font-medium">{unit.title}</span>

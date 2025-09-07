@@ -28,12 +28,13 @@ function Nav() {
       <nav className="z-70 fixed top-0 left-0 w-full h-[60px] flex items-center justify-between px-4 lg:px-12 bg-gray-950 opacity-98 border-b border-gray-800 backdrop-blur-md text-white">
         {/* Logo */}
         <NavLink to="/" className="flex items-center gap-2">
-          <img
+      {/* <img
             src={logoEasyway}
             alt="Easyway Logo"
-            className="h-7 sm:h-9 md:h-10 w-auto"
-          />
-          <h1 className="font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl tracking-wide">
+            className="h-9 md:h-10 w-auto"
+          /> */}
+          <h1 className="font-bold text-xl md:text-2xl lg:text-3xl tracking-wide bg-clip-text text-transparent 
+        bg-gradient-to-r from-blue-400 via-sky-500 to-blue-600">
             Easyway Pro
           </h1>
         </NavLink>

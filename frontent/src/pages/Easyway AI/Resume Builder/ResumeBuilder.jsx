@@ -96,34 +96,51 @@ const ResumeBuilder = () => {
   };
 
   // Reset all fields
-  const handleReset = () => {
-  toast((t) => (
-    <span>
-       Reset all fields?
-      <button
-        className="ml-3 px-3 py-1 bg-green-500 text-white rounded"
-        onClick={async () => {
-          try {
-            const { data } = await axios.post(`${API_URL}/resumes/reset`,{withCredentials: true});
-            setResumeData(data.data);
-            toast.dismiss(t.id);
-            toast.success("All fields reset")
-          } catch (error) {
-            toast.error("Failed to reset resume");
-          }
-        }}
-      >
-        Yes
-      </button>
-      <button
-        className="ml-2 px-3 py-1 bg-gray-500 text-white rounded"
-        onClick={() => toast.dismiss(t.id)}
-      >
-        No
-      </button>
-    </span>
-  ));
-};
+ const handleReset = () => {
+    toast((t) => (
+      <span>
+        Reset all fields?
+        <button
+          className="ml-3 px-3 py-1 bg-green-500 text-white rounded"
+          onClick={async () => {
+            toast.dismiss(t.id); // close confirm
+
+            // show loading
+            const loadingToast = toast.loading("Resetting...");
+            try {
+              const { data } = await axios.post(`${API_URL}/resumes/reset`, {
+                withCredentials: true,
+              });
+
+              setResumeData(data.data);
+
+              // dismiss loading immediately
+              toast.dismiss(loadingToast);
+
+              // show success (auto dismiss after 5s)
+              const msg = toast.success("All fields reset", { duration: 3000 });
+              toast.dismiss(msg);
+            } catch (error) {
+              toast.dismiss(loadingToast);
+              const msg = toast.error("Failed to reset resume", {
+                duration: 3000,
+              });
+              toast.dismiss(msg);
+            }
+          }}
+        >
+          Yes
+        </button>
+        <button
+          className="ml-2 px-3 py-1 bg-gray-500 text-white rounded"
+          onClick={() => toast.dismiss(t.id)}
+        >
+          No
+        </button>
+      </span>
+    ));
+  };
+          
 
 
   if(loading){
@@ -131,7 +148,6 @@ const ResumeBuilder = () => {
   }
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <div className="min-h-screen transition-colors duration-300">
         <Header
         selectedTemplate={selectedTemplate}

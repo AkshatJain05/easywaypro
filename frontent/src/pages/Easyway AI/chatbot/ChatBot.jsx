@@ -207,7 +207,7 @@ export default function ChatBot() {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:8000/api/chat/aichat", {
+      const res = await axios.post(`${API_URL}/chat/aichat`, {
         message: input,
       });
       const botReply = res.data.reply;
@@ -231,7 +231,7 @@ export default function ChatBot() {
   const deleteHistory = async () => {
     setFetching(true);
     try {
-      await axios.delete(`http://localhost:8000/api/chat/history`);
+      await axios.delete(`${API_URL}/chat/history`);
       setMessages([
         {
           sender: "bot",
@@ -340,7 +340,7 @@ export default function ChatBot() {
       </div>
 
       {loading && (
-        <div className="flex justify-start px-2">
+        <div className="flex justify-start p-2 my-2">
           <div className="bg-gray-700 text-white rounded-2xl p-3 max-w-[60%] flex items-center gap-1 animate-pulse">
             <span className="h-2 w-2 bg-white rounded-full animate-bounce"></span>
             <span className="h-2 w-2 bg-white rounded-full animate-bounce delay-150"></span>
