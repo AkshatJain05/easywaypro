@@ -7,6 +7,7 @@ import roadmap from "../../assets/roadMap.png";
 import syllabus from "../../assets/syllabusImg.png";
 import {Link} from "react-router-dom";
 
+
 function StudyMaterial() {
   const studyMaterialList = [
     { name: "AKTU PYQ's", link: "/pyq", img: pyq },

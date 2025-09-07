@@ -19,6 +19,14 @@ const PersonalInfo = ({ resumeData, updateResumeData }) => {
           onChange={handleChange}
           className="p-2 border rounded-md  border-gray-600"
         />
+         <input
+          type="text"
+          name="title"
+          placeholder="Professional Title"
+          value={resumeData.personalInfo.title}
+          onChange={handleChange}
+          className="p-2 border rounded-md  border-gray-600"
+        />
 
         <input
           type="email"
@@ -71,7 +79,7 @@ const PersonalInfo = ({ resumeData, updateResumeData }) => {
           placeholder="Portfolio Website URL"
           value={resumeData.personalInfo.portfolio || ""}
           onChange={handleChange}
-          className="p-2 border rounded-md border-gray-600 md:col-span-2"
+          className="p-2 border rounded-md border-gray-600 "
         />
       </div>
 

@@ -20,6 +20,7 @@ axios.defaults.withCredentials = true;
 const initialResumeData = {
   personalInfo: {
     name: "",
+    title: "",
     email: "",
     phone: "",
     address: "",
@@ -40,6 +41,7 @@ const ResumeBuilder = () => {
   const [resumeId, setResumeId] = useState(null);
   const [loading, setLoading] = useState(true);
   const debounceTimer = useRef(null);
+   const [selectedTemplate, setSelectedTemplate] = useState("Template1")
   const API_URL = import.meta.env.VITE_API_URL;
 
   // Load resume on mount
@@ -131,7 +133,10 @@ const ResumeBuilder = () => {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <div className="min-h-screen transition-colors duration-300">
-        <Header />
+        <Header
+        selectedTemplate={selectedTemplate}
+        setSelectedTemplate={setSelectedTemplate}
+      />
         <main className="container mx-auto p-4 md:p-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Input Forms */}
@@ -183,7 +188,7 @@ const ResumeBuilder = () => {
             {/* Live Preview */}
             <div>
               <div className="sticky top-8 print-static">
-                <ResumePreview resumeData={resumeData} />
+                <ResumePreview resumeData={resumeData} selectedTemplate={selectedTemplate} />
               </div>
             </div>
           </div>

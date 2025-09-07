@@ -42,6 +42,7 @@ const resetResume =  async (req, res) => {
     const initialResumeData = {
       personalInfo: {
         name: "",
+        title: "",
         email: "",
         phone: "",
         address: "",

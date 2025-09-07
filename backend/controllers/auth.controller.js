@@ -54,6 +54,49 @@ const login = async (req, res) => {
   }
 };
 
+
+const adminLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Fetch user 
+    const user = await User.findOne({ email })
+    if (!user) return res.status(400).json({ message: "Invalid email or password" });
+
+       // Check role
+    if (user.role !== "admin") {
+      return res.status(403).json({ message: "Access denied. Not an admin." });
+    }
+
+    // Compare password
+    const isMatch = await user.matchPassword(password);
+    if (!isMatch) return res.status(400).json({ message: "Invalid email or password" });
+
+    // Generate JWT + cookie
+    const token = generateToken(user._id);
+      res.cookie("jwt", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== "production", // only https in prod
+      sameSite: "strict",
+      maxAge: 24 * 60 * 60 * 1000, // 1 days
+    });
+
+    res.json({
+      message: "Login successful",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        profilePhoto: user.profilePhoto,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
 const logout = async(req,res)=>{
     res.clearCookie("jwt", {
         httpOnly: true,
@@ -78,4 +121,4 @@ const authMe =  async(req, res) => {
   }
 }
 
-export { register, login, logout ,authMe };
+export { register, login,adminLogin,logout ,authMe };

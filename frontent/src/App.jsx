@@ -29,6 +29,8 @@ import AdminLayout from "./component/AdminLayout.jsx";
 import Users from "./pages/Admin/Users.jsx";
 import AdminLogin from "./pages/auth/AdminLogin.jsx";
 import AdminProtectedRoute from "./component/AdminProtectedRoute.jsx";
+import PrivacyPolicy from "./component/PrivacyPolicy.jsx";
+import TermsAndConditions from "./component/Terms&Condition.jsx";
 
 function App() {
   return (
@@ -50,6 +52,8 @@ function App() {
           <Route path="/notes" element={<Notes />} />
           <Route path="/pyq" element={<PYQ />} />
           <Route path="/video-lectures" element={<VideoLectures />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy/>}/>
+          <Route path="/TAC" element={<TermsAndConditions/>}/>
 
           {/* Protected routes */}
           <Route element={<ProtectedRoute />}>

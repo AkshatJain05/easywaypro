@@ -1,4 +1,4 @@
-import {FaTrash } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 import { useState } from "react";
 
 const Certifications = ({ resumeData, updateResumeData }) => {
@@ -14,7 +14,9 @@ const Certifications = ({ resumeData, updateResumeData }) => {
   };
 
   const handleRemove = (index) => {
-    const updatedCertifications = resumeData.certifications.filter((_, i) => i !== index);
+    const updatedCertifications = resumeData.certifications.filter(
+      (_, i) => i !== index
+    );
     updateResumeData("certifications", updatedCertifications);
   };
 
