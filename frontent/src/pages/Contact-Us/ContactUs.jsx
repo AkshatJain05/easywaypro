@@ -28,7 +28,12 @@ const onSumbit = (e)=>{
     withCredentials: true,
   })
   .then((response) => {
-    toast.success("Contact message sent successfully!");
+    toast.success("Contact message sent successfully!")
+    setFormData({
+      name: "",
+      email: "",
+      message: "",
+    });
   })
   .catch((error) => {
     console.error("Error sending contact message:", error);

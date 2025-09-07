@@ -45,18 +45,6 @@ export default function PYQ() {
 
   return (
     <div className="max-w-6xl mx-auto p-4">
-<<<<<<< HEAD
-    {/* Back button */}
-          <button
-           onClick={() => navigate(-1)}
-           className="flex items-center gap-1 px-3 py-1.5 mb-1
-                                    bg-gray-800 hover:bg-gray-700 text-gray-200 
-                                    rounded-lg text-sm shadow-md transition-all cursor-pointer"
-         >
-           <FaArrowLeft className="text-sm" />
-           <span>Back</span>
-         </button>   
-=======
        {/* Back button */}
        <button
         onClick={() => navigate(-1)}
@@ -68,7 +56,6 @@ export default function PYQ() {
         <span>Back</span>
       </button>
       
->>>>>>> fbcd73d17be362ee68a9a92f8e48d3c696f0d5ac
       <h1 className="text-3xl font-bold text-center mb-6 text-white">Previous Year Questions (PYQs)</h1>
 
       <div className="space-y-4">
@@ -92,11 +79,7 @@ export default function PYQ() {
                   href={unit.link}
                   target="_blank"
                   rel="noopener noreferrer"
-<<<<<<< HEAD
-                  className="flex items-center gap-3 p-3 pl-5 lg:pl-16 bg-gray-800 hover:bg-gray-700 transition border-b border-gray-700 rounded-b-lg last:border-b-0"
-=======
                   className="flex items-center gap-3 p-3 pl-5 lg:pl-10 bg-gray-800 hover:bg-gray-700 transition border-b border-gray-700 rounded-b-lg last:border-b-0"
->>>>>>> fbcd73d17be362ee68a9a92f8e48d3c696f0d5ac
                 >
                   <FaFileAlt className="text-yellow-400" />
                   <span className="text-gray-200 font-medium">{unit.title}</span>

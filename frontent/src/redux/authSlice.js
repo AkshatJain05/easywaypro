@@ -8,31 +8,7 @@ export const fetchUser = createAsyncThunk("auth/fetchUser", async () => {
   return res.data.user;
 });
 
-export const login = createAsyncThunk(
-  "auth/login",
-  async ({ email, password }) => {
-    const res = await axios.post(
-      `${API_URL}/auth/login`,
-      { email, password },
-      { withCredentials: true }
-    );
-    return res.data.user;
-  }
-);
 
-<<<<<<< HEAD
-export const adminLogin = createAsyncThunk(
-  "auth/adminLogin",
-  async ({ email, password }) => {
-    const res = await axios.post(
-      `${API_URL}/auth/admin/login`,
-      { email, password },
-      { withCredentials: true }
-    );
-    return res.data.user;
-  }
-);
-=======
 export const login = createAsyncThunk("auth/login", async ({ email, password }) => {
   const res = await axios.post(
     `${API_URL}/auth/login`,
@@ -41,7 +17,6 @@ export const login = createAsyncThunk("auth/login", async ({ email, password }) 
   );
   return res.data.user;
 });
->>>>>>> fbcd73d17be362ee68a9a92f8e48d3c696f0d5ac
 
 export const adminLogin = createAsyncThunk(
   "auth/adminLogin",
@@ -70,9 +45,7 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchUser.pending, (state) => {
-        state.status = "loading";
-      })
+      .addCase(fetchUser.pending, (state) => { state.status = "loading"; })
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.user = action.payload;
         state.status = "succeeded";
@@ -83,9 +56,7 @@ const authSlice = createSlice({
         state.status = "failed";
         state.initialized = true;
       })
-      .addCase(login.pending, (state) => {
-        state.status = "loading";
-      })
+       .addCase(login.pending, (state) => { state.status = "loading"; })
       .addCase(login.fulfilled, (state, action) => {
         state.user = action.payload;
         state.status = "succeeded";
@@ -99,10 +70,6 @@ const authSlice = createSlice({
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
       })
-<<<<<<< HEAD
-
-=======
->>>>>>> fbcd73d17be362ee68a9a92f8e48d3c696f0d5ac
       .addCase(adminLogin.pending, (state) => {
         state.status = "loading";
       })

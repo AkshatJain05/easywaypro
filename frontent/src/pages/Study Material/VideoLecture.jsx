@@ -11,12 +11,8 @@ export default function VideoLectures() {
   const [openSubjects, setOpenSubjects] = useState({});
   const [loading, setLoading] = useState(true);
   const API_URL = import.meta.env.VITE_API_URL;
-<<<<<<< HEAD
-  const navigate = useNavigate();
-=======
    const navigate = useNavigate();
   
->>>>>>> fbcd73d17be362ee68a9a92f8e48d3c696f0d5ac
 
   // Fetch video lectures from backend
   const fetchVideos = async () => {
@@ -51,18 +47,6 @@ export default function VideoLectures() {
 
   return (
     <div className="max-w-6xl mx-auto p-4">
-<<<<<<< HEAD
-      {/* Back button */}
-          <button
-           onClick={() => navigate(-1)}
-           className="flex items-center gap-1 px-3 py-1.5 mb-1
-                                    bg-gray-800 hover:bg-gray-700 text-gray-200 
-                                    rounded-lg text-sm shadow-md transition-all cursor-pointer"
-         >
-           <FaArrowLeft className="text-sm" />
-           <span>Back</span>
-         </button> 
-=======
        {/* Back button */}
        <button
         onClick={() => navigate(-1)}
@@ -74,7 +58,6 @@ export default function VideoLectures() {
         <span>Back</span>
       </button>
       
->>>>>>> fbcd73d17be362ee68a9a92f8e48d3c696f0d5ac
       <h1 className="text-3xl font-bold text-center mb-6 text-white">Video Lectures</h1>
 
       <div className="space-y-4">

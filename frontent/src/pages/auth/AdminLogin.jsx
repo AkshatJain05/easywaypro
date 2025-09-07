@@ -19,11 +19,7 @@ function Login() {
     e.preventDefault();
     setLoading(true);
 
-<<<<<<< HEAD
-    try {
-=======
      try {
->>>>>>> fbcd73d17be362ee68a9a92f8e48d3c696f0d5ac
       const resultAction = await dispatch(adminLogin({ email, password }));
       // Check if login was successful
       if (adminLogin.fulfilled.match(resultAction)) {
