@@ -74,7 +74,7 @@ function Nav() {
 
       {/* Mobile Menu */}
       <div
-        className={`lg:hidden z-100 fixed top-[64px] left-0 w-full bg-gray-950/95 backdrop-blur-md border-b border-gray-800 transition-all duration-300 ${
+        className={`lg:hidden z-100 fixed top-[60px] left-0 w-full bg-gray-950/95 backdrop-blur-md border-b border-gray-800 transition-all duration-300 ${
           open
             ? "max-h-[400px] opacity-100"
             : "max-h-0 opacity-0 overflow-hidden"
