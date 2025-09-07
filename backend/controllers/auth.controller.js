@@ -54,10 +54,6 @@ const login = async (req, res) => {
   }
 };
 
-<<<<<<< HEAD
-
-=======
->>>>>>> fbcd73d17be362ee68a9a92f8e48d3c696f0d5ac
 const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -66,11 +62,7 @@ const adminLogin = async (req, res) => {
     const user = await User.findOne({ email })
     if (!user) return res.status(400).json({ message: "Invalid email or password" });
 
-<<<<<<< HEAD
-       // Check role
-=======
     // Check role
->>>>>>> fbcd73d17be362ee68a9a92f8e48d3c696f0d5ac
     if (user.role !== "admin") {
       return res.status(403).json({ message: "Access denied. Not an admin." });
     }
@@ -83,22 +75,13 @@ const adminLogin = async (req, res) => {
     const token = generateToken(user._id);
       res.cookie("jwt", token, {
       httpOnly: true,
-<<<<<<< HEAD
-      secure: process.env.NODE_ENV !== "production", // only https in prod
-      sameSite: "strict",
-=======
       secure: process.env.NODE_ENV === "production", // only https in prod
       sameSite: "none",
->>>>>>> fbcd73d17be362ee68a9a92f8e48d3c696f0d5ac
       maxAge: 24 * 60 * 60 * 1000, // 1 days
     });
 
     res.json({
-<<<<<<< HEAD
-      message: "Login successful",
-=======
       message: "Admin Login successful",
->>>>>>> fbcd73d17be362ee68a9a92f8e48d3c696f0d5ac
       user: {
         id: user._id,
         name: user.name,
@@ -112,10 +95,6 @@ const adminLogin = async (req, res) => {
   }
 };
 
-<<<<<<< HEAD
-
-=======
->>>>>>> fbcd73d17be362ee68a9a92f8e48d3c696f0d5ac
 const logout = async(req,res)=>{
     res.clearCookie("jwt", {
         httpOnly: true,
@@ -140,8 +119,4 @@ const authMe =  async(req, res) => {
   }
 }
 
-<<<<<<< HEAD
-export { register, login,adminLogin,logout ,authMe };
-=======
 export { register, login, logout ,authMe ,adminLogin};
->>>>>>> fbcd73d17be362ee68a9a92f8e48d3c696f0d5ac
