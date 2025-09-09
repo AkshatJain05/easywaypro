@@ -124,7 +124,7 @@ export default function WebsiteOverview() {
           </div>
           <div className="bg-gradient-to-br from-gray-950 to-black p-6 rounded-xl shadow-md border border-slate-700 hover:shadow-lg transition text-center">
             <h3 className="font-semibold mb-2 text-white">
-              📘 Daily Tasks
+               Daily Tasks
             </h3>
             <p className="text-sm text-slate-400 text-center">
               Stay on track with Easyway – plan, manage, and complete your study
