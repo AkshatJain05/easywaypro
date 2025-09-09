@@ -5,6 +5,8 @@ const templates = [
   { name: "Template 4", value: "Template4" },
   { name: "Template 5", value: "Template5" },
   { name: "Template 6", value: "Template6" },
+  { name: "Template 7", value: "Template7" },
+
 ];
 
 const TemplateSelector = ({ selectedTemplate, onChange }) => {

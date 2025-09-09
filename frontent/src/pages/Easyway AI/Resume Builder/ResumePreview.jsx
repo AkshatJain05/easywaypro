@@ -4,6 +4,7 @@ import ResumeTemplate3 from "./ResumeTemplate/ResumeTemplate3";
 import ResumeTemplate4 from "./ResumeTemplate/ResumeTemplate4";
 import ResumeTemplate5 from "./ResumeTemplate/ResumeTemplate5";
 import ResumeTemplate6 from "./ResumeTemplate/ResumeTemplate6";
+import ResumeTemplate7 from "./ResumeTemplate/ResumeTemplate7";
 
 const templateMap = {
   Template1: ResumeTemplate1,
@@ -12,6 +13,7 @@ const templateMap = {
   Template4: ResumeTemplate4,
   Template5: ResumeTemplate5,
   Template6: ResumeTemplate6,
+  Template7: ResumeTemplate7,
 };
 
 const ResumePreview = ({ resumeData, selectedTemplate }) => {
