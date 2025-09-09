@@ -7,11 +7,13 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function SignUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
@@ -44,8 +46,12 @@ function SignUp() {
           onSubmit={onSubmitHandler}
           className="max-w-96 w-full text-center border border-gray-300/60 rounded-2xl px-5 sm:px-8 bg-gradient-to-bl from-slate-950 to-slate-900 shadow-sm shadow-slate-600"
         >
-          <h1 className="text-gray-100 font-semibold text-3xl mt-10">Sign Up</h1>
-          <p className="text-gray-200 text-sm mt-2">Please sign up to continue</p>
+          <h1 className="text-gray-100 font-semibold text-3xl mt-10">
+            Sign Up
+          </h1>
+          <p className="text-gray-200 text-sm mt-2">
+            Please sign up to continue
+          </p>
 
           {/* Name */}
           <div className="flex items-center w-full mt-10 bg-slate-100 border border-yellow-500 h-11 rounded-full overflow-hidden pl-4 gap-2">
@@ -74,16 +80,27 @@ function SignUp() {
           </div>
 
           {/* Password */}
-          <div className="flex items-center mt-4 w-full bg-slate-100 border border-yellow-500 h-11 rounded-full overflow-hidden pl-4 gap-2 mb-5">
+          <div className="flex items-center mt-4 w-full bg-slate-100 border border-yellow-500 h-11 rounded-full overflow-hidden pl-4 gap-2">
             <RiLockPasswordFill className="text-gray-800 h-8 w-5" />
+
+            {/* Input field */}
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
               className="bg-transparent text-gray-900 placeholder-gray-500 outline-none text-sm w-full h-full"
               required
             />
+
+            {/* Eye toggle */}
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="pr-4 text-gray-700 focus:outline-none"
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
           </div>
 
           {/* Submit Button */}

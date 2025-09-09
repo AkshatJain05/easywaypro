@@ -6,10 +6,12 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { adminLogin } from "../../redux/authSlice";
 import { toast } from "react-hot-toast";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
@@ -19,7 +21,7 @@ function Login() {
     e.preventDefault();
     setLoading(true);
 
-     try {
+    try {
       const resultAction = await dispatch(adminLogin({ email, password }));
       // Check if login was successful
       if (adminLogin.fulfilled.match(resultAction)) {
@@ -43,8 +45,12 @@ function Login() {
           onSubmit={handleSubmit}
           className="max-w-96 w-full text-center border border-gray-300/60 rounded-2xl px-5 sm:px-8 bg-gradient-to-bl from-slate-950 to-slate-900 shadow-sm shadow-slate-600"
         >
-          <h1 className="text-gray-100 font-semibold text-3xl mt-10">Admin Login</h1>
-          <p className="text-gray-200 text-sm mt-2">Please sign in to continue</p>
+          <h1 className="text-gray-100 font-semibold text-3xl mt-10">
+            Admin Login
+          </h1>
+          <p className="text-gray-200 text-sm mt-2">
+            Please sign in to continue
+          </p>
 
           {/* Email */}
           <div className="flex items-center w-full mt-10 bg-slate-100 border border-yellow-500 h-11 rounded-full overflow-hidden pl-4 gap-2">
@@ -62,14 +68,25 @@ function Login() {
           {/* Password */}
           <div className="flex items-center mt-4 w-full bg-slate-100 border border-yellow-500 h-11 rounded-full overflow-hidden pl-4 gap-2">
             <RiLockPasswordFill className="text-gray-800 h-8 w-5" />
+
+            {/* Input field */}
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
               className="bg-transparent text-gray-900 placeholder-gray-500 outline-none text-sm w-full h-full"
               required
             />
+
+            {/* Eye toggle */}
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="pr-4 text-gray-700 focus:outline-none"
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
           </div>
 
           <button
@@ -81,7 +98,6 @@ function Login() {
           >
             {loading ? "Logging in..." : "Login"}
           </button>
-
         </form>
       </div>
     </ScrollReveal>
