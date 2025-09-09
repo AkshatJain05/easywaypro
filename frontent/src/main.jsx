@@ -11,11 +11,7 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <Provider store={store}>
-<<<<<<< HEAD
-        <Toaster position="top-center" />
-=======
         <Toaster position="top-center"/>
->>>>>>> 8bfe856aabc6e41d5f40e840e6535bfaf94aeb46
         <App />
       </Provider>
     </BrowserRouter>
