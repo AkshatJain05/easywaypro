@@ -69,7 +69,7 @@ const ResumeBuilder = () => {
     debounceTimer.current = setTimeout(async () => {
       try {
         if (!resumeId) {
-          const res = await axios.post("/resumes", data,{withCredentials: true});
+          const res = await axios.post(`${API_URL}/resumes`, data,{withCredentials: true});
           setResumeId(res.data._id);
         } else {
           await axios.put(`${API_URL}/resumes/${resumeId}`, data,{withCredentials: true});
