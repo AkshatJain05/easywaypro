@@ -1,32 +1,32 @@
 const ResumeTemplate1 = ({ resumeData }) => {
   const {
     personalInfo,
-    education,
+    experience,
     skills,
     projects,
-    experience,
     certifications,
+    education,
   } = resumeData;
 
   return (
     <div
       id="resume-preview"
-      className="p-6 print:p-6 bg-white shadow text-gray-900 font-sans leading-relaxed text-sm max-w-3xl mx-auto"
+      className="p-8 max-w-3xl mx-auto bg-white text-gray-900 font-sans text-sm leading-relaxed print:p-6"
     >
       {/* --- HEADER --- */}
-      <header className="text-center mb-4">
-        <h1 className="text-3xl font-semibold">{personalInfo.name}</h1>
+      <header className="text-center mb-6">
+        <h1 className="text-3xl font-bold tracking-wide">
+          {personalInfo.name}
+        </h1>
         {personalInfo.title && (
-          <p className="text-base font-medium text-gray-700">
-            {personalInfo.title}
-          </p>
+          <p className="text-base text-gray-700 mt-1">{personalInfo.title}</p>
         )}
-        <div className="flex flex-wrap justify-center gap-3 text-xs text-gray-700 mt-1">
+        <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-700 mt-2">
           {personalInfo.email && <span>{personalInfo.email}</span>}
           {personalInfo.phone && <span>{personalInfo.phone}</span>}
           {personalInfo.address && <span>{personalInfo.address}</span>}
         </div>
-        <div className="flex flex-wrap justify-center gap-3 text-xs text-blue-700 mt-1">
+        <div className="flex flex-wrap justify-center gap-4 text-xs text-blue-700 mt-2">
           {personalInfo.linkedin && (
             <a
               href={`https://${personalInfo.linkedin}`}
@@ -62,33 +62,39 @@ const ResumeTemplate1 = ({ resumeData }) => {
 
       {/* --- SUMMARY --- */}
       {personalInfo.summary && (
-        <section className="mb-3">
-          <h2 className="text-sm font-bold border-b border-gray-300 mb-1 uppercase">
+        <section className="mb-6">
+          <h2 className="text-sm font-bold border-b border-gray-300 mb-2 uppercase">
             Career Objective
           </h2>
-          <p className="text-xs text-gray-800 text-justify">
+          <p className="text-xs text-gray-800 leading-relaxed">
             {personalInfo.summary}
           </p>
         </section>
       )}
 
-      {/* --- EDUCATION --- */}
-      {education?.length > 0 && (
-        <section className="mb-3">
-          <h2 className="text-sm font-bold border-b border-gray-300 mb-1 uppercase">
-            Education
+      {/* --- EXPERIENCE --- */}
+      {experience?.length > 0 && (
+        <section className="mb-6">
+          <h2 className="text-sm font-bold border-b border-gray-300 mb-2 uppercase">
+            Internships / Experience
           </h2>
-          {education.map((edu) => (
-            <div key={edu.id} className="mb-1">
-              <div className="flex justify-between text-xs">
-                <span className="font-semibold">{edu.school}</span>
+          {experience.map((exp) => (
+            <div key={exp.id} className="mb-4">
+              <div className="flex justify-between text-xs mb-0.5">
+                <span className="font-semibold">{exp.company}</span>
                 <span className="text-gray-600">
-                  {edu.startDate} - {edu.endDate}
+                  {exp.startDate} - {exp.endDate}
                 </span>
               </div>
-              <p className="text-xs italic text-gray-700">{edu.degree}</p>
-              {edu.marks && (
-                <p className="text-xs text-gray-700">{edu.marks}</p>
+              <p className="text-xs font-medium mb-1">{exp.position}</p>
+              {exp.points?.length > 0 && (
+                <ul className="list-disc pl-5 text-xs text-gray-700 space-y-1">
+                  {exp.points.map((point, idx) => (
+                    <li key={idx} className="leading-snug">
+                      {point}
+                    </li>
+                  ))}
+                </ul>
               )}
             </div>
           ))}
@@ -97,11 +103,11 @@ const ResumeTemplate1 = ({ resumeData }) => {
 
       {/* --- SKILLS --- */}
       {skills?.length > 0 && (
-        <section className="mb-3">
-          <h2 className="text-sm font-bold border-b border-gray-300 mb-1 uppercase">
+        <section className="mb-6">
+          <h2 className="text-sm font-bold border-b border-gray-300 mb-2 uppercase">
             Skills
           </h2>
-          <div className="space-y-0.5 text-xs">
+          <div className="space-y-1 text-xs">
             {Object.entries(
               skills.reduce((acc, skill) => {
                 if (!acc[skill.category]) acc[skill.category] = [];
@@ -111,7 +117,7 @@ const ResumeTemplate1 = ({ resumeData }) => {
             ).map(([category, skillList]) => (
               <p key={category}>
                 <span className="font-semibold">{category}:</span>{" "}
-                {skillList.join(", ")}.
+                {skillList.join(", ")}
               </p>
             ))}
           </div>
@@ -120,14 +126,13 @@ const ResumeTemplate1 = ({ resumeData }) => {
 
       {/* --- PROJECTS --- */}
       {projects?.length > 0 && (
-        <section className="mb-3">
-          <h2 className="text-sm font-bold border-b border-gray-300 mb-1 uppercase">
+        <section className="mb-6">
+          <h2 className="text-sm font-bold border-b border-gray-300 mb-2 uppercase">
             Projects
           </h2>
           {projects.map((proj) => (
-            <div key={proj.id} className="mb-2">
-              {/* Project Title + Link */}
-              <div className="flex justify-between text-xs">
+            <div key={proj.id} className="mb-4">
+              <div className="flex justify-between text-xs mb-0.5">
                 <span className="font-semibold">{proj.name}</span>
                 {proj.link && (
                   <a
@@ -140,17 +145,13 @@ const ResumeTemplate1 = ({ resumeData }) => {
                   </a>
                 )}
               </div>
-
-              {/* Tech Stack */}
               {proj.technologies && (
-                <p className="text-xs italic text-gray-700">
+                <p className="text-xs italic text-gray-700 mb-1">
                   Tech: {proj.technologies}
                 </p>
               )}
-
-              {/* Bullet Points */}
               {proj.points?.length > 0 && (
-                <ul className="list-disc pl-4 text-xs text-gray-800 space-y-1">
+                <ul className="list-disc pl-5 text-xs text-gray-700 space-y-1">
                   {proj.points.map((point, idx) => (
                     <li key={idx} className="leading-snug">
                       {point}
@@ -163,28 +164,31 @@ const ResumeTemplate1 = ({ resumeData }) => {
         </section>
       )}
 
-      {/* --- EXPERIENCE --- */}
-      {experience?.length > 0 && (
-        <section className="mb-3">
-          <h2 className="text-sm font-bold border-b border-gray-300 mb-1 uppercase">
-            Internships / Experience
+      {/* --- EDUCATION (LAST) --- */}
+      {education?.length > 0 && (
+        <section className="mb-6">
+          <h2 className="text-sm font-bold border-b border-gray-300 mb-3 uppercase">
+            Education
           </h2>
-          {experience.map((exp) => (
-            <div key={exp.id} className="mb-2">
-              <div className="flex justify-between text-xs">
-                <span className="font-semibold">{exp.company}</span>
-                <span className="text-gray-600">
-                  {exp.startDate} - {exp.endDate}
-                </span>
+          {education.map((edu) => (
+            <div key={edu.id} className="mb-3">
+              <div className="flex justify-between items-start">
+                {/* School & Degree */}
+                <div>
+                  <p className="font-semibold text-gray-900">{edu.school}</p>
+                  <p className="text-xs italic text-gray-700 mt-0.5">
+                    {edu.degree}
+                    {edu.marks ? ` | ${edu.marks}` : ""}
+                  </p>
+                </div>
+
+                {/* Dates */}
+                <div className="text-xs text-gray-500 text-right">
+                  <p>
+                    {edu.startDate} - {edu.endDate}
+                  </p>
+                </div>
               </div>
-              <p className="text-xs font-medium">{exp.position}</p>
-              {exp.points?.length > 0 && (
-                <ul className="list-disc list-inside text-xs text-gray-700 space-y-0.5">
-                  {exp.points.map((point, idx) => (
-                    <li key={idx}>{point}</li>
-                  ))}
-                </ul>
-              )}
             </div>
           ))}
         </section>
@@ -192,11 +196,11 @@ const ResumeTemplate1 = ({ resumeData }) => {
 
       {/* --- CERTIFICATIONS --- */}
       {certifications?.length > 0 && (
-        <section>
-          <h2 className="text-sm font-bold border-b border-gray-300 mb-1 uppercase">
+        <section className="mb-6">
+          <h2 className="text-sm font-bold border-b border-gray-300 mb-2 uppercase">
             Certifications
           </h2>
-          <ul className="list-disc list-inside text-xs text-gray-800 space-y-0.5">
+          <ul className="list-disc pl-5 text-xs text-gray-800 space-y-1">
             {certifications.map((cert, idx) => (
               <li key={idx}>
                 {cert.title}{" "}
@@ -220,3 +224,4 @@ const ResumeTemplate1 = ({ resumeData }) => {
 };
 
 export default ResumeTemplate1;
+// ProfessionalResume
