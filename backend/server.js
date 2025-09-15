@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin:["https://easywaypro.onrender.com","http://localhost:5173"],
+  origin:["https://easywaypro.onrender.com","http://localhost:5173","https://easywayclasses.vercel.app"],
   credentials: true // allow cookies
 }));
 app.use(cookieParser());

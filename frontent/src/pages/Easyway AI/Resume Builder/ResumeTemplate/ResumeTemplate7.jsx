@@ -83,7 +83,7 @@ const ResumeTemplate1 = ({ resumeData }) => {
               <div className="flex justify-between text-xs mb-0.5">
                 <span className="font-semibold">{exp.company}</span>
                 <span className="text-gray-600">
-                  {exp.startDate} - {exp.endDate}
+                  {edu.startDate} {edu.endDate && "-"} {edu.endDate}
                 </span>
               </div>
               <p className="text-xs font-medium mb-1">{exp.position}</p>

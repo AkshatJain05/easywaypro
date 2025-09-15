@@ -107,7 +107,7 @@ const ResumeTemplate4 = ({ resumeData }) => {
               <div className="flex justify-between text-sm font-semibold">
                 <span>{edu.school}</span>
                 <span className="text-gray-500">
-                  {edu.startDate} - {edu.endDate}
+                  {edu.startDate} {edu.endDate && "-"} {edu.endDate}
                 </span>
               </div>
               <p className="italic text-gray-700">
