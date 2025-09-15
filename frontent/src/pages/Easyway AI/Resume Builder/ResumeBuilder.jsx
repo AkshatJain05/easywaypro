@@ -41,7 +41,7 @@ const ResumeBuilder = () => {
   const [resumeId, setResumeId] = useState(null);
   const [loading, setLoading] = useState(true);
   const debounceTimer = useRef(null);
-   const [selectedTemplate, setSelectedTemplate] = useState("Template1")
+   const [selectedTemplate, setSelectedTemplate] = useState("Template3")
   const API_URL = import.meta.env.VITE_API_URL;
 
   // Load resume on mount
