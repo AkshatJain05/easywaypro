@@ -1,7 +1,7 @@
 import ScrollReveal from "../../component/ScllorAnimation";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { adminLogin } from "../../redux/authSlice";
@@ -23,10 +23,9 @@ function Login() {
 
     try {
       const resultAction = await dispatch(adminLogin({ email, password }));
-      // Check if login was successful
       if (adminLogin.fulfilled.match(resultAction)) {
         toast.success("Login successful!");
-        navigate("/admin/add-roadmap"); // redirect after login
+        navigate("/admin/add-roadmap");
       } else {
         toast.error(resultAction.payload || "Admin Login failed");
       }
@@ -43,6 +42,7 @@ function Login() {
       <div className="h-[90vh] w-full px-5 flex justify-center items-center">
         <form
           onSubmit={handleSubmit}
+          autoComplete="on"  // ✅ enables autofill
           className="max-w-96 w-full text-center border border-gray-300/60 rounded-2xl px-5 sm:px-8 bg-gradient-to-bl from-slate-950 to-slate-900 shadow-sm shadow-slate-600"
         >
           <h1 className="text-gray-100 font-semibold text-3xl mt-10">
@@ -60,6 +60,7 @@ function Login() {
               placeholder="Email id"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="username"   // ✅ login email
               className="bg-transparent text-gray-900 placeholder-gray-500 outline-none text-[16px] w-full h-full"
               required
             />
@@ -68,17 +69,15 @@ function Login() {
           {/* Password */}
           <div className="flex items-center mt-4 w-full bg-slate-100 border border-yellow-500 h-11 rounded-full overflow-hidden pl-4 gap-2">
             <RiLockPasswordFill className="text-gray-800 h-8 w-5" />
-
-            {/* Input field */}
             <input
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
+              autoComplete="current-password"   // ✅ login password
               className="bg-transparent text-gray-900 placeholder-gray-500 outline-none text-sm w-full h-full"
               required
             />
-
             {/* Eye toggle */}
             <button
               type="button"

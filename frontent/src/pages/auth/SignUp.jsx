@@ -23,12 +23,7 @@ function SignUp() {
     setLoading(true);
 
     try {
-      const res = await axios.post(`${API_URL}/auth/register`, {
-        name,
-        email,
-        password,
-      });
-
+      await axios.post(`${API_URL}/auth/register`, { name, email, password });
       toast.success("Sign up successful!");
       navigate("/login");
     } catch (err) {
@@ -44,6 +39,7 @@ function SignUp() {
       <div className="h-[90vh] w-full px-5 flex justify-center items-center">
         <form
           onSubmit={onSubmitHandler}
+          autoComplete="on"   // ✅ enables autofill
           className="max-w-96 w-full text-center border border-gray-300/60 rounded-2xl px-5 sm:px-8 bg-gradient-to-bl from-slate-950 to-slate-900 shadow-sm shadow-slate-600"
         >
           <h1 className="text-gray-100 font-semibold text-3xl mt-10">
@@ -61,6 +57,7 @@ function SignUp() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Name"
+              autoComplete="name"   // ✅ autofill full name
               className="bg-transparent text-gray-900 placeholder-gray-500 outline-none text-[16px] w-full h-full"
               required
             />
@@ -74,6 +71,7 @@ function SignUp() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email id"
+              autoComplete="email"   // ✅ helps with email autofill
               className="bg-transparent text-gray-900 placeholder-gray-500 outline-none text-[16px] w-full h-full"
               required
             />
@@ -82,17 +80,15 @@ function SignUp() {
           {/* Password */}
           <div className="flex items-center mt-4 w-full bg-slate-100 border border-yellow-500 h-11 rounded-full overflow-hidden pl-4 gap-2">
             <RiLockPasswordFill className="text-gray-800 h-8 w-5" />
-
-            {/* Input field */}
             <input
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
+              autoComplete="new-password"   // ✅ for signup forms
               className="bg-transparent text-gray-900 placeholder-gray-500 outline-none text-sm w-full h-full"
               required
             />
-
             {/* Eye toggle */}
             <button
               type="button"
@@ -121,17 +117,6 @@ function SignUp() {
               Login
             </NavLink>
           </p>
-
-          {/* <h1 className="my-5 text-slate-100">OR</h1> */}
-
-          {/* Google Login */}
-          {/* <button
-            type="button"
-            className="w-full flex items-center gap-2 justify-center my-3 mb-10 bg-white border border-gray-900 py-2.5 rounded-full text-gray-800 active:scale-[0.96] transition-all"
-          >
-            <FcGoogle className="h-6 w-6" />
-            Log in with Google
-          </button> */}
         </form>
       </div>
     </ScrollReveal>
