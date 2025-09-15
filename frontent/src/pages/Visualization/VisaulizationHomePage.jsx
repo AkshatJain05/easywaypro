@@ -28,7 +28,7 @@ const HomePage = () => {
   ];
 
   return (
-    <div className="min-h-[calc(100vh-80px)] b bg-gradient-to-br from-gray-950 to-black  text-white flex flex-col items-center justify-center py-12 px-6">
+    <div className="min-h-[calc(100vh-80px)] bg-gradient-to-br from-gray-950 to-black  text-white flex flex-col items-center justify-center py-12 px-6">
       {/* Back Button */}
       <button
         onClick={() => navigate(-1)}
