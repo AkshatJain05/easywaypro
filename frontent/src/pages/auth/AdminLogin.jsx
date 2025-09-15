@@ -42,7 +42,7 @@ function Login() {
       <div className="h-[90vh] w-full px-5 flex justify-center items-center">
         <form
           onSubmit={handleSubmit}
-          autoComplete="on"  // ✅ enables autofill
+          autoComplete="on"  // enables autofill
           className="max-w-96 w-full text-center border border-gray-300/60 rounded-2xl px-5 sm:px-8 bg-gradient-to-bl from-slate-950 to-slate-900 shadow-sm shadow-slate-600"
         >
           <h1 className="text-gray-100 font-semibold text-3xl mt-10">
@@ -60,7 +60,7 @@ function Login() {
               placeholder="Email id"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              autoComplete="username"   // ✅ login email
+              autoComplete="email"   // login email
               className="bg-transparent text-gray-900 placeholder-gray-500 outline-none text-[16px] w-full h-full"
               required
             />
@@ -74,7 +74,7 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              autoComplete="current-password"   // ✅ login password
+              autoComplete="current-password"   //login password
               className="bg-transparent text-gray-900 placeholder-gray-500 outline-none text-sm w-full h-full"
               required
             />
