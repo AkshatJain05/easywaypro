@@ -13,7 +13,7 @@
 - **Placement quizzes** with results and analytics.  
 - **Roadmaps** to track progress and mark completed topics.  
 - **Resume Builder** to create professional resumes.
-- **Algorithm Visualizer**:
+- ####**Algorithm Visualizer**:
         -**Sorting Algorithms**: Bubble, Insertion, Selection, Merge, Quick Sort.
         -**Tree Structures**: Binary Search Tree (BST), AVL Tree, Red-Black Tree.
 - **Todo List** for task management and study planning.  
