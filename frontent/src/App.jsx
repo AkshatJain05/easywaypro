@@ -32,6 +32,10 @@ import AdminProtectedRoute from "./component/AdminProtectedRoute.jsx";
 import PrivacyPolicy from "./component/PrivacyPolicy.jsx";
 import TermsAndConditions from "./component/Terms&Condition.jsx";
 
+import HomePage from "./pages/Visualization/VisaulizationHomePage.jsx";
+import SortingPage from "./pages/Visualization/SortingPage.jsx";
+import TreePage from "./pages/Visualization/TreePage.jsx";
+
 function App() {
   return (
     <>
@@ -52,8 +56,12 @@ function App() {
           <Route path="/notes" element={<Notes />} />
           <Route path="/pyq" element={<PYQ />} />
           <Route path="/video-lectures" element={<VideoLectures />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy/>}/>
-          <Route path="/TAC" element={<TermsAndConditions/>}/>
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/TAC" element={<TermsAndConditions />} />
+
+          <Route path="/algorithm-visualizer" element={<HomePage />} />
+          <Route path="/sorting" element={<SortingPage />} />
+          <Route path="/trees" element={<TreePage />} />
 
           {/* Protected routes */}
           <Route element={<ProtectedRoute />}>
