@@ -82,7 +82,7 @@ function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-5 flex flex-col sm:flex-row items-center justify-between text-xs sm:text-sm text-slate-400 gap-2">
           <p>© 2025 Easyway Classes. All rights reserved.</p>
           <p>
-            AI-generated answers may contain mistakes.{" "}
+            AI-generated answers and Algorithm Visualizer may contain mistakes.{" "}
             <span className="text-yellow-400">Verify before use.</span>
           </p>
         </div>
