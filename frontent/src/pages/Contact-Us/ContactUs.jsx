@@ -23,6 +23,7 @@ function ContactUs() {
 
 const onSumbit = (e)=>{ 
   e.preventDefault()
+  setLoading(true);
 
    axios.post(`${API_URL}/contacts`, formData, {
     withCredentials: true,
@@ -38,6 +39,9 @@ const onSumbit = (e)=>{
   .catch((error) => {
     console.error("Error sending contact message:", error);
     toast.error("Failed to send contact message.");
+  })
+  .finally(() => {
+    setLoading(false);
   });
 
 }
