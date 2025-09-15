@@ -1,4 +1,4 @@
-import { motion } from "framer-motion"; //For smooth animation
+import { motion } from "framer-motion"; // For smooth animation
 
 const BarVisualizer = ({
   array,
@@ -20,22 +20,21 @@ const BarVisualizer = ({
   const maxVal = Math.max(...array);
 
   return (
-    <div className="bg-gray-900 p-6 rounded-2xl shadow-xl m-4 max-w-6xl mx-auto w-full">
+    <div className="bg-gray-900 p-4 md:p-6 rounded-2xl shadow-xl m-4 max-w-6xl mx-auto w-full">
       {/* Title */}
-      <h3 className="text-2xl font-bold text-white mb-6 text-center tracking-wide">
+      <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 text-center tracking-wide">
         {algorithmName}
       </h3>
 
       {/* Bars */}
-      <div className="flex justify-center items-end h-80 gap-1 border-b-2 border-gray-700 pb-2 w-full overflow-x-auto p-3">
+      <div className="flex justify-start items-end h-64 md:h-80 gap-1 border-b-2 border-gray-700 pb-2 overflow-x-auto p-2 md:p-3">
         {array.map((value, index) => {
           let barColor = "bg-blue-500"; // Default
-
           if (sortedIndices.includes(index)) barColor = "bg-green-500";
           else if (swaps.includes(index)) barColor = "bg-red-500";
           else if (comparisons.includes(index)) barColor = "bg-indigo-800";
           else if (activeIndices.includes(index)) barColor = "bg-yellow-500";
-          else if (index === pivot) barColor = "<bg-purple-6></bg-purple-6>00";
+          else if (index === pivot) barColor = "bg-purple-600";
 
           const heightPercentage =
             (value / (maxVal > 0 ? maxVal : 1)) * 95 + 5; // min height 5%
@@ -53,16 +52,18 @@ const BarVisualizer = ({
                 minWidth: "18px",
                 maxWidth: "45px",
               }}
-              title={`Index: ${index}, Value: ${value}`} 
+              title={`Index: ${index}, Value: ${value}`}
             >
-              <span className="mb-1 block text-center opacity-80">{value}</span>
+              <span className="mb-1 block text-center opacity-80 text-[10px] md:text-xs">
+                {value}
+              </span>
             </motion.div>
           );
         })}
       </div>
 
       {/* Legend */}
-      <div className="mt-5 flex flex-wrap justify-center gap-4 text-sm">
+      <div className="mt-5 flex flex-wrap justify-center gap-4 text-sm md:text-base">
         <span className="flex items-center gap-2">
           <span className="w-4 h-4 bg-blue-500 rounded-sm"></span> Default
         </span>
