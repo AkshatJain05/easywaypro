@@ -39,7 +39,7 @@ function SignUp() {
       <div className="h-[90vh] w-full px-5 flex justify-center items-center">
         <form
           onSubmit={onSubmitHandler}
-          autoComplete="on"   // ✅ enables autofill
+          autoComplete="on"   //  enables autofill
           className="max-w-96 w-full text-center border border-gray-300/60 rounded-2xl px-5 sm:px-8 bg-gradient-to-bl from-slate-950 to-slate-900 shadow-sm shadow-slate-600"
         >
           <h1 className="text-gray-100 font-semibold text-3xl mt-10">
@@ -57,7 +57,7 @@ function SignUp() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Name"
-              autoComplete="name"   // ✅ autofill full name
+              autoComplete="name"   // autofill full name
               className="bg-transparent text-gray-900 placeholder-gray-500 outline-none text-[16px] w-full h-full"
               required
             />
@@ -71,7 +71,7 @@ function SignUp() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email id"
-              autoComplete="email"   // ✅ helps with email autofill
+              autoComplete="email"   // helps with email autofill
               className="bg-transparent text-gray-900 placeholder-gray-500 outline-none text-[16px] w-full h-full"
               required
             />
@@ -85,7 +85,7 @@ function SignUp() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              autoComplete="new-password"   // ✅ for signup forms
+              autoComplete="new-password"   //  for signup forms
               className="bg-transparent text-gray-900 placeholder-gray-500 outline-none text-sm w-full h-full"
               required
             />
