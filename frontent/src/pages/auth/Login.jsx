@@ -58,7 +58,7 @@ function Login() {
               placeholder="Email id"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              autoComplete="username"   // ✅ helps autofill username/email
+              autoComplete="email"   // helps autofill username/email
               className="bg-transparent text-gray-900 placeholder-gray-500 outline-none text-[16px] w-full h-full"
               required
             />
@@ -72,7 +72,7 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              autoComplete="current-password"   // ✅ tells browser this is login password
+              autoComplete="current-password"   //  tells browser this is login password
               className="bg-transparent text-gray-900 placeholder-gray-500 outline-none text-sm w-full h-full"
               required
             />
