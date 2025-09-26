@@ -71,14 +71,14 @@ function Nav() {
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="flex flex-col items-center mt-20 gap-6 font-medium text-lg px-6">
+        <div className="flex flex-col items-center mt-20 gap-3 font-medium text-lg px-6">
           {navList.map((list, index) => (
             <NavLink
               key={index}
               to={list.link}
               onClick={handleNavLinkClick}
               className={({ isActive }) =>
-                `w-full text-center py-3 rounded-md transition-all duration-300 ${
+                `w-full text-center py-2 rounded-md transition-all duration-300 ${
                   isActive
                     ? "bg-gradient-to-r from-blue-600 to-indigo-700 shadow-md text-white"
                     : "hover:bg-slate-800 hover:text-yellow-400"
@@ -92,7 +92,7 @@ function Nav() {
       </div>
 
       {/* Spacer (so content isn’t hidden) */}
-      <div className="h-[64px]"></div>
+      <div className="h-[58px]"></div>
     </>
   );
 }
