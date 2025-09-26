@@ -21,7 +21,7 @@ function Nav() {
     <>
       {/* Navbar */}
       <nav className="fixed top-0 left-0 w-full z-50 bg-gray-950/80 backdrop-blur-lg border-b border-gray-800 shadow-lg">
-        <div className="max-w-8xl mx-auto flex items-center justify-between h-[64px] px-4 lg:px-12 text-white">
+        <div className="max-w-8xl mx-auto flex items-center justify-between h-[54px] md:h-[56px] px-4 lg:px-12 text-white">
           {/* Logo */}
           <NavLink to="/" className="flex items-center gap-3">
             {/* Logo Text */}
