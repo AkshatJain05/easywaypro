@@ -20,7 +20,7 @@ function Nav() {
   return (
     <>
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 w-full z-50 bg-gray-950/80 backdrop-blur-lg border-b border-gray-800 shadow-lg">
+      <nav className="fixed top-0 left-0 w-full z-150 bg-gray-950/80 backdrop-blur-lg border-b border-gray-800 shadow-lg">
         <div className="max-w-8xl mx-auto flex items-center justify-between h-[54px] md:h-[56px] px-4 lg:px-12 text-white">
           {/* Logo */}
           <NavLink to="/" className="flex items-center gap-3">
@@ -67,7 +67,7 @@ function Nav() {
 
       {/* Mobile Menu (Slide-in) */}
       <div
-        className={`fixed top-0 right-0 h-screen w-3/4 max-w-sm bg-gray-950/95 backdrop-blur-lg shadow-xl border-l border-gray-800 transform transition-transform duration-500 ease-in-out z-40 ${
+        className={`fixed top-0 right-0 h-screen w-3/4 max-w-sm bg-gray-950/95 backdrop-blur-lg shadow-xl border-l border-gray-800 transform transition-transform duration-500 ease-in-out z-140 ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
