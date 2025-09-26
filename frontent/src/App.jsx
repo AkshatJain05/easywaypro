@@ -37,10 +37,11 @@ import SortingPage from "./pages/Visualization/SortingPage.jsx";
 import TreePage from "./pages/Visualization/TreePage.jsx";
 import ScrollToTop from "./ScrollToTop.jsx";
 
+
 function App() {
   return (
     <>
-       <ScrollToTop/>
+      <ScrollToTop/>
       <Routes>
         <Route element={<UserLayout />}>
           {/* Public routes*/}
