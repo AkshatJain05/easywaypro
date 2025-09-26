@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { FaBarsStaggered } from "react-icons/fa6";
 import { RxCross2 } from "react-icons/rx";
-import logoEasyway from "../assets/logoEasyway.png";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import UserMenu from "./UserMenu";
 
 function Nav() {
   const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
 
   const navList = [
     { name: "Home", link: "/" },
@@ -18,98 +16,83 @@ function Nav() {
   ];
 
   const handleNavLinkClick = () => setOpen(false);
-  // const handleLoginBtn = () => {
-  //   navigate("/login");
-  //   setOpen(false);
-  // };
 
   return (
     <>
-      <nav className="z-70 fixed top-0 left-0 w-full h-[60px] flex items-center justify-between px-4 lg:px-12 bg-gray-950 opacity-98 border-b border-gray-800 backdrop-blur-md text-white">
-        {/* Logo */}
-        <NavLink to="/" className="flex items-center gap-2">
-      {/* <img
-            src={logoEasyway}
-            alt="Easyway Logo"
-            className="h-9 md:h-10 w-auto"
-          /> */}
-          <h1 className="font-bold text-xl md:text-2xl lg:text-3xl tracking-wide bg-clip-text text-transparent 
-        bg-gradient-to-r from-blue-400 via-sky-500 to-blue-600">
-            Easyway Pro
-          </h1>
-        </NavLink>
-
-        {/* Desktop Menu */}
-        <div className="hidden lg:flex items-center gap-8 font-medium">
-          {navList.map((list, index) => (
-            <NavLink
-              key={index}
-              to={list.link}
-              className={({ isActive }) =>
-                `px-3 py-1 rounded-md transition ${
-                  isActive
-                    ? "bg-gradient-to-br from-gray-950 to-black  border-1 border-white"
-                    : "hover:text-yellow-400"
-                }`
-              }
+      {/* Navbar */}
+      <nav className="fixed top-0 left-0 w-full z-50 bg-gray-950/80 backdrop-blur-lg border-b border-gray-800 shadow-lg">
+        <div className="max-w-8xl mx-auto flex items-center justify-between h-[64px] px-4 lg:px-12 text-white">
+          {/* Logo */}
+          <NavLink to="/" className="flex items-center gap-3">
+            {/* Logo Text */}
+            <h1
+              className="font-extrabold text-2xl md:text-2xl lg:text-3xl bg-clip-text text-transparent 
+      bg-gradient-to-r from-blue-400 via-sky-500 to-indigo-600 drop-shadow-lg"
             >
-              {list.name}
-            </NavLink>
-          ))}
-          <UserMenu />
-        </div>
+              Easyway Pro
+            </h1>
+          </NavLink>
 
-        <div className=" flex gap-2 items-center lg:hidden">
-          <UserMenu />
+          {/* Desktop Menu */}
+          <div className="hidden lg:flex items-center gap-10 font-medium">
+            {navList.map((list, index) => (
+              <NavLink
+                key={index}
+                to={list.link}
+                className={({ isActive }) =>
+                  `relative transition duration-300 pb-1 ${
+                    isActive ? "text-yellow-400 after:w-full" : null
+                  } after:absolute after:left-0 after:bottom-0 after:h-[2px] after:bg-gradient-to-r after:from-blue-400 after:to-indigo-600 after:transition-all after:duration-300 after:w-0 hover:after:w-full`
+                }
+              >
+                {list.name}
+              </NavLink>
+            ))}
+            <UserMenu />
+          </div>
+
           {/* Mobile Menu Button */}
-          <button
-            onClick={() => setOpen(!open)}
-            aria-label="Toggle Menu"
-            className="lg:hidden p-2 text-2xl"
-          >
-            {open ? <RxCross2 className="text-xl" /> : <FaBarsStaggered className="text-lg" />}
-          </button>
+          <div className="flex gap-2 items-center lg:hidden">
+            <UserMenu />
+            <button
+              onClick={() => setOpen(!open)}
+              aria-label="Toggle Menu"
+              className="p-2 text-2xl transition-transform duration-300 hover:scale-110"
+            >
+              {open ? <RxCross2 /> : <FaBarsStaggered />}
+            </button>
+          </div>
         </div>
       </nav>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu (Slide-in) */}
       <div
-        className={`lg:hidden z-100 fixed top-[60px] left-0 w-full bg-gray-950/95 backdrop-blur-md border-b border-gray-800 transition-all duration-300 ${
-          open
-            ? "max-h-[400px] opacity-100"
-            : "max-h-0 opacity-0 overflow-hidden"
+        className={`fixed top-0 right-0 h-screen w-3/4 max-w-sm bg-gray-950/95 backdrop-blur-lg shadow-xl border-l border-gray-800 transform transition-transform duration-500 ease-in-out z-40 ${
+          open ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="flex flex-col  px-2 w-full justify-center items-center py-6 gap-4 font-medium text-base">
+        <div className="flex flex-col items-center mt-20 gap-6 font-medium text-lg px-6">
           {navList.map((list, index) => (
             <NavLink
               key={index}
               to={list.link}
               onClick={handleNavLinkClick}
               className={({ isActive }) =>
-                `w-full text-center py-2 rounded-md ${
+                `w-full text-center py-3 rounded-md transition-all duration-300 ${
                   isActive
-                    ? "bg-slate-800  border-1 border-white"
-                    : "hover:bg-slate-800 hover:text-yellow-500"
+                    ? "bg-gradient-to-r from-blue-600 to-indigo-700 shadow-md text-white"
+                    : "hover:bg-slate-800 hover:text-yellow-400"
                 }`
               }
             >
               {list.name}
             </NavLink>
           ))}
-
-          
-          {/* <button
-            onClick={handleLoginBtn}
-            className="mt-4 w-40 px-4 py-2 bg-slate-900 text-white font-semibold rounded-lg shadow-md hover:bg-slate-400 transition"
-          >
-            Login
-          </button> */}
         </div>
       </div>
 
-      {/* Spacer (to avoid content hiding under fixed navbar) */}
-      <div className="bg-black h-[60px]"></div>
+      {/* Spacer (so content isn’t hidden) */}
+      <div className="h-[64px]"></div>
     </>
   );
 }
