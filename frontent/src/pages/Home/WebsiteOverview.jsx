@@ -117,15 +117,9 @@ export default function WebsiteOverview() {
               </button>
               <AnimatePresence>
                 {openFAQ === i && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="px-4 pb-4 text-sm text-slate-300 overflow-hidden"
-                  >
+                  <div className="px-4 pb-4 text-sm text-slate-300 overflow-hidden">
                     {faq.a}
-                  </motion.div>
+                  </div>
                 )}
               </AnimatePresence>
             </motion.div>
