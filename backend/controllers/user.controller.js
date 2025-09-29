@@ -25,7 +25,7 @@ export const updateProfile = async (req, res) => {
     if (req.file) {
       // Local file path from multer
       const filePath = req.file.path;
-      console.log("File path:", filePath);
+      //console.log("File path:", filePath);
 
       // Upload to Cloudinary
       uploaded = await uploadOnCloudinary(filePath, "profile");
