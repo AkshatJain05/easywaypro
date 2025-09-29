@@ -7,7 +7,7 @@ const router = express.Router();
 
 // Gemini API Setup (once)
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 // Utility: Remove Markdown code fences
 function cleanMarkdown(raw) {
