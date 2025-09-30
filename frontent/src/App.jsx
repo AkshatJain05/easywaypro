@@ -36,6 +36,9 @@ import HomePage from "./pages/Visualization/VisaulizationHomePage.jsx";
 import SortingPage from "./pages/Visualization/SortingPage.jsx";
 import TreePage from "./pages/Visualization/TreePage.jsx";
 import ScrollToTop from "./ScrollToTop.jsx";
+import ForgotPassword from "./pages/auth/ForgotPassword.jsx";
+import ResetPassword from "./pages/auth/ResetPassword.jsx";
+
 
 
 function App() {
@@ -65,6 +68,13 @@ function App() {
           <Route path="/algorithm-visualizer" element={<HomePage />} />
           <Route path="/sorting" element={<SortingPage />} />
           <Route path="/trees" element={<TreePage />} />
+
+           {/* Forgot Password */}
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+
+        {/* Reset Password with token */}
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+
 
           {/* Protected routes */}
           <Route element={<ProtectedRoute />}>

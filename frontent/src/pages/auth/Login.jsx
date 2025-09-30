@@ -58,7 +58,7 @@ function Login() {
               placeholder="Email id"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              autoComplete="email"   // helps autofill username/email
+              autoComplete="email"
               className="bg-transparent text-gray-900 placeholder-gray-500 outline-none text-[16px] w-full h-full"
               required
             />
@@ -72,7 +72,7 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              autoComplete="current-password"   //  tells browser this is login password
+              autoComplete="current-password"
               className="bg-transparent text-gray-900 placeholder-gray-500 outline-none text-sm w-full h-full"
               required
             />
@@ -87,10 +87,20 @@ function Login() {
             </button>
           </div>
 
+          {/* Forgot Password */}
+          <div className="w-full text-right mt-2">
+            <NavLink
+              to="/forgot-password"
+              className="text-indigo-500 text-sm hover:underline"
+            >
+              Forgot Password?
+            </NavLink>
+          </div>
+
           <button
             type="submit"
             disabled={loading}
-            className={`mt-2 w-full h-11 rounded-full text-white bg-slate-950 hover:opacity-90 border-1 border-slate-300 active:scale-[0.96] transition-all ${
+            className={`mt-4 w-full h-11 rounded-full text-white bg-slate-950 hover:opacity-90 border-1 border-slate-300 active:scale-[0.96] transition-all ${
               loading ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >

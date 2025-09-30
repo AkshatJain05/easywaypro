@@ -28,17 +28,19 @@ const HomePage = () => {
   ];
 
   return (
+    <>
+        <button
+                  onClick={() => navigate(-1)}
+                  className="flex items-center gap-1 px-3 py-1.5 mx-5 md:mx-10 mt-4 mb-2
+                           bg-gray-800 hover:bg-gray-700 text-gray-200 
+                           rounded-lg text-sm shadow-md transition-all cursor-pointer"
+                >
+                  <FaArrowLeft className="text-sm" />
+                  <span>Back</span>
+                </button>
     <div className="min-h-[calc(100vh-80px)] bg-gradient-to-br from-gray-950 to-black  text-white flex flex-col items-center justify-center py-12 px-6">
       {/* Back Button */}
-      <button
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-1 px-3 py-2 mx-2 mb-4
-                                bg-gray-800 hover:bg-gray-700 text-gray-200 
-                                rounded-lg text-sm shadow-md transition-transform transform hover:-translate-y-0.5"
-      >
-        <FaArrowLeft className="text-sm" />
-        <span>Back</span>
-      </button>
+      
       {/* Hero Section */}
       <h1 className="text-3xl md:text-5xl font-extrabold text-blue-400 mb-6 text-center leading-tight animate-fadeIn">
         Explore Algorithms Visually
@@ -62,6 +64,7 @@ const HomePage = () => {
         ))}
       </div>
     </div>
+    </>
   );
 };
 

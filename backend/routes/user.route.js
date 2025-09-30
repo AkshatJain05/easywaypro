@@ -1,5 +1,5 @@
 import express from "express";
-import { authMe, login, logout, register,adminLogin } from "../controllers/auth.controller.js";
+import { authMe, login, logout, register,adminLogin, forgetPassword, resetPassword } from "../controllers/auth.controller.js";
 import {protect} from "../middlewares/auth.middlerware.js";
 import { getProfile, updateProfile } from "../controllers/user.controller.js";
 import {upload} from "../middlewares/multer.middleware.js";
@@ -18,5 +18,9 @@ router.get("/me",authMe);
 
 //admin Login
 router.post("/admin/login",adminLogin);
+
+//reset password
+router.post("/forgot-password",forgetPassword);
+router.post("/reset-password/:token",resetPassword)
 
 export default router;

@@ -1,0 +1,39 @@
+import { useState } from "react";
+
+function ForgotPassword() {
+  const [email, setEmail] = useState("");
+  const [msg, setMsg] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleForgot = async (e) => {
+    e.preventDefault();
+    setMsg(""); setError("");
+    setLoading(true);
+    try {
+      const res = await axios.post("/api/forgot-password", { email });
+      setMsg(res.data.message);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to send reset email");
+    } finally { setLoading(false); }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="bg-gradient-to-br from-gray-950 to-black border-1 w-full max-w-md p-8 rounded-2xl shadow-lg text-white">
+        <h2 className="text-3xl font-bold text-center mb-6">Forgot Password</h2>
+        <form onSubmit={handleForgot} className="space-y-4">
+          <input type="email" placeholder="Enter your email" value={email} onChange={e => setEmail(e.target.value)}
+            className="w-full p-3  text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 border-gray-100 border-2 rounded-xl" required />
+          <button type="submit" disabled={loading} className="w-full bg-indigo-600 py-3 rounded hover:bg-indigo-500 transition font-semibold">
+            {loading ? "Sending..." : "Send Reset Link"}
+          </button>
+        </form>
+        {msg && <p className="mt-4 text-green-400 text-center">{msg}</p>}
+        {error && <p className="mt-4 text-red-400 text-center">{error}</p>}
+      </div>
+    </div>
+  );
+}   
+
+export default ForgotPassword;

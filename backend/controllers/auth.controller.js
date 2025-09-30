@@ -119,4 +119,49 @@ const authMe =  async(req, res) => {
   }
 }
 
-export { register, login, logout ,authMe ,adminLogin};
+
+const resetPassword =  async (req, res) => {
+  const hashedToken = crypto.createHash("sha256").update(req.params.token).digest("hex");
+
+  const user = await User.findOne({
+    resetToken: hashedToken,
+    resetTokenExpire: { $gt: Date.now() },
+  });
+
+  if (!user) return res.status(400).json({ message: "Token invalid or expired" });
+
+  user.password = req.body.password; // hashed automatically
+  user.resetToken = undefined;
+  user.resetTokenExpire = undefined;
+  await user.save();
+
+  res.json({ message: "Password reset successful" });
+}
+
+const forgetPassword = async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) return res.status(404).json({ message: "User not found" });
+
+  const resetToken = user.createPasswordResetToken();
+  await user.save();
+
+  const resetURL = `http://localhost:8000/reset-password/${resetToken}`;
+
+  const transporter = nodemailer.createTransport({
+    service: "Gmail",
+    auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+  });
+
+  await transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Password Reset Request",
+    html: `<p>Click below to reset your password:</p><a href="${resetURL}" class="text-blue-500">Reset Password</a>`,
+  });
+
+  res.json({ message: "Reset link sent to email" });
+}
+
+
+export { register, login, logout ,authMe ,adminLogin,resetPassword,forgetPassword};
