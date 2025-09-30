@@ -28,7 +28,7 @@ const HomePage = () => {
   ];
 
   return (
-    <>
+     <>
         <button
                   onClick={() => navigate(-1)}
                   className="flex items-center gap-1 px-3 py-1.5 mx-5 md:mx-10 mt-4 mb-2
