@@ -117,14 +117,7 @@ export default function WebsiteOverview() {
               </button>
               <AnimatePresence>
                 {openFAQ === i && (
-<<<<<<< HEAD
-                  <div
-                   
-                    className="px-4 pb-4 text-sm text-slate-300 overflow-hidden"
-                  >
-=======
                   <div className="px-4 pb-4 text-sm text-slate-300 overflow-hidden">
->>>>>>> fbef574de5fc531b1ed649d11a86189a646b8f74
                     {faq.a}
                   </div>
                 )}
