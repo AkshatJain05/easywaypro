@@ -78,7 +78,7 @@ function SignUp() {
           </div>
 
           {/* Password */}
-          <div className="flex items-center mt-4 w-full bg-slate-100 border border-yellow-500 h-11 rounded-full overflow-hidden pl-4 gap-2">
+          <div className="flex items-center mt-4 w-full bg-slate-100 border border-yellow-500 h-11 rounded-full overflow-hidden pl-4 gap-2 mb-5">
             <RiLockPasswordFill className="text-gray-800 h-8 w-5" />
             <input
               type={showPassword ? "text" : "password"}
