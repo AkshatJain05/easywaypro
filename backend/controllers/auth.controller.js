@@ -38,8 +38,8 @@ const login = async (req, res) => {
     const token = generateToken(user._id);
     res.cookie("jwt", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV !== "production", // only https in prod
-      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production", // only https in prod
+      sameSite: "none",
       maxAge: 24 * 60 * 60 * 1000, // 1 days
     });
 
@@ -81,8 +81,8 @@ const adminLogin = async (req, res) => {
     const token = generateToken(user._id);
     res.cookie("jwt", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV !== "production", // only https in prod
-      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production", // only https in prod
+      sameSite: "none",
       maxAge: 24 * 60 * 60 * 1000, // 1 days
     });
 
@@ -104,8 +104,8 @@ const adminLogin = async (req, res) => {
 const logout = async (req, res) => {
   res.clearCookie("jwt", {
     httpOnly: true,
-    secure: process.env.NODE_ENV !== "production",
-    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "none",
   });
   res.json({ message: "Logout successful" });
 };
@@ -158,7 +158,7 @@ const forgetPassword = async (req, res) => {
     await user.save({ validateBeforeSave: false }); // skip unnecessary validation
 
     //  Construct reset URL (use HTTPS in production)
-    const resetURL = `http://localhost:5173/reset-password/${resetToken}`;
+    const resetURL = `https://easywaypro.onrender.com/reset-password/${resetToken}`;
 
     //  Create Nodemailer transporter (Gmail)
     const transporter = nodemailer.createTransport({
