@@ -41,11 +41,7 @@ function ForgotPassword() {
         <span>Back</span>
       </button>
 
-<<<<<<< HEAD
-      <div className="min-h-screen flex items-start  justify-center p-4">
-=======
       <div className="min-h-screen flex items-start justify-center p-4">
->>>>>>> 4121fc47c2816bd60dc808806fa3319289b8eefd
         <div className="bg-gradient-to-br from-gray-950 to-black border-1 w-full max-w-md p-8 rounded-2xl shadow-lg text-white">
           <h2 className="text-3xl font-bold text-center mb-6">
             Forgot Password
