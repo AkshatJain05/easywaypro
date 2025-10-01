@@ -26,7 +26,6 @@ It helps students **learn smarter** by providing resources like **notes, PYQs, s
 ### Certificate Feature
 - Generate and download **completion certificates** for quizzes or courses.  
 - Certificates include **student name, course/quiz, score, and date**.  
-- Fully styled with **Tailwind CSS**, no external icons required.  
 - Certificates can be **Download Certificate** directly from the browser.
 
 ### Admin Features
@@ -38,7 +37,7 @@ It helps students **learn smarter** by providing resources like **notes, PYQs, s
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 - **Frontend:** React, Redux Toolkit, React Router, Tailwind CSS  
 - **Backend:** Node.js, Express, MongoDB, Mongoose  
 - **Authentication:** JWT, Cookies  
