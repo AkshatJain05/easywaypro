@@ -67,10 +67,10 @@ export default function CertificateView() {
           <IoIosArrowBack size={20} />
           <span className="text-sm font-medium">Go Back</span>
         </button>
-        {/* Print button now visible on all screen sizes */}
+        {/* Hide print button on smaller screens for better mobile UX */}
         <button
           onClick={handlePrint}
-          className="flex items-center gap-2 bg-blue-600 text-white font-semibold py-2 px-5 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-300 transform hover:scale-105"
+          className="hidden sm:flex items-center gap-2 bg-blue-600 text-white font-semibold py-2 px-5 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-300 transform hover:scale-105"
         >
           <MdOutlinePrint size={20} />
           <span className="text-sm">Print / Save as PDF</span>
@@ -111,7 +111,7 @@ export default function CertificateView() {
           </div>
 
           {/* Footer Section */}
-          <div className="w-full flex justify-between items-end mt-4 sm:mt-2 mb-12 px-4">
+          <div className="w-full flex justify-between items-end mt-4 sm:mt-2 mb-12 px-2">
             {/* Certificate ID & URL */}
             <div className="text-left text-xs sm:text-sm text-gray-700 max-w-[50%]">
               <p className="font-semibold">Certificate ID: <span className="font-mono">{certificate.certificateId}</span></p>
