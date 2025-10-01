@@ -1,13 +1,16 @@
-import {User} from "../models/user.model.js";
+import { User } from "../models/user.model.js";
 import { generateToken } from "../utils/generateToken.js";
 import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
+import crypto from "crypto";
 
 const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
     const userExists = await User.findOne({ email });
-    if (userExists) return res.status(400).json({ message: "User already exists" });
+    if (userExists)
+      return res.status(400).json({ message: "User already exists" });
 
     const user = await User.create({ name, email, password });
 
@@ -17,25 +20,26 @@ const register = async (req, res) => {
   }
 };
 
-
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Fetch user 
-    const user = await User.findOne({ email })
-    if (!user) return res.status(400).json({ message: "Invalid email or password" });
+    // Fetch user
+    const user = await User.findOne({ email });
+    if (!user)
+      return res.status(400).json({ message: "Invalid email or password" });
 
     // Compare password
     const isMatch = await user.matchPassword(password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid email or password" });
+    if (!isMatch)
+      return res.status(400).json({ message: "Invalid email or password" });
 
     // Generate JWT + cookie
     const token = generateToken(user._id);
-      res.cookie("jwt", token, {
+    res.cookie("jwt", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // only https in prod
-      sameSite: "none",
+      secure: process.env.NODE_ENV !== "production", // only https in prod
+      sameSite: "lax",
       maxAge: 24 * 60 * 60 * 1000, // 1 days
     });
 
@@ -58,9 +62,10 @@ const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Fetch user 
-    const user = await User.findOne({ email })
-    if (!user) return res.status(400).json({ message: "Invalid email or password" });
+    // Fetch user
+    const user = await User.findOne({ email });
+    if (!user)
+      return res.status(400).json({ message: "Invalid email or password" });
 
     // Check role
     if (user.role !== "admin") {
@@ -69,14 +74,15 @@ const adminLogin = async (req, res) => {
 
     // Compare password
     const isMatch = await user.matchPassword(password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid email or password" });
+    if (!isMatch)
+      return res.status(400).json({ message: "Invalid email or password" });
 
     // Generate JWT + cookie
     const token = generateToken(user._id);
-      res.cookie("jwt", token, {
+    res.cookie("jwt", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // only https in prod
-      sameSite: "none",
+      secure: process.env.NODE_ENV !== "production", // only https in prod
+      sameSite: "lax",
       maxAge: 24 * 60 * 60 * 1000, // 1 days
     });
 
@@ -95,16 +101,16 @@ const adminLogin = async (req, res) => {
   }
 };
 
-const logout = async(req,res)=>{
-    res.clearCookie("jwt", {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "none"
-    });
-    res.json({ message: "Logout successful" });
-}
+const logout = async (req, res) => {
+  res.clearCookie("jwt", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV !== "production",
+    sameSite: "lax",
+  });
+  res.json({ message: "Logout successful" });
+};
 
-const authMe =  async(req, res) => {
+const authMe = async (req, res) => {
   const token = req.cookies.jwt;
   if (!token) return res.status(401).json({ message: "No token" });
 
@@ -113,22 +119,24 @@ const authMe =  async(req, res) => {
     // console.log("decoded", decoded);
     const user = await User.findById(decoded?.userId).select("-password");
     res.json({ user: user });
-
   } catch {
     res.status(401).json({ message: "Invalid token" });
   }
-}
+};
 
-
-const resetPassword =  async (req, res) => {
-  const hashedToken = crypto.createHash("sha256").update(req.params.token).digest("hex");
+const resetPassword = async (req, res) => {
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
 
   const user = await User.findOne({
     resetToken: hashedToken,
     resetTokenExpire: { $gt: Date.now() },
   });
 
-  if (!user) return res.status(400).json({ message: "Token invalid or expired" });
+  if (!user)
+    return res.status(400).json({ message: "Token invalid or expired" });
 
   user.password = req.body.password; // hashed automatically
   user.resetToken = undefined;
@@ -136,32 +144,82 @@ const resetPassword =  async (req, res) => {
   await user.save();
 
   res.json({ message: "Password reset successful" });
-}
+};
 
 const forgetPassword = async (req, res) => {
-  const { email } = req.body;
-  const user = await User.findOne({ email });
-  if (!user) return res.status(404).json({ message: "User not found" });
+  try {
+    const { email } = req.body;
+    //  Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-  const resetToken = user.createPasswordResetToken();
-  await user.save();
+    //  Generate secure reset token
+    const resetToken = user.createPasswordResetToken();
+    await user.save({ validateBeforeSave: false }); // skip unnecessary validation
 
-  const resetURL = `http://localhost:8000/reset-password/${resetToken}`;
+    //  Construct reset URL (use HTTPS in production)
+    const resetURL = `http://localhost:5173/reset-password/${resetToken}`;
 
-  const transporter = nodemailer.createTransport({
-    service: "Gmail",
-    auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
-  });
+    //  Create Nodemailer transporter (Gmail)
+    const transporter = nodemailer.createTransport({
+      service: "Gmail",
+      port: 465, // SSL port
+      secure: true, // SSL/TLS from start
+      auth: {
+        user: process.env.EMAIL_USER, // Gmail address
+        pass: process.env.EMAIL_PASS, // Gmail App Password
+      },
+    });
 
-  await transporter.sendMail({
-    from: process.env.EMAIL_USER,
-    to: email,
-    subject: "Password Reset Request",
-    html: `<p>Click below to reset your password:</p><a href="${resetURL}" class="text-blue-500">Reset Password</a>`,
-  });
+    //  Compose email (styled HTML)
+    const message = `
+      <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
+        <h2>Password Reset Request</h2>
+        <p>Hello,</p>
+        <p>We received a request to reset your password for your account.</p>
+        <p>Click the button below to reset your password. This link is valid for <strong>10 min</strong>.</p>
+        <a href="${resetURL}" 
+           style="
+             display: inline-block;
+             padding: 10px 20px;
+             margin: 10px 0;
+             background-color: #1a73e8;
+             color: #ffffff;
+             text-decoration: none;
+             border-radius: 5px;
+           ">
+          Reset Password
+        </a>
+        <p>If you did not request a password reset, you can safely ignore this email.</p>
+      </div>
+    `;
 
-  res.json({ message: "Reset link sent to email" });
-}
+    // Send email
+    await transporter.sendMail({
+      from: `"Easyway Pro" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Password Reset Request",
+      html: message,
+    });
 
+    // Respond to frontend
+    res
+      .status(200)
+      .json({ message: "A password reset link has been sent to your email." });
+  } catch (error) {
+    console.error("Error sending password reset email:", error);
+    res
+      .status(500)
+      .json({ message: "Error sending email, please try again later." });
+  }
+};
 
-export { register, login, logout ,authMe ,adminLogin,resetPassword,forgetPassword};
+export {
+  register,
+  login,
+  logout,
+  authMe,
+  adminLogin,
+  resetPassword,
+  forgetPassword,
+};

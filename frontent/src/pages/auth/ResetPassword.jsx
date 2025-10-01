@@ -13,6 +13,7 @@ function ResetPassword() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleReset = async (e) => {
     e.preventDefault();
@@ -26,7 +27,7 @@ function ResetPassword() {
 
     setLoading(true);
     try {
-      const res = await axios.post(`/api/reset-password/${token}`, { password });
+      const res = await axios.post(`${API_URL}/auth/reset-password/${token}`, { password });
       setMsg(res.data.message);
       setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
