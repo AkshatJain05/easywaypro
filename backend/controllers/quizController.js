@@ -1,128 +1,265 @@
-// import Quiz from "../models/quiz.model.js";
-// import Certificate from "../models/certificate.model.js";
-// import crypto from "crypto";
+import Quiz from "../models/Quiz.model.js";
+import Certificate from "../models/Certificate.model.js";
+import QuizAttempt from "../models/QuizAttempt.model.js";
+import mongoose from "mongoose";
+import crypto from "crypto";
+import CompletedQuiz from "../models/CompletedQuizSchema .js";
 
-// /**
-//  * Utility: generate unique certificate ID
-//  */
-// const generateCertificateId = () => crypto.randomBytes(8).toString("hex"); // 16-char hex
+export const getQuiz = async (req, res) => {
+  try {
+    const { subject } = req.query;
+    const filter = subject ? { subject } : {};
+    const quizzes = await Quiz.find(filter);
+    res.json(quizzes);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
-// /**
-//  * Fetch all quizzes or by subject
-//  */
-// export const getQuizzes = async (req, res) => {
-//   try {
-//     const { subject } = req.query;
-//     let quizzes;
+export const getQuizById = async (req, res) => {
+  try {
+    const { quizId } = req.params;
+    let quiz = null;
 
-//     if (subject) {
-//       quizzes = await Quiz.find({ subject });
-//       if (!quizzes.length) return res.status(404).json({ message: `No quizzes found for '${subject}'` });
-//     } else {
-//       quizzes = await Quiz.find();
-//       if (!quizzes.length) return res.status(404).json({ message: "No quizzes found" });
-//     }
+    // Try finding by ObjectId
+    try {
+      quiz = await Quiz.findById(quizId);
+    } catch (err) {
+      // If invalid ObjectId, ignore the error
+      quiz = null;
+    }
 
-//     res.status(200).json(quizzes);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: "Server error: " + err.message });
-//   }
-// };
+    // If not found, try finding by slug
+    if (!quiz) {
+      quiz = await Quiz.findOne({ slug: quizId });
+    }
 
-// /**
-//  * Fetch quiz by ID
-//  */
-// export const getQuizById = async (req, res) => {
-//   try {
-//     const { quizId } = req.params;
-//     if (!quizId) return res.status(400).json({ message: "Quiz ID required" });
+    if (!quiz) return res.status(404).json({ message: "Quiz not found" });
 
-//     const quiz = await Quiz.findById(quizId);
-//     if (!quiz) return res.status(404).json({ message: "Quiz not found" });
+    res.json(quiz);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
-//     res.status(200).json(quiz);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: "Server error: " + err.message });
-//   }
-// };
+export const submitQuiz = async (req, res) => {
+  try {
+    const { quizId, answers } = req.body;
 
-// /**
-//  * Submit quiz (score calculation + certificate)
-//  * Email now comes from logged-in user (req.user.email)
-//  */
-// export const submitQuiz = async (req, res) => {
-//   const { quizId, answers } = req.body;
-//   const email = req.user?.email; // get email from cookie-auth middleware
+    // Fetch quiz safely
+    let quiz;
+    if (mongoose.Types.ObjectId.isValid(quizId)) {
+      quiz = await Quiz.findById(quizId);
+    }
+    if (!quiz) {
+      quiz = await Quiz.findOne({ slug: quizId });
+    }
+    if (!quiz) return res.status(404).json({ message: "Quiz not found" });
 
-//   if (!email) return res.status(401).json({ message: "Unauthorized" });
+    // Calculate score
+    let score = 0;
+    quiz.questions.forEach((q, idx) => {
+      const ans = answers[idx];
+      if (!ans) return;
+      if (q.type === "mcq") {
+        const correct = q.options.find((o) => o.isCorrect)?.text;
+        if (ans === correct) score += q.marks || 1;
+      } else if (q.type === "code") {
+        if (
+          q.answerHint &&
+          ans.toLowerCase().includes(q.answerHint.toLowerCase())
+        ) {
+          score += q.marks || 1;
+        }
+      }
+    });
 
-//   try {
-//     const quiz = await Quiz.findById(quizId);
-//     if (!quiz) return res.status(404).json({ message: "Quiz not found" });
+    // Save quiz attempt
+    const attempt = new QuizAttempt({
+      email: req.user.email,
+      quizId: quiz._id,
+      answers,
+      score,
+    });
+    await attempt.save();
 
-//     let score = 0;
+    // Generate certificate if passed
+    let certificate = null;
+    if (score >= 10) {
+      certificate = new Certificate({
+        name: req.user.name,
+        title: quiz.title,
+        email: req.user.email,
+        subject: quiz.subject,
+        score,
+        certificateId: crypto.randomBytes(8).toString("hex"),
+      });
+      await certificate.save();
+    }
 
-//     quiz.questions.forEach((q, idx) => {
-//       const userAnswer = answers[idx];
-//       if (!userAnswer) return;
+    // Save to CompletedQuiz
+    await CompletedQuiz.findOneAndUpdate(
+      { user: req.user.id, quiz: quiz._id },
+      {
+        user: req.user.id,
+        quiz: quiz._id,
+        certificateGenerated: !!certificate,
+        score,
+      },
+      { upsert: true, new: true }
+    );
 
-//       if (q.type === "mcq") {
-//         const correctOption = q.options.find(opt => opt.isCorrect);
-//         if (correctOption && userAnswer === correctOption.text) score += q.marks;
-//       } else if (q.type === "code") {
-//         if (q.answerHint && userAnswer.toLowerCase().includes(q.answerHint.toLowerCase().split(" ")[0])) {
-//           score += q.marks;
-//         }
-//       }
-//     });
+    res.json({ score, certificate });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
-//     let certificate = null;
-//     if (score >= 70) {
-//       certificate = new Certificate({
-//         email,
-//         subject: quiz.subject,
-//         score,
-//         certificateId: generateCertificateId()
-//       });
-//       await certificate.save();
-//     }
+export const userScore = async (req, res) => {
+  try {
+    // console.log("Hello")
+    const email = req.user.email;
 
-//     res.json({ score, certificate });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
+    // Get the latest quiz attempt
+    const latestAttempt = await QuizAttempt.findOne({ email }).sort({
+      date: -1,
+    });
+    if (!latestAttempt) return res.json({ score: 0, certificate: null });
 
-// /**
-//  * Get all certificates for logged-in user
-//  */
-// export const getCertificates = async (req, res) => {
-//   const email = req.user?.email;
-//   if (!email) return res.status(401).json({ message: "Unauthorized" });
+    let quiz = null;
 
-//   try {
-//     const certificates = await Certificate.find({ email }).sort({ date: -1 });
-//     res.json(certificates);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: err.message });
-//   }
-// };
+    // Safely fetch the quiz
+    if (latestAttempt.quizId) {
+      try {
+        // Try findById first
+        quiz = await Quiz.findById(latestAttempt.quizId);
+      } catch (err) {
+        // If invalid ObjectId, fallback to findOne by _id
+        quiz = await Quiz.findOne({ _id: latestAttempt.quizId }).catch(
+          () => null
+        );
+      }
+    }
 
-// /**
-//  * Get certificate by certificateId (shareable URL)
-//  */
-// export const getCertificateById = async (req, res) => {
-//   const { id } = req.params;
-//   try {
-//     const certificate = await Certificate.findOne({ certificateId: id });
-//     if (!certificate) return res.status(404).json({ message: "Certificate not found" });
-//     res.json(certificate);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: err.message });
-//   }
-// };
+    // Find certificate for this quiz subject
+    const certificate = quiz
+      ? await Certificate.findOne({ email, subject: quiz.subject })
+      : null;
+
+    res.json({ score: latestAttempt.score, certificate });
+  } catch (err) {
+    console.error("User score error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const userCertification = async (req, res) => {
+  try {
+    const email = req.user.email;
+    const certificates = await Certificate.find({ email }).sort({ date: -1 });
+    res.json(certificates);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const userCertificationById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const cert = await Certificate.findOne({ certificateId: id });
+    if (!cert)
+      return res.status(404).json({ message: "Certificate not found" });
+    res.json(cert);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const createQuiz = async (req, res) => {
+  try {
+    const { title, subject, questions } = req.body;
+
+    // Basic validation
+    if (!title || !subject || !questions || !questions.length) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // Validate each question
+    for (let i = 0; i < questions.length; i++) {
+      const q = questions[i];
+
+      if (!q.questionText || !q.questionText.trim()) {
+        return res.status(400).json({
+          message: `Question ${i + 1} must have text`,
+        });
+      }
+
+      if (q.type === "mcq") {
+        if (!q.options || q.options.length < 2) {
+          return res.status(400).json({
+            message: `Question ${i + 1} must have at least 2 options`,
+          });
+        }
+
+        // Remove empty options
+        q.options = q.options.filter(
+          (opt) => opt.text && opt.text.trim() !== ""
+        );
+
+        if (q.options.length < 2) {
+          return res.status(400).json({
+            message: `Question ${i + 1} must have at least 2 valid options`,
+          });
+        }
+
+        // Ensure one option is correct
+        const hasCorrect = q.options.some((opt) => opt.isCorrect === true);
+        if (!hasCorrect) {
+          return res.status(400).json({
+            message: `Question ${i + 1} must have at least one correct option`,
+          });
+        }
+      }
+
+      if (q.type === "code" && (!q.answerHint || !q.answerHint.trim())) {
+        return res.status(400).json({
+          message: `Question ${
+            i + 1
+          } is a code question but answer hint is empty`,
+        });
+      }
+    }
+
+    // Create quiz
+    const newQuiz = new Quiz({ title, subject, questions });
+    await newQuiz.save();
+
+    return res.status(201).json({
+      message: "Quiz created successfully",
+      quiz: newQuiz,
+    });
+  } catch (error) {
+    console.error("Error creating quiz:", error);
+
+    // Return Mongoose validation errors if any
+    if (error.name === "ValidationError") {
+      const errors = Object.values(error.errors).map((e) => e.message);
+      return res.status(400).json({ message: "Validation failed", errors });
+    }
+
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const completedQuiz = async (req, res) => {
+  try {
+    const completed = await CompletedQuiz.find({ user: req.user._id })
+      .populate("quiz", "title subject")
+      .select("quiz certificateGenerated score");
+
+    res.json({ completed });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
