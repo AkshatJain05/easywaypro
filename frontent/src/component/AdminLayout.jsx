@@ -1,6 +1,7 @@
 import  { useState } from "react";
 import { Outlet, NavLink } from "react-router-dom";
 import { FaBook, FaUsers, FaFileAlt, FaEnvelope, FaBars, FaTimes } from "react-icons/fa";
+import { MdQuiz } from "react-icons/md";
 import UserMenu from "./UserMenu";
 
 
@@ -11,6 +12,7 @@ export default function AdminLayout() {
     { name: "Add Roadmap", icon: <FaBook />, path: "/admin/add-roadmap" },
     { name: "Manage Resources", icon: <FaFileAlt />, path: "/admin/manage-resource" },
     { name: "Manage Contacts", icon: <FaEnvelope />, path: "/admin/contacts" },
+     { name: "Create Quiz", icon: <MdQuiz />, path: "/admin/create-quiz" },
     { name: "Users", icon: <FaUsers />, path: "/admin/users" },
   ];
 

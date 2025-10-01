@@ -27,6 +27,8 @@ import codeAnalyzerRouter from "./routes/codeAnalyze.route.js"
 import taskRouter from "./routes/task.routes.js"  
 import contactRouter from "./routes/contact.route.js"
 import adminRouter from "./routes/admin.route.js"
+import quizRouter from "./routes/quiz.route.js"
+
 app.use("/api/auth",userRouter);
 app.use("/api/resources",resouceRouter);
 app.use("/api/roadmap",roadmapRouter);
@@ -35,7 +37,8 @@ app.use("/api/resumes", resumeRouter);
 app.use("/api/code",codeAnalyzerRouter);
 app.use("/api/tasks", taskRouter);
 app.use("/api/contacts", contactRouter);
-app.use("/api/admin",adminRouter)
+app.use("/api/admin",adminRouter);
+app.use("/api/quiz",quizRouter)
 
 
 // Connect DB first, then start server

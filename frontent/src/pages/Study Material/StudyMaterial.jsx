@@ -6,6 +6,7 @@ import onlineLecture from "../../assets/onlineLecture.png";
 import roadmap from "../../assets/roadMap.png";
 import syllabus from "../../assets/syllabusImg.png";
 import algorithmVisualizer from "../../assets/algorithmVisualizer.png";
+import Certificates from "../../assets/certificatefeature.png";
 import { Link } from "react-router-dom";
 
 function StudyMaterial() {
@@ -16,8 +17,8 @@ function StudyMaterial() {
     { name: "Video Lectures", link: "/video-lectures", img: onlineLecture },
     { name: "AKTU Syllabus", link: "/syllabus", img: syllabus },
     { name: "AKTU PYQ's", link: "/pyq", img: pyq },
-    { name: "Algorithm Visualizer", link: "/algorithm-visualizer ", img: algorithmVisualizer,
-    },
+    { name: "Algorithm Visualizer", link: "/algorithm-visualizer ", img: algorithmVisualizer},
+    { name: "Quizzes (Certificate)", link: "/quizzes", img: Certificates },
   ];
 
   return (

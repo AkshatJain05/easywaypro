@@ -111,6 +111,15 @@ export default function UserMenu() {
             >
               Profile
             </Link>
+
+             <Link
+              to="/certificates"
+              className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
+              onClick={() => setOpen(false)}
+            >
+              Certificates
+            </Link>
+
             <button
               className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
               onClick={() => {

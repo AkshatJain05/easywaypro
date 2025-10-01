@@ -38,13 +38,17 @@ import TreePage from "./pages/Visualization/TreePage.jsx";
 import ScrollToTop from "./ScrollToTop.jsx";
 import ForgotPassword from "./pages/auth/ForgotPassword.jsx";
 import ResetPassword from "./pages/auth/ResetPassword.jsx";
-
-
+import Quiz from "./pages/Certificate/Quiz.jsx";
+import Result from "./pages/Certificate/Result.jsx";
+import Certificates from "./pages/Certificate/Certificates.jsx";
+import CertificateView from "./pages/Certificate/CertificateView.jsx";
+import QuizzesList from "./pages/Certificate/QuizzesList.jsx";
+import AdminCreateQuiz from "./pages/Admin/AdminCreateQuiz.jsx";
 
 function App() {
   return (
     <>
-      <ScrollToTop/>
+      <ScrollToTop />
       <Routes>
         <Route element={<UserLayout />}>
           {/* Public routes*/}
@@ -69,12 +73,13 @@ function App() {
           <Route path="/sorting" element={<SortingPage />} />
           <Route path="/trees" element={<TreePage />} />
 
-           {/* Forgot Password */}
-        <Route path="/forgot-password" element={<ForgotPassword />} />
+          {/* Forgot Password */}
+          <Route path="/forgot-password" element={<ForgotPassword />} />
 
-        {/* Reset Password with token */}
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
+          {/* Reset Password with token */}
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
 
+          {/* Certificate */}
 
           {/* Protected routes */}
           <Route element={<ProtectedRoute />}>
@@ -83,10 +88,20 @@ function App() {
             <Route path="/chatbot" element={<ChatBot />} />
             <Route path="/code-analyzer" element={<CodeAnalyzer />} />
             <Route path="/todo-list" element={<TodoList />} />
+
+            <Route path="/quiz/:quizId" element={<Quiz />} />
+            <Route path="/result" element={<Result />} />
+            <Route path="/certificates" element={<Certificates />} />
+            <Route path="/quizzes" element={<QuizzesList />} />
           </Route>
         </Route>
 
         <Route path="/admin/login" element={<AdminLogin />} />
+
+        <Route
+          path="/certificate/:certificateId"
+          element={<CertificateView />}
+        />
 
         <Route element={<AdminLayout />}>
           <Route element={<AdminProtectedRoute />}>
@@ -95,6 +110,7 @@ function App() {
               <Route path="manage-resource" element={<ManageResources />} />
               <Route path="contacts" element={<AdminContacts />} />
               <Route path="add-roadmap" element={<AdminRoadmap />} />
+              <Route path="create-quiz" element={<AdminCreateQuiz />} />
             </Route>
           </Route>
         </Route>
