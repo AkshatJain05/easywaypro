@@ -10,7 +10,7 @@ import {
   userCertificationById,
   userScore,
   completedQuiz,
-} from "../controllers/quizController.js";
+} from "../controllers/quiz.controller.js";
 
 const router = express.Router();
 

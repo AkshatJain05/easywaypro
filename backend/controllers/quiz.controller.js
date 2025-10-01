@@ -86,7 +86,7 @@ export const submitQuiz = async (req, res) => {
 
     // Generate certificate if passed
     let certificate = null;
-    if (score >= 10) {
+    if (score >= 60) {
       certificate = new Certificate({
         name: req.user.name,
         title: quiz.title,

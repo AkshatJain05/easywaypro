@@ -43,7 +43,7 @@ export default function Result() {
           Your Score: <span className="font-semibold text-blue-400">{score} / 100</span>
         </div>
 
-        {score >= 10 ? (
+        {score >= 60 ? (
           <>
             <FaCheckCircle className="text-green-400 text-3xl mx-auto mb-4" />
             <p className="text-green-400 font-semibold mb-6">Congratulations! You passed.</p>
