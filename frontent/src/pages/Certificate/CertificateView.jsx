@@ -57,73 +57,77 @@ export default function CertificateView() {
     "This certificate recognizes the dedication, effort, and successful completion of all curriculum requirements, achieving certified proficiency in the subject matter.";
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-10 bg-black">
-      {/* Control Buttons */}
-      <div className="flex justify-between items-center w-full max-w-6xl mb-8 no-print">
+    <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
+      {/* Control Buttons - Hidden on print */}
+      <div className="no-print w-full max-w-5xl flex justify-between items-center mb-6">
         <button
           onClick={handleGoBack}
-          className="flex items-center space-x-1 text-white hover:text-gray-300 transition duration-200"
+          className="flex items-center gap-2 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors duration-300"
         >
-          <IoIosArrowBack className="w-5 h-5" />
-          <span>Go Back</span>
+          <IoIosArrowBack size={20} />
+          <span className="text-sm font-medium">Go Back</span>
         </button>
+        {/* Print button now visible on all screen sizes */}
         <button
           onClick={handlePrint}
-          className="flex items-center space-x-2 bg-gradient-to-r from-blue-800 to-blue-900 hover:from-blue-900 hover:to-blue-950 text-white font-medium py-2 px-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-[1.02]"
+          className="flex items-center gap-2 bg-blue-600 text-white font-semibold py-2 px-5 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-300 transform hover:scale-105"
         >
-          <MdOutlinePrint className="w-5 h-5" />
-          <span>Print / Save PDF</span>
+          <MdOutlinePrint size={20} />
+          <span className="text-sm">Print / Save as PDF</span>
         </button>
       </div>
 
-      {/* Certificate Container */}
+      {/* Certificate Container - This is what will be printed */}
       <div className="certificate-container w-full flex justify-center">
         <div
           ref={certificateRef}
-          className="certificate-content relative w-full max-w-[1000px] aspect-[11/5] bg-white rounded-xl shadow-2xl p-6 md:p-12 lg:p-16 flex flex-col items-center justify-between"
+          className="certificate-content relative w-full max-w-5xl aspect-[297/210] bg-white shadow-2xl flex flex-col justify-between p-6 sm:p-8 md:p-12"
           style={{
-            backgroundImage:`url(${Certificates})`,
+            backgroundImage: `url(${Certificates})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
         >
-          <div className="w-full flex flex-col items-center mt-4 md:mt-6 text-black">
-            {/* Company Name */}
-            <h1 className="text-3xl md:text-5xl font-bold text-center text-indigo-900">Easyway Pro</h1>
-            {/* Certificate Title */}
-            <h2 className="text-xl md:text-3xl  italic text-center text-gray-900 mt-2 md:mt-4 font-semibold">Certificate of Achievement</h2>
-
-            {/* Recipient */}
-            <p className="text-sm md:text-lg text-center text-gray-800 mt-4">This is awarded to</p>
-            <h3 className="text-2xl md:text-5xl font-bold my-2 md:my-4 text-center">{certificate.name || "Student Name"}</h3>
-
-            {/* Description */}
-            <p className="text-center text-sm md:text-lg text-gray-800 mt-2 md:mt-4 px-4 md:px-12 leading-relaxed">{descriptiveText}</p>
-
-            {/* Course */}
-            <p className="text-center text-sm md:text-lg text-gray-900 font-medium mt-4 md:mt-6">For successfully completing the course:</p>
-            <h4 className="text-xl md:text-3xl font-bold text-blue-800 my-2 md:my-4 text-center">{certificate.subject}</h4>
-
-            {/* Date */}
-            <p className="text-center text-xs md:text-base text-gray-900 mt-2">
-              Awarded on: <span className="font-semibold">{new Date(certificate.date).toLocaleDateString("en-US", { year:'numeric', month:'long', day:'numeric' })}</span>
+          {/* Main Content */}
+          <div className="w-full text-center text-gray-950 mt-19">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-indigo-900">Easyway Pro</h1>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold italic text-gray-800 mt-2">Certificate of Achievement</h2>
+            
+            <p className="text-sm sm:text-base md:text-lg mt-6 sm:mt-8">This certificate is proudly presented to</p>
+            <h3 className="text-2xl sm:text-4xl md:text-5xl font-bold text-black my-2 sm:my-3">
+              {certificate.name || "Student Name"}
+            </h3>
+            
+            <p className="text-xs sm:text-sm md:text-base max-w-3xl mx-auto mt-4 leading-snug">{descriptiveText}</p>
+            
+            <p className="text-sm sm:text-base md:text-lg font-medium mt-4 sm:mt-6">for successfully completing the course</p>
+            <h4 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-800 my-2">
+              {certificate.subject}
+            </h4>
+            
+            <p className="text-xs sm:text-sm md:text-base mt-4">
+              Awarded on: <span className="font-semibold">{new Date(certificate.date).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })}</span>
             </p>
           </div>
 
-          {/* Signature on the right */}
-          <div className="w-full flex justify-end items-end mt-6 md:mt-8 px-4 md:px-12 relative">
-            <div className="flex flex-col items-center">
-              <img className="w-32 md:w-48 h-auto mb-1 md:mb-2" />
-              <p className="text-gray-900 font-semibold text-sm md:text-lg">Akshat Jain</p>
-              <p className="text-indigo-800 text-xs md:text-sm font-medium">Founder</p>
+          {/* Footer Section */}
+          <div className="w-full flex justify-between items-end mt-4 sm:mt-2 mb-12 px-4">
+            {/* Certificate ID & URL */}
+            <div className="text-left text-xs sm:text-sm text-gray-700 max-w-[50%]">
+              <p className="font-semibold">Certificate ID: <span className="font-mono">{certificate.certificateId}</span></p>
+              <p className="break-words">Verify at: <span className="text-blue-600 font-medium">{`${window.location.origin}/certificate/${certificate.certificateId}`}</span></p>
+            </div>
+            
+            {/* Signature */}
+            <div className="text-center">
+              {/* Add your signature image source here */}
+              {/* <img src="/path/to/signature.png" alt="Signature" className="w-28 sm:w-36 h-auto mx-auto" /> */}
+              <div className=" border-gray-600 pt-1 mt-8 sm:mt-12">
+                <p className="font-bold text-sm sm:text-base text-gray-800">Akshat Jain</p>
+                <p className="text-xs sm:text-sm font-medium text-indigo-800">Founder, Easyway Pro</p>
+              </div>
             </div>
           </div>
-
-          {/* Certificate ID & URL at bottom-left */}
-          <p className="absolute md:bottom-17 md:left-16  bottom-4 left-4 text-xs md:text-sm text-gray-900 break-words max-w-[50%]">
-            Certificate ID: <span className="font-mono">{certificate.certificateId}</span><br/>
-            Verify at: <span className="text-blue-700">{window.location.origin}/certificate/{certificate.certificateId}</span>
-          </p>
         </div>
       </div>
     </div>
