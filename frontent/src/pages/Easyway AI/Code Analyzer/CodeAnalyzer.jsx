@@ -53,7 +53,7 @@ export default function CodeAnalyzer() {
           <button
             onClick={() => navigate(-1)}
             className="flex items-center gap-1 px-3 py-1 mb-1 m-2 mx-5
-                                     bg-gray-800 hover:bg-gray-700 text-gray-200 
+                                     bg-gray-900 hover:bg-gray-800 text-gray-200 
                                      rounded-lg text-sm shadow-md transition-all cursor-pointer"
           >
             <FaArrowLeft className="text-sm" />
