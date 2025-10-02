@@ -170,36 +170,47 @@ function ChatMessageContent({ text }) {
 
   const parts = parseMessage(text);
 
-  const [copied, setCopied] = useState(false);
+  const [copiedIndex, setCopiedIndex] = useState(null);
 
-  const handleCopy = (copypart) => {
+  const handleCopy = (copypart, idx) => {
     navigator.clipboard.writeText(copypart);
-    setCopied(true);
+    setCopiedIndex(idx);
 
-    // Reset back to "Copy" after 2 seconds
-    setTimeout(() => setCopied(false), 2000);
+    // Reset back after 2 seconds
+    setTimeout(() => setCopiedIndex(null), 2000);
   };
 
   return (
     <>
       {parts.map((part, idx) => {
         if (part.type === "text") {
-          // Wrap text content in a div to maintain spacing
           return <div key={idx}>{renderMarkdown(part.content)}</div>;
         }
         if (part.type === "code") {
           return (
             <div key={idx} className="relative my-4 overflow-x-auto text-sm">
               <button
-                onClick={() => {
-                  handleCopy(part.content);
-                }}
-                className=" absolute top-2 right-2 bg-slate-900 hover:bg-slate-800 active:bg-slate-700 text-xs font-medium px-3 py-1.5 rounded-lg shadow-md hover:shadow-lg active:scale-95 transition-all duration-200 ease-in-out z-10"
+                onClick={() => handleCopy(part.content, idx)}
+                className="
+                  absolute top-2 right-2
+                  bg-slate-900 hover:bg-slate-800 active:bg-slate-700
+                  text-xs font-medium
+                  px-3 py-1.5 rounded-lg
+                  shadow-md hover:shadow-lg
+                  active:scale-95
+                  transition-all duration-200 ease-in-out
+                  z-10
+                "
               >
-                <span className={copied ? "text-green-400" : "text-white"}>
-                  {copied ? "Copied" : "Copy"}
+                <span
+                  className={
+                    copiedIndex === idx ? "text-green-400" : "text-white"
+                  }
+                >
+                  {copiedIndex === idx ? "Copied" : "Copy"}
                 </span>
               </button>
+
               <SyntaxHighlighter
                 language={part.lang}
                 style={oneDark}
@@ -333,7 +344,7 @@ export default function ChatBot() {
     // Main container is centered and takes full screen height, with a max width for large screens
     <div className="flex flex-col h-screen bg-gray-950 text-white md:max-w-8xl md:mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-slate-950 to-gray-950  border-b border-gray-800 shadow-xl z-10">
+      <div className="flex fixed w-full  items-center justify-between px-4 py-3 bg-gradient-to-r from-slate-950 to-gray-950  border-b border-gray-800 shadow-xl z-10">
         <button
           onClick={() => navigate(-1)}
           className="flex items-center gap-1 px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-lg text-sm transition-all cursor-pointer shadow-md active:scale-95"
