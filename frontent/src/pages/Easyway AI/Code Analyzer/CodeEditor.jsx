@@ -1,9 +1,13 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { FaCopy, FaCheck, FaTrash, FaPlay, FaSpinner } from "react-icons/fa";
 
-export default function CodeEditor({ initialCode = "", defaultLanguage = "javascript", onRun }) {
+export default function CodeEditor({
+  initialCode = "",
+  defaultLanguage = "javascript",
+  onRun,
+}) {
   const [code, setCode] = useState(initialCode);
   const [language, setLanguage] = useState(defaultLanguage);
   const [copied, setCopied] = useState(false);
@@ -30,14 +34,14 @@ export default function CodeEditor({ initialCode = "", defaultLanguage = "javasc
   };
 
   return (
-    <div className="w-full max-w-6xl  mx-auto rounded-xl bg-gray-900 border border-gray-700 shadow-lg overflow-hidden">
+    <div className="w-full max-w-6xl  mx-auto rounded-xl bg-gray-950 border border-gray-700 shadow-lg overflow-hidden">
       {/* Toolbar */}
-      <div className="flex justify-between items-center px-4 py-2 bg-gray-800 border-b border-gray-700">
+      <div className="flex justify-between items-center px-4 py-3 bg-gradient-to-r from-gray-950 to-black border-b border-gray-700">
         {/* Language Selector */}
         <select
           value={language}
           onChange={(e) => setLanguage(e.target.value)}
-          className="bg-gray-700 text-white text-sm px-2 py-1 rounded-md focus:outline-none"
+          className="bg-gray-900 text-white text-sm px-2 py-1 rounded-md focus:outline-none"
           disabled={loading}
         >
           <option value="javascript">JavaScript</option>
@@ -45,7 +49,6 @@ export default function CodeEditor({ initialCode = "", defaultLanguage = "javasc
           <option value="java">Java</option>
           <option value="cpp">C++</option>
           <option value="cpp">C</option>
-
         </select>
 
         {/* Toolbar Buttons */}
@@ -57,7 +60,11 @@ export default function CodeEditor({ initialCode = "", defaultLanguage = "javasc
               copied ? "text-green-400" : "text-gray-300 hover:text-white"
             }`}
           >
-            {copied ? <FaCheck size={14} className="hidden sm:block"/> : <FaCopy size={14} className="hidden sm:block"/>}
+            {copied ? (
+              <FaCheck size={14} className="hidden sm:block" />
+            ) : (
+              <FaCopy size={14} className="hidden sm:block" />
+            )}
             {copied ? "Copied!" : "Copy"}
           </button>
 
@@ -66,13 +73,13 @@ export default function CodeEditor({ initialCode = "", defaultLanguage = "javasc
             disabled={loading}
             className="flex items-center gap-1 text-gray-300 hover:text-red-400 transition text-sm"
           >
-            <FaTrash size={14} className="hidden sm:block"/> Clear
+            <FaTrash size={14} className="hidden sm:block" /> Clear
           </button>
 
           <button
             onClick={handleRun}
             disabled={loading}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 bg-blue-800 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <>
@@ -80,7 +87,7 @@ export default function CodeEditor({ initialCode = "", defaultLanguage = "javasc
               </>
             ) : (
               <>
-                <FaPlay size={14} className="hidden sm:block"/> Analyze
+                <FaPlay size={14} className="hidden sm:block" /> Analyze
               </>
             )}
           </button>
@@ -96,11 +103,12 @@ export default function CodeEditor({ initialCode = "", defaultLanguage = "javasc
           customStyle={{
             margin: 0,
             padding: "12px",
-            fontSize: "14px",
+            fontSize: "16px",
+            lineHeight: 1.6,
             fontFamily: '"Fira Code", monospace',
             minHeight: "300px",
             borderRadius: "0 0 12px 12px",
-            background: "transparent",
+            background: "rgb(2,1,8)",
           }}
         >
           {code || "// Start typing your code..."}
@@ -110,7 +118,7 @@ export default function CodeEditor({ initialCode = "", defaultLanguage = "javasc
         <textarea
           value={code}
           onChange={(e) => setCode(e.target.value)}
-          className="absolute top-0 left-0 w-full h-full bg-transparent text-transparent caret-green-400 resize-none p-3 font-mono text-sm focus:outline-none"
+          className="absolute top-1 left-0 w-full h-full min-h-[300px] m-0 leading-[1.6]  bg-transparent  text-[16px] p-[12px] text-transparent caret-green-400 resize-none  font-mono focus:outline-none"
           spellCheck="false"
           disabled={loading}
         />

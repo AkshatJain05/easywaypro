@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+// Import a brighter theme
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-export default function TypingCode({ code = "", language = "javascript", speed = 10 }) {
+export default function TypingCode({ code = "", language = "javascript", speed = 15 }) {
   const [displayedCode, setDisplayedCode] = useState("");
 
   useEffect(() => {
@@ -12,12 +13,10 @@ export default function TypingCode({ code = "", language = "javascript", speed =
     }
 
     let i = 0;
-    setDisplayedCode(""); // reset when code changes
+    setDisplayedCode(""); // reset on new code
 
     const interval = setInterval(() => {
-      // ✅ stop exactly when i == code.length
       if (i < code.length) {
-        // ✅ slice ensures no "cass" and no "undefined"
         setDisplayedCode(code.slice(0, i + 1));
         i++;
       } else {
@@ -29,16 +28,19 @@ export default function TypingCode({ code = "", language = "javascript", speed =
   }, [code, speed]);
 
   return (
-    <div className="text-sm font-mono">
+    <div className="w-full max-w-3xl mx-auto my-4 text-sm font-mono rounded-lg shadow-lg overflow-hidden border border-gray-700">
       <SyntaxHighlighter
         language={language}
-        style={oneDark}
+        style={vscDarkPlus} // ✅ vivid colors
+        showLineNumbers
         customStyle={{
           margin: 0,
-          padding: "12px",
+          padding: "16px",
           borderRadius: "8px",
-          background: "#0d1117",
           fontSize: "14px",
+          lineHeight: "1.5",
+          background: "rgb(2, 1, 8)",// matches VS Code dark
+          boxShadow: "inset 0 0 15px rgba(0,0,0,0.4)",
         }}
       >
         {displayedCode || "// Loading..."}
