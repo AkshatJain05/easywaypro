@@ -31,7 +31,7 @@ export default function TypingCode({ code = "", language = "javascript", speed =
     <div className="w-full max-w-3xl mx-auto my-4 text-sm font-mono rounded-lg shadow-lg overflow-hidden border border-gray-700">
       <SyntaxHighlighter
         language={language}
-        style={vscDarkPlus} // ✅ vivid colors
+        style={vscDarkPlus} //  vivid colors
         showLineNumbers
         customStyle={{
           margin: 0,

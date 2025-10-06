@@ -97,12 +97,12 @@ function App() {
 
         <Route path="/admin/login" element={<AdminLogin />} />
 
+        //without header and footer
         <Route
           path="/certificate/:certificateId"
           element={<CertificateView />}
         />
-                    <Route path="/chatbot" element={<ChatBot />} />
-
+        <Route path="/chatbot" element={<ChatBot />} />
 
         <Route element={<AdminLayout />}>
           <Route element={<AdminProtectedRoute />}>

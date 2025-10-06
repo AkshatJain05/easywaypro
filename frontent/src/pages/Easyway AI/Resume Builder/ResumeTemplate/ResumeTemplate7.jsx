@@ -185,7 +185,7 @@ const ResumeTemplate1 = ({ resumeData }) => {
                 {/* Dates */}
                 <div className="text-xs text-gray-500 text-right">
                   <p>
-                    {edu.startDate} - {edu.endDate}
+                    {edu.startDate} {edu.endDate && "-"} {edu.endDate}
                   </p>
                 </div>
               </div>

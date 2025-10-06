@@ -344,7 +344,7 @@ export default function ChatBot() {
     // Main container is centered and takes full screen height, with a max width for large screens
     <div className="flex flex-col h-screen bg-gray-950 text-white md:max-w-8xl md:mx-auto">
       {/* Header */}
-      <div className="fixed w-full  flex items-center justify-between px-4 py-3 bg-gradient-to-r from-slate-950 to-gray-950  border-b border-gray-800 shadow-xl z-150">
+      <div className="flex fixed w-full z-150  items-center justify-between px-4 py-3 bg-gradient-to-r from-slate-950 to-gray-950  border-b border-gray-800 shadow-xl">
         <button
           onClick={() => navigate(-1)}
           className="flex items-center gap-1 px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-lg text-sm transition-all cursor-pointer shadow-md active:scale-95"
@@ -379,7 +379,8 @@ export default function ChatBot() {
         </button>
       </div>
 
-      <div className="h-15"></div>
+       <div className="h-15"></div>
+
 
       {/* --- */}
 

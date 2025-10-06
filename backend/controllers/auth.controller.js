@@ -164,7 +164,7 @@ const forgetPassword = async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: "Gmail",
       port: 465, // SSL port
-      secure: true, // SSL/TLS from start
+      secure: true, // SSL/TLS from start 
       auth: {
         user: process.env.EMAIL_USER, // Gmail address
         pass: process.env.EMAIL_PASS, // Gmail App Password
