@@ -19,7 +19,7 @@ const ResumeTemplate6 = ({ resumeData }) => {
   } = resumeData;
 
   const SectionTitle = ({ title }) => (
-    <h2 className="text-lg font-bold text-gray-900 mb-2 border-b border-gray-300 uppercase tracking-widest">
+    <h2 className="text-base font-bold text-gray-800 mb-2 border-b border-gray-300 uppercase tracking-wider pb-1">
       {title}
     </h2>
   );
@@ -27,38 +27,36 @@ const ResumeTemplate6 = ({ resumeData }) => {
   return (
     <div
       id="resume-preview"
-      className="p-8 print:p-6 bg-white text-gray-800 font-sans text-sm leading-relaxed min-w-full shadow-lg"
+      className="p-6 print:p-4 bg-white text-gray-800 font-sans text-sm leading-normal min-w-full shadow-lg"
     >
       {/* --- HEADER --- */}
-      <header className="text-center mb-6">
+      <header className="text-center mb-4">
         <h1 className="text-4xl font-semibold text-gray-900 tracking-tight">
           {personalInfo.name || "Your Name"}
         </h1>
-        <p className="text-xl text-gray-700 font-medium mt-1">
+        <p className="text-sm text-gray-800 ">
           {personalInfo.title || "Professional Title"}
         </p>
 
-        <div className="flex justify-center flex-wrap gap-4 mt-3 text-gray-600 text-sm">
+        <div className="flex justify-center flex-wrap gap-x-4 gap-y-1 mt-2 text-gray-600 text-xs">
           {personalInfo.email && (
-            <span className="flex items-center gap-2">
-              <FaEnvelope className="text-gray-600" /> {personalInfo.email}
+            <span className="flex items-center gap-1.5">
+              <FaEnvelope /> {personalInfo.email}
             </span>
           )}
           {personalInfo.phone && (
-            <span className="flex items-center gap-2">
-              <FaPhone className="text-gray-600 rotate-90" />{" "}
-              {personalInfo.phone}
+            <span className="flex items-center gap-1.5">
+              <FaPhone className="rotate-90" /> {personalInfo.phone}
             </span>
           )}
           {personalInfo.address && (
-            <span className="flex items-center gap-2">
-              <FaMapMarkerAlt className="text-gray-600" />{" "}
-              {personalInfo.address}
+            <span className="flex items-center gap-1.5">
+              <FaMapMarkerAlt /> {personalInfo.address}
             </span>
           )}
         </div>
 
-        <div className="flex justify-center flex-wrap gap-4 mt-2 text-blue-600">
+        <div className="flex justify-center flex-wrap gap-x-4 gap-y-1 mt-2 text-blue-600 text-xs">
           {personalInfo.linkedin && (
             <a
               href={`https://${personalInfo.linkedin}`}
@@ -71,7 +69,7 @@ const ResumeTemplate6 = ({ resumeData }) => {
           )}
           {personalInfo.github && (
             <a
-              href={`https://${personalInfo.github}`}
+              href={`https://www.github.com/${personalInfo.github}`}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:underline flex items-center gap-1"
@@ -94,22 +92,20 @@ const ResumeTemplate6 = ({ resumeData }) => {
 
       {/* --- SUMMARY --- */}
       {personalInfo.summary && (
-        <section className="mb-6">
-          <SectionTitle title="CAREER OBJECTIVE" />
-          <p className="text-gray-700 leading-relaxed text-justify">
-            {personalInfo.summary}
-          </p>
+        <section className="mb-4">
+          <SectionTitle title="Career Objective" />
+          <p className="text-gray-700 text-justify">{personalInfo.summary}</p>
         </section>
       )}
 
       {/* --- EXPERIENCE --- */}
       {experience?.length > 0 && (
-        <section className="mb-6">
+        <section className="mb-4">
           <SectionTitle title="Experience" />
           {experience.map((exp) => (
             <div
               key={exp.id}
-              className="mb-5 pb-2 border-b border-gray-300 last:border-b-0 last:mb-0"
+              className="mb-3 last:mb-0"
             >
               <div className="flex justify-between items-baseline flex-wrap gap-1">
                 <h3 className="font-semibold text-gray-900">{exp.company}</h3>
@@ -117,22 +113,16 @@ const ResumeTemplate6 = ({ resumeData }) => {
                   {exp.startDate} - {exp.endDate}
                 </p>
               </div>
-              <p className="text-gray-700 font-medium mt-0.5 mb-1">
+              <p className="text-gray-700 font-medium mt-0.5 mb-1.5">
                 {exp.position || "Role"}
               </p>
-              {exp.points?.length > 0 ? (
-                <ul className="list-disc list-inside text-gray-700 space-y-1 pl-4">
+              {exp.points?.length > 0 && (
+                <ul className="list-disc list-inside text-gray-700 space-y-1 pl-2">
                   {exp.points.map((point, idx) => (
-                    <li key={idx} className="leading-snug">
-                      {point}
-                    </li>
+                    <li key={idx}>{point}</li>
                   ))}
                 </ul>
-              ) : exp.description ? (
-                <p className="text-gray-700 mt-1.5 leading-relaxed">
-                  {exp.description}
-                </p>
-              ) : null}
+              )}
             </div>
           ))}
         </section>
@@ -141,37 +131,31 @@ const ResumeTemplate6 = ({ resumeData }) => {
       {/* --- EDUCATION --- */}
       {education?.length > 0 && (
         <section className="mb-4">
-          <h2 className="text-lg font-bold text-gray-800 border-b border-gray-300 pb-1 mb-4 uppercase">
-            Education
-          </h2>
+          <SectionTitle title="Education" />
           {education.map((edu) => (
-            <div
-              key={edu.id}
-              className="mb-5 pb-2 border-b border-gray-200 last:border-b-0 last:mb-0"
-            >
+            <div key={edu.id} className="mb-3 last:mb-0">
               <div className="flex justify-between items-start flex-wrap gap-1">
-                <h3 className="font-semibold text-gray-900 text-md">
-                  {edu.school}
-                </h3>
-                <p className="text-sm text-gray-500">
+                <h3 className="font-semibold text-gray-900">{edu.school}</h3>
+                <p className="text-xs text-gray-500">
                   {edu.startDate} {edu.endDate && "-"} {edu.endDate}
                 </p>
               </div>
-              <div className="flex justify-between items-start flex-wrap gap-2 mt-1 text-sm">
+              <div className="flex justify-between items-start flex-wrap gap-2 mt-0.5 text-sm">
                 <p className="italic text-gray-700">{edu.degree}</p>
                 {edu.marks && (
-                  <p className="font-medium text-gray-700">{edu.marks}</p>
+                  <p className="font-medium text-gray-600">{edu.marks}</p>
                 )}
               </div>
             </div>
           ))}
         </section>
       )}
+
       {/* --- SKILLS --- */}
       {skills?.length > 0 && (
-        <section className="mb-6">
+        <section className="mb-4">
           <SectionTitle title="Skills" />
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             {Object.entries(
               skills.reduce((acc, skill) => {
                 if (!acc[skill.category]) acc[skill.category] = [];
@@ -179,23 +163,21 @@ const ResumeTemplate6 = ({ resumeData }) => {
                 return acc;
               }, {})
             ).map(([category, skillList]) => (
-              <p key={category} className="leading-relaxed">
+              <p key={category}>
                 <span className="font-semibold text-gray-900">{category}:</span>{" "}
-                <span className="">{skillList.join(", ")}.</span>
+                <span className="text-gray-700">{skillList.join(", ")}.</span>
               </p>
             ))}
           </div>
         </section>
       )}
+
       {/* --- PROJECTS --- */}
       {projects?.length > 0 && (
-        <section className="mb-6">
+        <section className="mb-4">
           <SectionTitle title="Projects" />
           {projects.map((proj) => (
-            <div
-              key={proj.id}
-              className="mb-6 pb-2 border-b border-gray-300 last:border-b-0 last:mb-0"
-            >
+            <div key={proj.id} className="mb-3 last:mb-0">
               <div className="flex justify-between items-start flex-wrap gap-1">
                 <h3 className="font-semibold text-gray-900">{proj.name}</h3>
                 {proj.link && (
@@ -203,26 +185,22 @@ const ResumeTemplate6 = ({ resumeData }) => {
                     href={proj.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline text-xs flex items-center gap-1 mt-1 sm:mt-0"
+                    className="text-blue-600 hover:underline text-xs flex items-center gap-1 mt-0.5"
                   >
-                    <FaLink className="w-3 h-3" /> View Project
+                    <FaLink size={11} /> Link
                   </a>
                 )}
               </div>
-
               {proj.technologies && (
-                <p className="text-xs italic text-gray-500 mt-1 mb-2">
+                <p className="text-xs italic text-gray-500 mt-0.5 mb-1.5">
                   <span className="font-semibold">Technologies: </span>
                   {proj.technologies}
                 </p>
               )}
-
               {proj.points?.length > 0 && (
-                <ul className="list-disc text-gray-700 space-y-1 pl-5">
+                <ul className="list-disc text-gray-700 space-y-1 pl-4">
                   {proj.points.map((point, idx) => (
-                    <li key={idx} className="leading-relaxed">
-                      {point}
-                    </li>
+                    <li key={idx}>{point}</li>
                   ))}
                 </ul>
               )}
@@ -233,11 +211,11 @@ const ResumeTemplate6 = ({ resumeData }) => {
 
       {/* --- CERTIFICATIONS --- */}
       {certifications?.length > 0 && (
-        <section className="mb-6">
+        <section>
           <SectionTitle title="Certifications & Awards" />
-          <ul className="list-disc list-inside space-y-2 pl-4 text-gray-700">
+          <ul className="list-disc list-inside space-y-1.5 pl-2 text-gray-700">
             {certifications.map((cert, index) => (
-              <li key={index} className="leading-snug">
+              <li key={index}>
                 <span className="font-semibold">{cert?.title}</span>
                 {cert?.link && (
                   <a
@@ -246,7 +224,7 @@ const ResumeTemplate6 = ({ resumeData }) => {
                     rel="noopener noreferrer"
                     className="ml-2 inline-flex items-center text-blue-600 hover:underline text-xs gap-0.5"
                   >
-                    <FaLink size={11} /> View Credential
+                    <FaLink size={11} /> View
                   </a>
                 )}
               </li>

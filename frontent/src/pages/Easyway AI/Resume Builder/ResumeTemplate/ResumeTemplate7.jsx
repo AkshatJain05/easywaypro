@@ -14,19 +14,19 @@ const ResumeTemplate1 = ({ resumeData }) => {
       className="p-8 max-w-3xl mx-auto bg-white text-gray-900 font-sans text-sm leading-relaxed print:p-6"
     >
       {/* --- HEADER --- */}
-      <header className="text-center mb-6">
-        <h1 className="text-3xl font-bold tracking-wide">
+      <header className="text-center mb-4">
+        <h1 className="text-4xl font-bold tracking-wide">
           {personalInfo.name}
         </h1>
         {personalInfo.title && (
-          <p className="text-base text-gray-700 mt-1">{personalInfo.title}</p>
+          <p className="text-base text-gray-700 ">{personalInfo.title}</p>
         )}
-        <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-700 mt-2">
-          {personalInfo.email && <span>{personalInfo.email}</span>}
-          {personalInfo.phone && <span>{personalInfo.phone}</span>}
+        <div className="flex flex-wrap justify-center gap-2 text-xs text-gray-700 mt-2">
+          {personalInfo.email && <span>{personalInfo.email}</span>}|
+          {personalInfo.phone && <span>{personalInfo.phone}</span>}|
           {personalInfo.address && <span>{personalInfo.address}</span>}
         </div>
-        <div className="flex flex-wrap justify-center gap-4 text-xs text-blue-700 mt-2">
+        <div className="flex flex-wrap justify-center gap-2 text-xs text-blue-700 mt-2">
           {personalInfo.linkedin && (
             <a
               href={`https://${personalInfo.linkedin}`}
@@ -36,7 +36,7 @@ const ResumeTemplate1 = ({ resumeData }) => {
             >
               LinkedIn
             </a>
-          )}
+          )} |
           {personalInfo.github && (
             <a
               href={`https://${personalInfo.github}`}
@@ -46,7 +46,7 @@ const ResumeTemplate1 = ({ resumeData }) => {
             >
               GitHub
             </a>
-          )}
+          )} |
           {personalInfo.portfolio && (
             <a
               href={personalInfo.portfolio}

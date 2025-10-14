@@ -153,8 +153,8 @@ const ResumeBuilder = () => {
         selectedTemplate={selectedTemplate}
         setSelectedTemplate={setSelectedTemplate}
       />
-        <main className="container mx-auto p-4 md:p-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <main className="container mx-auto p-4 md:p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Input Forms */}
             <div className="space-y-8 p-6 bg-gradient-to-br from-gray-950 to-black rounded-2xl shadow-lg print-hide border-2 border-gray-600">
               <PersonalInfo

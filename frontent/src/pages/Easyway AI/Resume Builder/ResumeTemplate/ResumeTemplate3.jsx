@@ -19,7 +19,7 @@ const ResumeTemplate3 = ({ resumeData }) => {
   } = resumeData;
 
   const SectionTitle = ({ title }) => (
-    <h2 className="text-lg font-bold text-gray-800 pb-1 mb-2 border-b border-blue-200 uppercase tracking-widest text-left">
+    <h2 className="text-lg font-bold text-blue-900 pb-1 mb-2 border-b border-blue-200 uppercase tracking-widest text-left">
       {title}
     </h2>
   );
@@ -31,10 +31,10 @@ const ResumeTemplate3 = ({ resumeData }) => {
     >
       {/* --- HEADER --- */}
       <header className="text-center mb-1 print:mb-1">
-        <h1 className="text-[40px] font-semibold text-gray-900">
+        <h1 className="text-4xl font-semibold text-gray-900">
           {personalInfo.name || "Your Name"}
         </h1>
-        <p className="text-lg text-gray-700 mb-2">
+        <p className="text-lg text-blue-800 mb-1">
           {personalInfo.title || "Professional Title"}
         </p>
 
