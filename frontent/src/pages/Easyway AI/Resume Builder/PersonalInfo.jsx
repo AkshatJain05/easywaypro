@@ -58,7 +58,7 @@ const PersonalInfo = ({ resumeData, updateResumeData }) => {
         <input
           type="text"
           name="linkedin"
-          placeholder="LinkedIn Profile URL"
+          placeholder="linkedin.com/in/your-profile-name"
           value={resumeData.personalInfo.linkedin}
           onChange={handleChange}
           className="p-2 border rounded-md  border-gray-600"
@@ -67,7 +67,7 @@ const PersonalInfo = ({ resumeData, updateResumeData }) => {
         <input
           type="text"
           name="github"
-          placeholder="GitHub Profile URL"
+          placeholder="github.com/username"
           value={resumeData.personalInfo.github}
           onChange={handleChange}
           className="p-2 border rounded-md  border-gray-600"
