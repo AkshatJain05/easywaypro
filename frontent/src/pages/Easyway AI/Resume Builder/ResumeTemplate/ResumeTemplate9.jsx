@@ -211,25 +211,27 @@ const ResumeTemplate9 = ({ resumeData }) => {
         </section>
       )}
 
-      {/* EDUCATION */}
+      {/* --- EDUCATION --- */}
       {education?.length > 0 && (
-        <section className="mb-5 print:mb-4">
-          <SectionTitle title="EDUCATION" />
+        <section className="mb-6 print:mb-4">
+          <SectionTitle title="Education" />
           {education.map((edu) => (
-            <div key={edu.id} className="mb-2 last:mb-0">
-              {/* Added flex-col-reverse for sm:flex-row for small screen layout */}
-              <div className="flex flex-col-reverse sm:flex-row justify-between items-start sm:items-baseline">
-                <h3 className={`font-bold ${TEXT_COLOR_HEADER}`}>
+            <div
+              key={edu.id}
+              className="mb-2 pb-1 border-b border-gray-100 last:border-b-0 last:mb-0"
+            >
+              <div className="flex justify-between items-baseline">
+                <h3 className="font-semibold text-gray-700 text-sm">
                   {edu.school}
                 </h3>
-                <p className="text-sm font-medium text-slate-500 mb-0.5 sm:mb-0">
+                <p className="text-xs text-gray-500">
                   {edu.startDate} {edu.endDate && "-"} {edu.endDate}
                 </p>
               </div>
               <div className="flex justify-between text-sm mt-0.5">
-                <p className="italic text-slate-700">{edu.degree}</p>
+                <p className="italic text-gray-700">{edu.degree}</p>
                 {edu.marks && (
-                  <p className="font-semibold text-slate-600">{edu.marks}</p>
+                  <p className="font-semibold text-gray-700">{edu.marks}</p>
                 )}
               </div>
             </div>

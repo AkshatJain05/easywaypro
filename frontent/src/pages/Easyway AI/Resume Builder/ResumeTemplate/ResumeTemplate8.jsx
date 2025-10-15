@@ -60,10 +60,10 @@ const ResumeTemplate3 = ({ resumeData }) => {
         {/* LEFT SIDEBAR */}
         <aside className="w-full md:w-1/3 bg-gray-800 text-white p-6 print:p-8 flex flex-col gap-y-6">
           <div className="text-center md:text-left">
-            <h1 className="text-3xl lg:text-4xl font-bold text-white tracking-tight">
+            <h1 className="text-4xl font-bold text-white tracking-tight">
               {personalInfo.name || "Your Name"}
             </h1>
-            <h2 className="text-md lg:text-lg font-semibold text-indigo-300 mt-1">
+            <h2 className="text-sm font-semibold text-indigo-300 mt-1">
               {personalInfo.title || "Professional Title"}
             </h2>
           </div>
@@ -79,7 +79,7 @@ const ResumeTemplate3 = ({ resumeData }) => {
               )}
               {personalInfo.phone && (
                 <div className="flex items-center gap-2">
-                  <FaPhone className="text-indigo-300 w-4 h-4 flex-shrink-0" />
+                  <FaPhone className="text-indigo-300 w-4 h-4 flex-shrink-0 rotate-90" />
                   <span>{personalInfo.phone}</span>
                 </div>
               )}

@@ -31,7 +31,7 @@ const ResumeTemplate2 = ({ resumeData }) => {
           <h1 className="text-3xl font-semibold text-gray-900">
             {personalInfo.name || "Your Name"}
           </h1>
-          <p className="text-md text-gray-700 font-medium">
+          <p className="text-md text-gray-700 font-semibold">
             {personalInfo.title || "Professional Title"}
           </p>
         </div>

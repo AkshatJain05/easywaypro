@@ -25,7 +25,7 @@ const ResumeTemplate4 = ({ resumeData }) => {
         <h1 className="text-3xl font-bold text-gray-900">
           {personalInfo.name || "Your Name"}
         </h1>
-        <p className="text-md text-gray-700 font-medium">
+        <p className="text-md font-semibold text-gray-700">
           {personalInfo.title || "Professional Title"}
         </p>
 
