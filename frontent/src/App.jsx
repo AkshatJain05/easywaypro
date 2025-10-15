@@ -102,7 +102,10 @@ function App() {
           path="/certificate/:certificateId"
           element={<CertificateView />}
         />
-        <Route path="/chatbot" element={<ChatBot />} />
+
+         <Route element={<ProtectedRoute />}>
+               <Route path="/chatbot" element={<ChatBot />} />
+         </Route> 
 
         <Route element={<AdminLayout />}>
           <Route element={<AdminProtectedRoute />}>
