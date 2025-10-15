@@ -146,7 +146,7 @@ const ResumeTemplate9 = ({ resumeData }) => {
       {personalInfo.summary && (
         <section className="mb-5 print:mb-4">
           <SectionTitle title="PROFESSIONAL SUMMARY" />
-          <p className="text-slate-700 leading-relaxed text-left">
+          <p className="text-slate-700 leading-relaxed text-justify">
             {personalInfo.summary}
           </p>
         </section>

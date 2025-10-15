@@ -186,7 +186,7 @@ const ResumeTemplate3 = ({ resumeData }) => {
         <main className="w-full md:w-2/3 p-6 print:p-8 bg-white">
           {personalInfo.summary && (
             <MainSection title="Professional Summary">
-              <p className="text-sm text-gray-700 leading-relaxed">
+              <p className="text-sm text-gray-700 leading-relaxed text-justify">
                 {personalInfo.summary}
               </p>
             </MainSection>

@@ -70,7 +70,7 @@ const ResumeTemplate7 = ({ resumeData }) => {
           <h2 className="text-sm font-bold border-b border-gray-300 mb-2 uppercase">
             Career Objective
           </h2>
-          <p className="text-xs text-gray-800 leading-relaxed">
+          <p className="text-xs text-gray-800 leading-relaxed text-justify">
             {personalInfo.summary}
           </p>
         </section>
