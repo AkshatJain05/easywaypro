@@ -1,3 +1,5 @@
+//BluePro — Modern Professional Design
+
 import {
   FaEnvelope,
   FaPhone,
@@ -19,7 +21,7 @@ const ResumeTemplate3 = ({ resumeData }) => {
   } = resumeData;
 
   const SectionTitle = ({ title }) => (
-    <h2 className="text-lg font-bold text-blue-900 pb-1 mb-2 border-b border-blue-200 uppercase tracking-widest text-left">
+    <h2 className="text-lg font-bold text-blue-700 pb-1 mb-2 border-b border-blue-200 uppercase tracking-widest text-left">
       {title}
     </h2>
   );

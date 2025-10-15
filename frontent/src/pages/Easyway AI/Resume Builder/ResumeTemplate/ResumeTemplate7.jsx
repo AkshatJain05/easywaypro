@@ -1,4 +1,6 @@
-const ResumeTemplate1 = ({ resumeData }) => {
+// Professional — Skills & Projects Focus
+
+const ResumeTemplate7 = ({ resumeData }) => {
   const {
     personalInfo,
     experience,
@@ -36,7 +38,8 @@ const ResumeTemplate1 = ({ resumeData }) => {
             >
               LinkedIn
             </a>
-          )} |
+          )}{" "}
+          |
           {personalInfo.github && (
             <a
               href={`https://${personalInfo.github}`}
@@ -46,7 +49,8 @@ const ResumeTemplate1 = ({ resumeData }) => {
             >
               GitHub
             </a>
-          )} |
+          )}{" "}
+          |
           {personalInfo.portfolio && (
             <a
               href={personalInfo.portfolio}
@@ -223,5 +227,4 @@ const ResumeTemplate1 = ({ resumeData }) => {
   );
 };
 
-export default ResumeTemplate1;
-// ProfessionalResume
+export default ResumeTemplate7;

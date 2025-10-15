@@ -1,3 +1,4 @@
+//Classic — Education Focus (With Titles)
 import {
   FaEnvelope,
   FaPhone,
@@ -103,10 +104,7 @@ const ResumeTemplate6 = ({ resumeData }) => {
         <section className="mb-4">
           <SectionTitle title="Experience" />
           {experience.map((exp) => (
-            <div
-              key={exp.id}
-              className="mb-3 last:mb-0"
-            >
+            <div key={exp.id} className="mb-3 last:mb-0">
               <div className="flex justify-between items-baseline flex-wrap gap-1">
                 <h3 className="font-semibold text-gray-900">{exp.company}</h3>
                 <p className="text-xs text-gray-500">
@@ -130,20 +128,25 @@ const ResumeTemplate6 = ({ resumeData }) => {
 
       {/* --- EDUCATION --- */}
       {education?.length > 0 && (
-        <section className="mb-4">
+        <section className="mb-6 print:mb-4">
           <SectionTitle title="Education" />
           {education.map((edu) => (
-            <div key={edu.id} className="mb-3 last:mb-0">
-              <div className="flex justify-between items-start flex-wrap gap-1">
-                <h3 className="font-semibold text-gray-900">{edu.school}</h3>
+            <div
+              key={edu.id}
+              className="mb-2 pb-1 border-b border-gray-100 last:border-b-0 last:mb-0"
+            >
+              <div className="flex justify-between items-baseline">
+                <h3 className="font-semibold text-gray-700 text-sm">
+                  {edu.school}
+                </h3>
                 <p className="text-xs text-gray-500">
                   {edu.startDate} {edu.endDate && "-"} {edu.endDate}
                 </p>
               </div>
-              <div className="flex justify-between items-start flex-wrap gap-2 mt-0.5 text-sm">
+              <div className="flex justify-between text-sm mt-0.5">
                 <p className="italic text-gray-700">{edu.degree}</p>
                 {edu.marks && (
-                  <p className="font-medium text-gray-600">{edu.marks}</p>
+                  <p className="font-semibold text-gray-700">{edu.marks}</p>
                 )}
               </div>
             </div>

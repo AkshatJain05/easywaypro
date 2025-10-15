@@ -1,3 +1,5 @@
+//Minimal — Education Focus (No Title)
+
 import {
   FaEnvelope,
   FaPhone,

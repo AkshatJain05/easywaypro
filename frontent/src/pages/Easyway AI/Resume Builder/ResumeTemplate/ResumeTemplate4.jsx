@@ -1,3 +1,4 @@
+//"Minimal — No Skill Category"
 const ResumeTemplate4 = ({ resumeData }) => {
   const {
     personalInfo,

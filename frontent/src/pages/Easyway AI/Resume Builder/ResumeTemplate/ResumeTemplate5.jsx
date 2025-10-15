@@ -1,3 +1,4 @@
+//Clean Layout (No Divider Lines)
 const ResumeTemplate5 = ({ resumeData }) => {
   const {
     personalInfo,

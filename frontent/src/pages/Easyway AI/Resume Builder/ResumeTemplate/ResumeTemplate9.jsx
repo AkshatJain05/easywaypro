@@ -1,5 +1,5 @@
-//IndigoPro
-import React from "react";
+//IndigoPro — Modern Professional Design
+
 import {
   FaEnvelope,
   FaPhone,
@@ -55,7 +55,7 @@ const ResumeTemplate9 = ({ resumeData }) => {
         --- HEADER (Responsive 2-column for wide view/print) ---
         ========================================
       */}
-       <header
+      <header
         className={`flex flex-col sm:flex-row justify-between sm:items-center border-b-4 ${ACCENT_COLOR_TITLE} pb-4 mb-6`}
       >
         {/* Left — Name & Title */}
@@ -134,7 +134,6 @@ const ResumeTemplate9 = ({ resumeData }) => {
           </div>
         </div>
       </header>
-     
 
       {/* ========================================
         --- MAIN CONTENT SECTIONS --- 

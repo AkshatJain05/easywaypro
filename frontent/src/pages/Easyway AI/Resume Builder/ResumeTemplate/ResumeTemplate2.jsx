@@ -1,3 +1,4 @@
+//Two-Column Simple Layout
 import {
   FaEnvelope,
   FaPhone,

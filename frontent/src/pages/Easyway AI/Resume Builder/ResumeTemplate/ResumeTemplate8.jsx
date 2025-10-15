@@ -1,5 +1,4 @@
-//DualColumnResume
-import React from "react";
+// Modern Two-Column Resume
 import {
   FaEnvelope,
   FaPhone,
