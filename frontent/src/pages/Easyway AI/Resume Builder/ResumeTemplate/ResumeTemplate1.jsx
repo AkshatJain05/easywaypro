@@ -212,7 +212,7 @@ const ResumeTemplate1 = ({ resumeData }) => {
               {proj.points && proj.points.length > 0 && (
                 <ul className="list-disc pl-5 text-sm text-gray-800 space-y-1">
                   {proj.points.map((point, idx) => (
-                    <li key={idx} className="leading-snug">
+                    <li key={idx} className="leading-snug text-justify">
                       {point}
                     </li>
                   ))}
