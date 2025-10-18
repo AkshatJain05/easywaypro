@@ -3,6 +3,7 @@ import { generateToken } from "../utils/generateToken.js";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
+import { OAuth2Client } from "google-auth-library";
 
 const register = async (req, res) => {
   try {
@@ -124,6 +125,66 @@ const authMe = async (req, res) => {
   }
 };
 
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+const googleLogin = async (req, res) => {
+  try {
+    const { tokenId } = req.body;
+    if (!tokenId) return res.status(400).json({ message: "Token missing" });
+
+    // Verify token with Google
+    const ticket = await client.verifyIdToken({
+      idToken: tokenId,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const { email, name, picture, sub } = ticket.getPayload(); // sub = Google UID
+
+    // Find existing user or create new
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      user = await User.create({
+        name,
+        email,
+        profilePhoto: picture,
+        role: "student",
+        googleUID: sub,
+      });
+    } else if (!user.googleUID) {
+      // Link Google account if email exists
+      user.googleUID = sub;
+      if (!user.profilePhoto) user.profilePhoto = picture;
+      await user.save();
+    }
+
+    // Issue JWT
+    const token = generateToken(user._id);
+
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "development", // HTTPS only in prod
+      sameSite: "none",
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+    });
+
+    res.json({
+      success: true,
+      message: "Google login successful",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        profilePhoto: user.profilePhoto,
+        role: user.role,
+      },
+    });
+  } catch (err) {
+    console.error("Google login error:", err);
+    res.status(500).json({ message: "Google login failed" });
+  }
+};
+
 const resetPassword = async (req, res) => {
   const hashedToken = crypto
     .createHash("sha256")
@@ -164,7 +225,7 @@ const forgetPassword = async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: "Gmail",
       port: 465, // SSL port
-      secure: true, // SSL/TLS from start 
+      secure: true, // SSL/TLS from start
       auth: {
         user: process.env.EMAIL_USER, // Gmail address
         pass: process.env.EMAIL_PASS, // Gmail App Password
@@ -222,4 +283,5 @@ export {
   adminLogin,
   resetPassword,
   forgetPassword,
+  googleLogin,
 };

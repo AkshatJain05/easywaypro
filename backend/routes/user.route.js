@@ -1,5 +1,5 @@
 import express from "express";
-import { authMe, login, logout, register,adminLogin, forgetPassword, resetPassword } from "../controllers/auth.controller.js";
+import { authMe, login, logout, register,adminLogin, forgetPassword, resetPassword ,googleLogin} from "../controllers/auth.controller.js";
 import {protect} from "../middlewares/auth.middlerware.js";
 import { getProfile, updateProfile } from "../controllers/user.controller.js";
 import {upload} from "../middlewares/multer.middleware.js";
@@ -9,6 +9,7 @@ const router = express.Router();
 router.post("/login",login);
 router.post("/register",register);
 router.post("/logout",logout);
+router.post("/google", googleLogin);
 // Get logged-in user profile
 router.get("/profile", protect, getProfile);
 
