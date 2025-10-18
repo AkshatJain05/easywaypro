@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login, fetchUser } from "../../redux/authSlice";
 import { useNavigate, Link } from "react-router-dom";
-import { toast, Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import axios from "axios";
 import ScrollReveal from "../../component/ScllorAnimation";
 import { MdEmail } from "react-icons/md";
@@ -104,7 +104,6 @@ const Login = () => {
   return (
     <ScrollReveal from="bottom">
       <div className="h-[95vh] w-full px-5 flex justify-center items-center">
-        <Toaster position="top-center" />
         <form
           onSubmit={handleSubmit}
           autoComplete="on"
