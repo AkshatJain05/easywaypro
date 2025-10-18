@@ -1,11 +1,15 @@
 import { User } from "../models/user.model.js";
 import { generateToken } from "../utils/generateToken.js";
 import jwt from "jsonwebtoken";
-import nodemailer from "nodemailer";
-import crypto from "crypto";
 import { OAuth2Client } from "google-auth-library";
+import dotenv from "dotenv";
 
-const register = async (req, res) => {
+dotenv.config();
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+// ================== REGISTER ==================
+export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
@@ -13,35 +17,33 @@ const register = async (req, res) => {
     if (userExists)
       return res.status(400).json({ message: "User already exists" });
 
-    const user = await User.create({ name, email, password });
-
+    await User.create({ name, email, password });
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-const login = async (req, res) => {
+// ================== LOGIN ==================
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Fetch user
     const user = await User.findOne({ email });
     if (!user)
       return res.status(400).json({ message: "Invalid email or password" });
 
-    // Compare password
     const isMatch = await user.matchPassword(password);
     if (!isMatch)
       return res.status(400).json({ message: "Invalid email or password" });
 
-    // Generate JWT + cookie
     const token = generateToken(user._id);
+
     res.cookie("jwt", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // only https in prod
-      sameSite: "none",
-      maxAge: 24 * 60 * 60 * 1000, // 1 days
+      secure: process.env.NODE_ENV === "production", // HTTPS only on Render
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // cross-site allowed in prod
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
 
     res.json({
@@ -59,32 +61,29 @@ const login = async (req, res) => {
   }
 };
 
-const adminLogin = async (req, res) => {
+// ================== ADMIN LOGIN ==================
+export const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Fetch user
     const user = await User.findOne({ email });
     if (!user)
       return res.status(400).json({ message: "Invalid email or password" });
 
-    // Check role
-    if (user.role !== "admin") {
+    if (user.role !== "admin")
       return res.status(403).json({ message: "Access denied. Not an admin." });
-    }
 
-    // Compare password
     const isMatch = await user.matchPassword(password);
     if (!isMatch)
       return res.status(400).json({ message: "Invalid email or password" });
 
-    // Generate JWT + cookie
     const token = generateToken(user._id);
+
     res.cookie("jwt", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // only https in prod
-      sameSite: "none",
-      maxAge: 24 * 60 * 60 * 1000, // 1 days
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
     res.json({
@@ -102,47 +101,48 @@ const adminLogin = async (req, res) => {
   }
 };
 
-const logout = async (req, res) => {
+// ================== LOGOUT ==================
+export const logout = async (req, res) => {
   res.clearCookie("jwt", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "none",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   });
   res.json({ message: "Logout successful" });
 };
 
-const authMe = async (req, res) => {
+// ================== AUTH ME ==================
+export const authMe = async (req, res) => {
   const token = req.cookies.jwt;
   if (!token) return res.status(401).json({ message: "No token" });
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    // console.log("decoded", decoded);
     const user = await User.findById(decoded?.userId).select("-password");
-    res.json({ user: user });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.json({ user });
   } catch {
     res.status(401).json({ message: "Invalid token" });
   }
 };
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
-const googleLogin = async (req, res) => {
+// ================== GOOGLE LOGIN ==================
+export const googleLogin = async (req, res) => {
   try {
     const { tokenId } = req.body;
     if (!tokenId) return res.status(400).json({ message: "Token missing" });
 
-    // Verify token with Google
+    // Verify Google token
     const ticket = await client.verifyIdToken({
       idToken: tokenId,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
-    const { email, name, picture, sub } = ticket.getPayload(); // sub = Google UID
+    const { email, name, picture, sub } = ticket.getPayload();
 
-    // Find existing user or create new
+    // Find or create user
     let user = await User.findOne({ email });
-
     if (!user) {
       user = await User.create({
         name,
@@ -152,20 +152,18 @@ const googleLogin = async (req, res) => {
         googleUID: sub,
       });
     } else if (!user.googleUID) {
-      // Link Google account if email exists
       user.googleUID = sub;
       if (!user.profilePhoto) user.profilePhoto = picture;
       await user.save();
     }
 
-    // Issue JWT
+    // Issue JWT + cookie
     const token = generateToken(user._id);
-
     res.cookie("jwt", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "development", // HTTPS only in prod
-      sameSite: "none",
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
     res.json({
@@ -184,6 +182,7 @@ const googleLogin = async (req, res) => {
     res.status(500).json({ message: "Google login failed" });
   }
 };
+
 
 const resetPassword = async (req, res) => {
   const hashedToken = crypto
