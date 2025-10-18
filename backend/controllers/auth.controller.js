@@ -9,7 +9,7 @@ dotenv.config();
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // ================== REGISTER ==================
-export const register = async (req, res) => {
+const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
@@ -25,7 +25,7 @@ export const register = async (req, res) => {
 };
 
 // ================== LOGIN ==================
-export const login = async (req, res) => {
+const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -62,7 +62,7 @@ export const login = async (req, res) => {
 };
 
 // ================== ADMIN LOGIN ==================
-export const adminLogin = async (req, res) => {
+const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -102,7 +102,7 @@ export const adminLogin = async (req, res) => {
 };
 
 // ================== LOGOUT ==================
-export const logout = async (req, res) => {
+const logout = async (req, res) => {
   res.clearCookie("jwt", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -112,7 +112,7 @@ export const logout = async (req, res) => {
 };
 
 // ================== AUTH ME ==================
-export const authMe = async (req, res) => {
+const authMe = async (req, res) => {
   const token = req.cookies.jwt;
   if (!token) return res.status(401).json({ message: "No token" });
 
@@ -128,7 +128,7 @@ export const authMe = async (req, res) => {
 };
 
 // ================== GOOGLE LOGIN ==================
-export const googleLogin = async (req, res) => {
+const googleLogin = async (req, res) => {
   try {
     const { tokenId } = req.body;
     if (!tokenId) return res.status(400).json({ message: "Token missing" });
