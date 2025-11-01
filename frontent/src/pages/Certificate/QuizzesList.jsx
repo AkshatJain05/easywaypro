@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Loading from "../../component/Loading";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft, FaCheckCircle, FaPlayCircle } from "react-icons/fa"; // Kept essential status/action icons
+import { motion } from "framer-motion";
 
 export default function QuizzesList({ userId }) {
   const [quizzes, setQuizzes] = useState([]);
@@ -10,6 +11,14 @@ export default function QuizzesList({ userId }) {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
+
+  // Reduced card styles array for a cleaner look, focusing only on colors
+  const cardStyles = [
+    { color: 'blue', border: 'border-blue-500/50', gradient: 'from-blue-600 to-indigo-600' },
+    { color: 'purple', border: 'border-purple-500/50', gradient: 'from-purple-600 to-fuchsia-600' },
+    { color: 'teal', border: 'border-teal-500/50', gradient: 'from-teal-600 to-cyan-600' },
+    { color: 'amber', border: 'border-amber-500/50', gradient: 'from-amber-500 to-orange-500' },
+  ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,7 +37,7 @@ export default function QuizzesList({ userId }) {
     };
 
     fetchData();
-  }, [userId]);
+  }, [userId, API_URL]);
 
   const handleStartQuiz = (quizId) => {
     navigate(`/quiz/${quizId}`);
@@ -36,62 +45,117 @@ export default function QuizzesList({ userId }) {
 
   if (loading) return <Loading />;
 
+  // --- UI START ---
   return (
-    <div className="p-6 max-w-5xl mx-auto min-h-screen bg-gray-900 text-gray-100">
+    <div className="p-4 md:p-8 max-w-6xl mx-auto min-h-screen  text-gray-100">
+      
       {/* Back Button */}
-      <button
+      <motion.button
         onClick={() => navigate(-1)}
-        className="flex items-center space-x-2 mb-6 text-gray-300 hover:text-white"
+        className="flex items-center space-x-2 mb-10 text-gray-400 hover:text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-fuchsia-500/50 rounded-md p-1 -ml-1"
+        whileHover={{ x: -5 }}
+        whileTap={{ scale: 0.95 }}
       >
-        <FaArrowLeft /> <span>Back</span>
-      </button>
-
-      <h1 className="text-2xl md:text-4xl font-bold mb-8 text-center">Available Quizzes and Code (Certificate)</h1>
+        <FaArrowLeft className="text-lg" /> 
+        <span className="font-medium text-sm border-1 py-2 px-4 bg-black rounded">Back</span>
+      </motion.button>
+      
+      {/* Header */}
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-12 text-center drop-shadow-lg">
+        <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-purple-400 to-fuchsia-400">
+          Available Quizzes and Code (Certificate)
+        </span>
+      </h1>
 
       {quizzes.length === 0 ? (
-        <p className="text-center mt-10 text-gray-300">
-          No quizzes available.
-        </p>
+        <div className="flex flex-col items-center justify-center h-64 border border-gray-700/50 rounded-xl bg-gray-900/50">
+          {/* Using FaCheckCircle as a placeholder for a quiz/code icon */}
+          <FaCheckCircle className="text-6xl text-gray-500 mb-4" /> 
+          <p className="text-center text-lg text-gray-400 font-medium">
+            No quizzes available at this time. Check back soon!
+          </p>
+        </div>
       ) : (
-        <div className="grid md:grid-cols-2 gap-6">
-          {quizzes.map((q) => {
+        //  Layout change: md:grid-cols-2 (Two columns on desktop)
+        <div className="grid md:grid-cols-2 gap-8">
+          {quizzes.map((q, index) => {
             const completed = completedQuizzes.some(
               (cq) => cq.quiz._id === q._id
             );
+            
+            const style = cardStyles[index % cardStyles.length];
 
             return (
-              <div
+              <motion.div
                 key={q._id}
-                className={`bg-gradient-to-r from-slate-950 to-gray-950  shadow-lg rounded-lg p-6 flex flex-col justify-between hover:scale-105 transition-transform duration-200 border ${
-                  completed ? "border-green-500" : "border-gray-100"
-                }`}
+                className={`bg-gray-900/30 shadow-2xl rounded-xl p-6 flex flex-col justify-between transition-all duration-300 transform border-2 
+                  ${
+                    completed 
+                      ? "border-green-500/70 opacity-80" 
+                      : `hover:shadow-fuchsia-500/30 ${style.border} hover:scale-[1.02]`
+                  }
+                  hover:bg-gray-800/50
+                `}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
               >
                 <div>
-                  <h2 className="text-2xl font-semibold mb-2">{q.title}</h2>
-                  <p className="text-gray-300 mb-1">Subject: {q.subject}</p>
-                  <p className="text-gray-300 mb-2">
-                    Questions: {q.questions.length}
-                  </p>
-                  {completed && (
-                    <span className="inline-block bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded">
-                      Completed
-                    </span>
-                  )}
+                  <div className="flex items-center mb-4">
+                    {/* Removed emoji icon, simplified title presentation */}
+                    <h2 className={`text-2xl font-bold ${completed ? 'text-gray-300' : 'text-white'}`}>
+                        {q.title}
+                    </h2>
+                  </div>
+                  
+                  <div className="text-sm space-y-2">
+                    <p className="text-gray-400 font-medium">
+                        <span className="text-fuchsia-400">Subject:</span> {q.subject || 'General'}
+                    </p>
+                    <p className="text-gray-400 font-medium">
+                        <span className="text-fuchsia-400">Questions:</span> {q.questions.length}
+                    </p>
+                  </div>
+                  
+                  {/* Status Badge */}
+                  <div className="mt-5">
+                    {completed ? (
+                      <span className="inline-flex items-center bg-green-700/50 text-green-300 text-xs font-bold px-3 py-1 rounded-full border border-green-500/50">
+                        <FaCheckCircle className="mr-1" /> Completed
+                      </span>
+                    ) : (
+                      <span className="inline-block bg-fuchsia-600/50 text-fuchsia-200 text-xs font-bold px-3 py-1 rounded-full border border-fuchsia-500/50">
+                        Ready to Start
+                      </span>
+                    )}
+                  </div>
+                  
                 </div>
 
+                {/* Action Button */}
                 <button
                   onClick={() => handleStartQuiz(q._id)}
                   disabled={completed}
-                  className={`mt-4 py-2 rounded-lg font-semibold transition duration-200 flex justify-center items-center
+                  className={`mt-6 py-3 rounded-lg font-bold uppercase tracking-wider transition duration-300 shadow-lg flex justify-center items-center gap-2
                     ${
                       completed
-                        ? "bg-green-600 cursor-not-allowed"
-                        : "bg-blue-600 hover:bg-blue-700 text-white"
+                        //  Changed button background and text color for attempted status
+                        ? "bg-gray-700 text-gray-400 cursor-not-allowed border border-gray-600" 
+                        : `text-white bg-gradient-to-r ${style.gradient} hover:shadow-xl hover:shadow-${style.color}-500/20 focus:ring-4 focus:ring-${style.color}-500/50`
                     }`}
                 >
-                  {completed ? "Completed" : "Start Quiz"}
+                  {completed ? (
+                    //  Button text changed to "Attempted"
+                    <span className="flex items-center gap-2">
+                        <FaCheckCircle /> Attempted
+                    </span>
+                  ) : (
+                    <>
+                      <FaPlayCircle /> Start Quiz
+                    </>
+                  )}
                 </button>
-              </div>
+              </motion.div>
             );
           })}
         </div>

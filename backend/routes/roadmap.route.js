@@ -1,83 +1,109 @@
 import express from "express";
 import Roadmap from "../models/roadmap.model.js";
-import { protect } from "../middlewares/auth.middlerware.js";
-import { Progress } from "../models/Progress.model.js";
-import { isAdmin } from "../middlewares/auth.middlerware.js";
+import { protect, isAdmin } from "../middlewares/auth.middlerware.js";
 
 const router = express.Router();
 
-//Add roadmap
+/* ------------------------------- ADD ROADMAP ------------------------------- */
 router.post("/", protect, isAdmin, async (req, res) => {
   try {
     const { title, description, months } = req.body;
+
     const roadmap = new Roadmap({ title, description, months });
-    await roadmap.save();
-    res.status(201).json(roadmap);
+    await roadmap.save(); // pre-save hook auto-calculates progress
+
+    res.status(201).json({
+      success: true,
+      message: "Roadmap created successfully",
+      roadmap,
+    });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ success: false, error: error.message });
   }
 });
 
-// get  roadmap
+/* ------------------------------ GET ALL ROADMAPS ------------------------------ */
 router.get("/", async (req, res) => {
   try {
     const roadmaps = await Roadmap.find();
-    res.json(roadmaps);
+    res.status(200).json({ success: true, count: roadmaps.length, roadmaps });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
-// get all roadmaps
-router.get("/title/:id", async (req, res) => {
+/* ------------------------------ GET ROADMAP BY ID ----------------------------- */
+router.get("/:id", async (req, res) => {
   try {
-    const { id } = req.params;
-    const roadmap = await Roadmap.findOne({ _id: id });
-    res.json(roadmap);
+    const roadmap = await Roadmap.findById(req.params.id);
+    if (!roadmap)
+      return res.status(404).json({ success: false, error: "Roadmap not found" });
+
+    res.status(200).json({ success: true, roadmap });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
-router.get("/step/:topic", async (req, res) => {
+/* ----------------------------- SEARCH BY TOPIC ----------------------------- */
+router.get("/search/:topic", async (req, res) => {
   try {
     const { topic } = req.params;
     const roadmaps = await Roadmap.find({ "months.steps.topic": topic });
-    res.json(roadmaps);
+    res.status(200).json({ success: true, roadmaps });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
-// Get roadmap progress
-router.get("/progress/:roadmapId", protect, async (req, res) => {
-  const progress = await Progress.findOne({
-    userId: req.user._id,
-    roadmapId: req.params.roadmapId,
-  });
-  res.json(progress || { completed: {} });
-});
+/* --------------------------- TOGGLE STEP COMPLETION --------------------------- */
+// mark step as completed/uncompleted
+router.put("/:roadmapId/month/:monthIndex/step/:stepIndex/toggle", protect, async (req, res) => {
+  try {
+    const { roadmapId, monthIndex, stepIndex } = req.params;
+    const roadmap = await Roadmap.findById(roadmapId);
+    if (!roadmap) return res.status(404).json({ success: false, error: "Roadmap not found" });
 
-// Save progress
-router.post("/progress/:roadmapId", protect, async (req, res) => {
-  const { completed } = req.body;
-  let progress = await Progress.findOne({
-    userId: req.user._id,
-    roadmapId: req.params.roadmapId,
-  });
-  console.log("Request body:", req.user._id);
+    const month = roadmap.months[monthIndex];
+    if (!month) return res.status(404).json({ success: false, error: "Month not found" });
 
-  if (!progress) {
-    progress = new Progress({
-      userId: req.user._id,
-      roadmapId: req.params.roadmapId,
-      completed,
+    const step = month.steps[stepIndex];
+    if (!step) return res.status(404).json({ success: false, error: "Step not found" });
+
+    // ✅ Toggle step completion
+    step.completed = !step.completed;
+
+    // ✅ Save and trigger pre-save hook for recalculating progress
+    await roadmap.save();
+
+    res.status(200).json({
+      success: true,
+      message: `Step "${step.topic}" marked as ${step.completed ? "completed" : "incomplete"}`,
+      roadmap,
     });
-  } else {
-    progress.completed = completed;
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
   }
-
-  await progress.save();
-  res.json(progress);
 });
+
+/* ----------------------------- GET ROADMAP PROGRESS ----------------------------- */
+router.get("/progress/:id", async (req, res) => {
+  try {
+    const roadmap = await Roadmap.findById(req.params.id);
+    if (!roadmap)
+      return res.status(404).json({ success: false, error: "Roadmap not found" });
+
+    res.status(200).json({
+      success: true,
+      progress: {
+        overallProgress: roadmap.overallProgress,
+        completedSteps: roadmap.completedSteps,
+        totalSteps: roadmap.totalSteps,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 export default router;

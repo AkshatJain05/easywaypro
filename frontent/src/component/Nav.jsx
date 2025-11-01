@@ -10,6 +10,7 @@ function Nav() {
   const navList = [
     { name: "Home", link: "/" },
     { name: "Study Material", link: "/study-material" },
+    { name: "Task Planner", link: "/task-planner" },
     { name: "Resume Builder", link: "/resume-builder" },
     { name: "AI Tools", link: "/easyway-ai" },
     { name: "Contact Us", link: "/contact-us" },
@@ -34,7 +35,7 @@ function Nav() {
           </NavLink>
 
           {/* Desktop Menu */}
-          <div className="hidden lg:flex items-center gap-10 font-medium">
+          <div className="hidden xl:flex items-center gap-10 font-medium">
             {navList.map((list, index) => (
               <NavLink
                 key={index}
@@ -52,7 +53,7 @@ function Nav() {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="flex gap-2 items-center lg:hidden">
+          <div className="flex gap-2 items-center xl:hidden">
             <UserMenu />
             <button
               onClick={() => setOpen(!open)}

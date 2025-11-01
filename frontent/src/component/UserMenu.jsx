@@ -94,7 +94,7 @@ export default function UserMenu() {
       {open && (
         <div
           ref={menuRef}
-          className="absolute z-120 right-0 mt-2 w-56 rounded-xl bg-white dark:bg-gray-900 shadow-lg border border-gray-200 dark:border-gray-700 ring-1 ring-black/5 backdrop-blur"
+          className="absolute z-120 right-0 mt-2 w-56 rounded-xl bg-white dark:bg-gray-950 shadow-lg border border-gray-200 dark:border-gray-700 ring-1 ring-black/5 backdrop-blur"
         >
           <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
             <p className="text-xs text-gray-500 dark:text-gray-400">Signed in as</p>

@@ -31,7 +31,7 @@ export default function WebsiteOverview() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 to-black text-slate-100">
+    <div className="min-h-screen  text-slate-100">
       {/* Overview Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
         <h2 className="text-3xl font-extrabold mb-4 text-center text-white">How Easyway Works</h2>

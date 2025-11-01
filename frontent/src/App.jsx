@@ -59,8 +59,6 @@ function App() {
           <Route path="/courses" element={<Courses />} />
           <Route path="/login" element={<Login />} />
           <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/roadmap" element={<RoadmapList />} />
-          <Route path="/roadmap/:id" element={<Roadmap />} />
           <Route path="/syllabus" element={<Syllabus />} />
           <Route path="/quiz" element={<QuizPlacement />} />
           <Route path="/notes" element={<Notes />} />
@@ -86,7 +84,9 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/resume-builder" element={<ResumeBuilder />} />
             <Route path="/code-analyzer" element={<CodeAnalyzer />} />
-            <Route path="/todo-list" element={<TodoList />} />
+            <Route path="//task-planner" element={<TodoList />} />
+            <Route path="/roadmap" element={<RoadmapList />} />
+            <Route path="/roadmap/:id" element={<Roadmap />} />
 
             <Route path="/quiz/:quizId" element={<Quiz />} />
             <Route path="/result" element={<Result />} />
@@ -94,19 +94,15 @@ function App() {
             <Route path="/quizzes" element={<QuizzesList />} />
           </Route>
         </Route>
-
         <Route path="/admin/login" element={<AdminLogin />} />
-
         //without header and footer
         <Route
           path="/certificate/:certificateId"
           element={<CertificateView />}
         />
-
-         <Route element={<ProtectedRoute />}>
-               <Route path="/chatbot" element={<ChatBot />} />
-         </Route> 
-
+        <Route element={<ProtectedRoute />}>
+          <Route path="/chatbot" element={<ChatBot />} />
+        </Route>
         <Route element={<AdminLayout />}>
           <Route element={<AdminProtectedRoute />}>
             <Route path="/admin">
@@ -118,7 +114,6 @@ function App() {
             </Route>
           </Route>
         </Route>
-
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

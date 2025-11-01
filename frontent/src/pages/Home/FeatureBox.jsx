@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 function FeatureBox() {
   const featureList = [
     { name: "Easyway Classes 2.0", featureLink: "https://www.youtube.com/@EasywayClasses2.0" },
-    { name: "Todo-List", featureLink: "/todo-list" },
+    { name: "Task Planner", featureLink: "/task-planner" },
     { name: "Notes", featureLink: "/notes" },
     { name: "PYQ", featureLink: "/pyq" },
     { name: "Roadmap", featureLink: "/roadmap" },
@@ -15,7 +15,7 @@ function FeatureBox() {
 
   return (
     <div className="w-full text-white px-4 sm:px-6 lg:px-12 
-                    pt-6 pb-16 bg-gradient-to-tr from-slate-950 to-black 
+                    pt-6 pb-16
                     overflow-x-hidden">
       {/* Section Header */}
       <div className="text-center mb-12 px-2">

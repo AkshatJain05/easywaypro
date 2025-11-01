@@ -251,7 +251,7 @@ export default function CertificateView() {
 
   // 3. Render (Responsive HTML/CSS)
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
       {/* Control Buttons - Hidden on print */}
       <div className="no-print w-full max-w-5xl flex justify-between items-center mb-6">
         <button
