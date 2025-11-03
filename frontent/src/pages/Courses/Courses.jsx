@@ -1,62 +1,197 @@
-import ScrollReveal from "../../component/ScllorAnimation";
-import { useNavigate } from "react-router-dom";
-import java from "../../assets/java.png"
-import python from "../../assets/python.png"
+import { motion } from "framer-motion";
+import { useNavigate, useParams } from "react-router-dom";
+import { FaClock, FaCertificate, FaUserTie, FaVideo, FaTasks, FaCheckCircle, FaArrowLeft, FaShoppingCart } from "react-icons/fa";
+import java from "../../assets/java.png";
+import python from "../../assets/python.png";
 
-function Courses(){
+export default function PaidCourseDetail() {
+  const navigate = useNavigate();
+  const { id } = useParams();
 
-    const navigate = useNavigate()
+  const courseData = {
+    java: {
+      title: "Java Placement Mastery",
+      image: java,
+      price: "₹999",
+      duration: "6 Weeks",
+      level: "Intermediate",
+      certificate: true,
+      live: true,
+      mockInterview: true,
+      syllabus: [
+        "Java Basics, Loops & Arrays",
+        "OOPs Concepts (Inheritance, Polymorphism)",
+        "Exception Handling & File I/O",
+        "Collections Framework (List, Set, Map)",
+        "Multi-threading & Generics",
+        "Data Structures & Algorithms in Java",
+        "Project: Build a Mini Placement Portal",
+      ],
+      features: [
+        "50+ Hours of HD Video Lectures",
+        "Weekly Doubt Solving Sessions",
+        "Industry Projects & Quizzes",
+        "Mock Interviews with Mentors",
+        "Placement & Resume Assistance",
+        "Certificate of Completion",
+      ],
+      description:
+        "This placement-focused Java course covers everything from core concepts to advanced problem solving. Designed for B.Tech students and beginners aiming for product-based company interviews.",
+    },
 
-     const courseList = [
-      {
-        name:"Java Courses",
-        link:"/java",
-        img:java,
-        description:"This a placement oriented courses and help to your placement",
-        price:"399",
-        buyLink:"/buy/java"
-      },
-      {
-        name:"Python",
-        link:"/python",
-        img:python,
-        description:"This a placement oriented courses and help to your placement",
-        price:"299",
-        buyLink:"buy.python"
-      },
-     ]   
+    python: {
+      title: "Python Pro Bootcamp",
+      image: python,
+      price: "₹799",
+      duration: "4 Weeks",
+      level: "Beginner",
+      certificate: true,
+      live: false,
+      mockInterview: false,
+      syllabus: [
+        "Python Fundamentals & Syntax",
+        "Data Structures (List, Dict, Tuple)",
+        "File Handling & Exception Management",
+        "Automation Projects using Python",
+        "Mini Project: Web Scraper / API App",
+        "Introduction to Data Science",
+      ],
+      features: [
+        "30+ Hours of Video Lessons",
+        "Hands-on Exercises & Assignments",
+        "Beginner Friendly Explanation",
+        "Lifetime Access to Materials",
+        "Certificate After Completion",
+      ],
+      description:
+        "Master Python programming with practical exercises, automation projects, and real-world use cases. Ideal for beginners wanting to enter coding, automation, or data science fields.",
+    },
+  };
 
-    return<>
-    
-       <div className="text-xl mt-4 md:mt-8  lg:text-3xl  ml-2 md:ml-10 text-center text-slate-100 text-shadow-2xs text-shadow-amber-50 ">
-          Courses 
-        </div>
-        <div className="flex justify-center w-full">
-          <hr className="bg-orange-500 ml-2 md:ml-10 h-1 rounded-full w-18 lg:w-25 mt-2 mb-5  border-yellow-500 " />
-        </div>
-         
+  const course = courseData[id] || courseData.java;
 
-        <div className='h-auto  mt-7 mb-4  rounded-2xl p-3  px-4 md:px-8 xl:px-35 grid sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4 gap-5  '>
-        
-        {
-          courseList.map( (list,index) => 
-          <ScrollReveal from="bottom" key={index}>
-          <div className='h-auto   place-self-center border-1  border-slate-400 m-1  w-65 rounded-xl shadow-2xl shadow-gray-600 hover:scale-[1.02] transition-all hover:border-2'>
-            <img src={list.img} className='h-40 w-80 rounded-t-xl border-1 border-blacks brightness-90'></img>
-            <div className='h-auto text-xl pt-3  text-left px-4 rounded-b-xl font-semibold opacity-95'>
-                <h1>{list.name}</h1>
-                <p className="text-sm my-2 font-normal">{list.description}</p>
-                <div className="flex justify-between items-center mb-2">
-                <h2 className="my-2">Free</h2>
-                <button className="h-8 text-sm  text-gray-900 font-semibold border-1 rounded border-black p-1 m-1 bg-gradient-to-l from-orange-500 to-orange-400 shadow-2xl shadow-white hover:border-yellow-100 active:scale-[0.9]" onClick={()=>navigate(list.buyLink)}>Register now</button>
-                </div>
-                </div>
+  return (
+    <div className="min-h-screen bg-[#050505] text-gray-100 px-6 py-10">
+      {/* Back Button */}
+      <motion.button
+        whileHover={{ x: -5 }}
+        onClick={() => navigate(-1)}
+        className="flex items-center gap-2 text-gray-400 hover:text-fuchsia-400 mb-8"
+      >
+        <FaArrowLeft /> Back to Courses
+      </motion.button>
+
+      {/* Main Section */}
+      <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 items-center">
+        {/* Course Image */}
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          className="relative bg-gradient-to-br from-gray-900 to-black rounded-2xl border border-purple-500/40 p-6 shadow-lg flex justify-center items-center"
+        >
+          <img
+            src={course.image}
+            alt={course.title}
+            className="w-full h-64 object-contain rounded-xl"
+          />
+        </motion.div>
+
+        {/* Course Info */}
+        <motion.div
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          className="space-y-6"
+        >
+          <h1 className="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-fuchsia-400 to-purple-400 text-transparent bg-clip-text">
+            {course.title}
+          </h1>
+          <p className="text-gray-400 leading-relaxed text-sm sm:text-base">{course.description}</p>
+
+          <div className="flex flex-wrap gap-4 text-sm sm:text-base">
+            <span className="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-lg">
+              <FaClock className="text-fuchsia-400" /> {course.duration}
+            </span>
+            <span className="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-lg">
+              <FaUserTie className="text-sky-400" /> {course.level}
+            </span>
+            {course.certificate && (
+              <span className="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-lg">
+                <FaCertificate className="text-yellow-400" /> Certificate Included
+              </span>
+            )}
           </div>
-          </ScrollReveal>)
-        }
-        </div>
-        
-    </>
-}
 
-export default Courses;
+          <div className="text-xl font-bold text-fuchsia-400">Price: {course.price}</div>
+
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-fuchsia-500 to-pink-500 px-6 py-3 rounded-xl font-semibold text-white hover:shadow-[0_0_20px_rgba(236,72,153,0.4)] transition-all"
+          >
+            <FaShoppingCart /> Enroll Now
+          </motion.button>
+        </motion.div>
+      </div>
+
+      {/* Course Details */}
+      <div className="max-w-5xl mx-auto mt-14 grid md:grid-cols-2 gap-10">
+        {/* Syllabus */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="bg-gradient-to-br from-gray-900 to-black p-6 rounded-2xl border border-gray-700"
+        >
+          <h2 className="text-2xl font-semibold text-fuchsia-400 mb-4">Syllabus Overview</h2>
+          <ul className="space-y-2 text-gray-300 text-sm">
+            {course.syllabus.map((topic, i) => (
+              <li key={i} className="flex items-start gap-2">
+                <FaCheckCircle className="text-green-400 mt-1" /> {topic}
+              </li>
+            ))}
+          </ul>
+        </motion.div>
+
+        {/* Features */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="bg-gradient-to-br from-gray-900 to-black p-6 rounded-2xl border border-gray-700"
+        >
+          <h2 className="text-2xl font-semibold text-sky-400 mb-4">Course Features</h2>
+          <ul className="space-y-2 text-gray-300 text-sm">
+            {course.features.map((f, i) => (
+              <li key={i} className="flex items-start gap-2">
+                <FaTasks className="text-purple-400 mt-1" /> {f}
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-5 text-sm text-gray-400">
+            {course.live ? (
+              <p className="flex items-center gap-2 text-green-400">
+                <FaVideo /> Live Classes Included
+              </p>
+            ) : (
+              <p className="flex items-center gap-2 text-yellow-400">
+                <FaVideo /> Recorded Sessions Only
+              </p>
+            )}
+
+            {course.mockInterview ? (
+              <p className="flex items-center gap-2 text-green-400 mt-2">
+                <FaUserTie /> Mock Interview Rounds Available
+              </p>
+            ) : (
+              <p className="flex items-center gap-2 text-red-400 mt-2">
+                <FaUserTie /> No Mock Interviews in this Course
+              </p>
+            )}
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+}

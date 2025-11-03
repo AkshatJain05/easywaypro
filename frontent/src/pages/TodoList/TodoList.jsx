@@ -336,7 +336,10 @@ export default function TodoList() {
       <div className="min-h-screen p-4 pt-16 sm:p-8">
         <div className="max-w-3xl mx-auto bg-gray-950 border border-gray-800 rounded-3xl shadow-2xl p-5 sm:p-8 text-gray-100">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-center text-indigo-400 mb-2 tracking-wide">
-            📋 Task Planner
+            📋{" "}  
+            <span className="text-center bg-gradient-to-r from-purple-400 to-sky-400 text-transparent bg-clip-text">
+              Task Planner
+            </span>
           </h1>
           <p className="text-center mb-7 text-gray-400 px-5 text-sm">
             Plan your day, track your goals, and stay productive.

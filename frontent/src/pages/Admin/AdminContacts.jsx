@@ -47,7 +47,7 @@ export default function AdminContacts() {
       ) : (
         <div className="space-y-4">
           {contacts.map(contact => (
-            <div key={contact._id} className="bg-gray-900 p-4 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center shadow-md hover:shadow-lg transition border-1 border-gray-500">
+            <div key={contact._id} className="bg-gray-950 p-4 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center shadow-md hover:shadow-lg transition border-1 border-gray-500">
               <div className="mb-2 md:mb-0">
                 <p className="text-white font-semibold">{contact.name}</p>
                 <p className="text-gray-400 text-sm">{contact.email}</p>

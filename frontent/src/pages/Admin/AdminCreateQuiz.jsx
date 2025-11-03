@@ -117,8 +117,8 @@ export default function AdminQuizForm() {
   if (loading) return <Loading />;
 
   return (
-    <div className="min-h-screen bg-gray-900 p-4 md:p-10 text-gray-100">
-      <div className="max-w-5xl mx-auto bg-gray-800 rounded-lg shadow-lg p-6 md:p-10">
+    <div className="min-h-screen  p-4 md:p-10 text-gray-100">
+      <div className="max-w-5xl mx-auto bg-gray-950 rounded-lg shadow-lg p-6 md:p-10">
         <h1 className="text-3xl font-bold mb-6">Create Quiz</h1>
 
         {/* Title */}

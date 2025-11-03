@@ -48,7 +48,7 @@ export default function Result() {
   const hasPassed = score >= PASS_SCORE;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#050505] px-4 py-10 text-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-[#050505] px-6 py-10 text-gray-100">
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}

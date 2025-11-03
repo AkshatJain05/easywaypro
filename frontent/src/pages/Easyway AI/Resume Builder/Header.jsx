@@ -5,7 +5,7 @@ const Header = ({ selectedTemplate, setSelectedTemplate }) => {
     <header className="w-full p-2 shadow ">
       <div className="container mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
         {/* Title */}
-        <h1 className="text-3xl sm:text-4xl font-semibold text-center sm:text-left">
+        <h1 className="text-3xl sm:text-4xl text-center bg-gradient-to-r from-purple-400 to-sky-400 text-transparent bg-clip-text font-bold sm:text-left">
           Resume Builder
         </h1>
 

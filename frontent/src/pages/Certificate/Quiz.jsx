@@ -6,10 +6,7 @@ import { toast } from "react-hot-toast";
 import { FaPaperPlane, FaCode } from "react-icons/fa";
 import Loading from "../../component/Loading";
 
-// Helper function to check if an answer is empty
-const isAnswerEmpty = (answer) => {
-  return !answer || (typeof answer === "string" && answer.trim() === "");
-};
+const isAnswerEmpty = (answer) => !answer || (typeof answer === "string" && answer.trim() === "");
 
 export default function Quiz() {
   const { quizId } = useParams();
@@ -42,10 +39,7 @@ export default function Quiz() {
   };
 
   const totalQuestions = useMemo(() => quiz?.questions?.length || 0, [quiz]);
-  const answeredCount = useMemo(
-    () => answers.filter((a) => !isAnswerEmpty(a)).length,
-    [answers]
-  );
+  const answeredCount = useMemo(() => answers.filter((a) => !isAnswerEmpty(a)).length, [answers]);
 
   const handleSubmit = async () => {
     if (answeredCount === 0) {
@@ -62,9 +56,7 @@ export default function Quiz() {
       );
       navigate("/result");
     } catch (err) {
-      toast.error(
-        err.response?.data?.error || "Error submitting quiz. Try again later."
-      );
+      toast.error(err.response?.data?.error || "Error submitting quiz. Try again later.");
       setSubmitting(false);
     }
   };
@@ -72,16 +64,16 @@ export default function Quiz() {
   if (loading) return <Loading />;
 
   return (
-    <div className="min-h-screen px-4 py-10 sm:px-6 flex justify-center bg-[#050505] text-white">
-      <div className="relative w-full max-w-4xl space-y-6">
-        {/* Header (includes Progress Bar) */}
+    <div className="min-h-screen px-4 py-10 sm:px-6 flex justify-center bg-gradient-to-b from-black via-[#090909] to-[#0f0f0f] text-white">
+      <div className="relative w-full max-w-4xl space-y-8">
+        {/* Header Section */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, type: "spring", stiffness: 60 }}
-          className="text-center p-6 sm:p-8 bg-gradient-to-br from-[#101010]/70 via-[#181818]/70 to-[#0a0a0a]/70 border border-white/10 rounded-3xl shadow-2xl backdrop-blur-md"
+          transition={{ duration: 0.5 }}
+          className="text-center p-6 sm:p-8 bg-[#111111]/70 border border-white/10 rounded-3xl shadow-xl backdrop-blur-lg"
         >
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-sky-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-sky-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
             {quiz.title}
           </h1>
           <p className="text-gray-400 text-sm sm:text-base mt-2">
@@ -97,18 +89,16 @@ export default function Quiz() {
               <motion.div
                 initial={{ width: 0 }}
                 animate={{
-                  width: `${Math.round(
-                    (answeredCount / totalQuestions) * 100
-                  )}%`,
+                  width: `${Math.round((answeredCount / totalQuestions) * 100)}%`,
                 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+                transition={{ duration: 0.6 }}
                 className="h-full bg-gradient-to-r from-sky-500 to-purple-500"
               />
             </div>
           </div>
         </motion.div>
 
-        {/* Questions */}
+        {/* Questions Section */}
         <AnimatePresence>
           {quiz.questions.map((q, idx) => {
             const isCode = q.type !== "mcq";
@@ -121,35 +111,34 @@ export default function Quiz() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.4, delay: idx * 0.05 }}
+                transition={{ duration: 0.3, delay: idx * 0.05 }}
                 className={`p-5 sm:p-7 rounded-2xl border backdrop-blur-md transition-all ${
                   answered
-                    ? "border-sky-400/40 bg-gradient-to-br from-[#0a1a2a]/60 to-[#111]/60 shadow-sky-800/40 shadow-2xl"
-                    : "border-white/10 bg-[#111]/70"
+                    ? "border-sky-400/40 bg-[#101820]/70 shadow-lg shadow-sky-800/30"
+                    : "border-white/10 bg-[#111]/60 hover:bg-[#151515]/80"
                 }`}
               >
                 {/* Question Header */}
                 <div className="flex flex-wrap justify-between items-center mb-3">
-                  <p className="text-lg sm:text-xl font-semibold text-gray-200 whitespace-pre-wrap break-words">
-                    <span className="text-purple-400 mr-2">{idx + 1}.</span>
+                  <p className="text-sm sm:text-lg font-semibold text-gray-200 whitespace-pre-wrap break-words">
+                    <span className="text-sky-400 mr-2">{idx + 1}.</span>
                     {q.questionText}
                   </p>
-                  
-                  {/* Marks Display */}
-                  <span className="text-sm font-semibold px-3 py-1 rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md">
+
+                  <span className="text-xs font-semibold px-2 py-1 my-2 mx-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md">
                     {q.marks} Marks
                   </span>
                 </div>
 
-                {/* Question Type */}
+                {/* Question Type Rendering */}
                 {isCode ? (
                   <div className="mt-3">
                     <label className="text-sm text-gray-400 flex items-center mb-2">
                       <FaCode className="mr-2" /> Code Answer
                     </label>
                     <textarea
-                      className="w-full p-4 rounded-lg bg-[#0a0a0a] border border-gray-700 text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-purple-500 font-mono text-sm sm:text-base resize-y"
-                      rows={6}
+                      className="w-full p-4 rounded-lg bg-[#0a0a0a]/70 border border-gray-700 text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-sky-500 font-mono text-sm resize-y"
+                      rows={5}
                       value={ans || ""}
                       onChange={(e) => handleChange(idx, e.target.value)}
                       placeholder="Write your code here..."
@@ -174,11 +163,9 @@ export default function Quiz() {
                             value={opt.text}
                             checked={selected}
                             onChange={(e) => handleChange(idx, e.target.value)}
-                            className="h-4 w-4 accent-purple-500 focus:ring-purple-400"
+                            className="h-4 w-4 accent-sky-500 focus:ring-sky-400"
                           />
-                          <span className="ml-3 text-sm sm:text-base">
-                            {opt.text}
-                          </span>
+                          <span className="ml-3 text-sm sm:text-base">{opt.text}</span>
                         </label>
                       );
                     })}
@@ -190,8 +177,8 @@ export default function Quiz() {
         </AnimatePresence>
 
         {/* Note */}
-        <p className="text-yellow-400 text-xs sm:text-sm text-center italic">
-          * Code questions are checked for keyword presence, not exact logic.
+        <p className="text-yellow-400 text-xs sm:text-sm text-center italic mt-4">
+          * Code questions are auto-checked for keywords, not full logic.
         </p>
 
         {/* Submit Button */}
@@ -206,11 +193,7 @@ export default function Quiz() {
               : "hover:from-sky-500 hover:to-purple-500 shadow-xl shadow-sky-600/30"
           }`}
         >
-          <FaPaperPlane
-            className={`${
-              submitting ? "animate-pulse" : ""
-            } text-white text-xl`}
-          />
+          <FaPaperPlane className={`${submitting ? "animate-pulse" : ""} text-white text-xl`} />
           {submitting ? "Submitting..." : "Submit Quiz"}
         </motion.button>
       </div>

@@ -78,33 +78,33 @@ export default function ManageResources() {
       {/* Add Resource Form */}
       <form
         onSubmit={addResource}
-        className="bg-gray-900 p-6 rounded-xl shadow-md mb-8 flex flex-col gap-4"
+        className="bg-gray-950 p-6 rounded-xl shadow-md mb-8 flex flex-col gap-4"
       >
         <input
           type="text"
           placeholder="Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="p-2 rounded bg-gray-800 text-white focus:outline-none"
+          className="p-2 rounded bg-gray-900 text-white focus:outline-none"
         />
         <input
           type="text"
           placeholder="Link (Drive or YouTube)"
           value={link}
           onChange={(e) => setLink(e.target.value)}
-          className="p-2 rounded bg-gray-800 text-white focus:outline-none"
+          className="p-2 rounded bg-gray-900 text-white focus:outline-none"
         />
         <input
           type="text"
           placeholder="Subject"
           value={subject}
           onChange={(e) => setSubject(e.target.value)}
-          className="p-2 rounded bg-gray-800 text-white focus:outline-none"
+          className="p-2 rounded bg-gray-900 text-white focus:outline-none"
         />
         <select
           value={type}
           onChange={(e) => setType(e.target.value)}
-          className="p-2 rounded bg-gray-800 text-white focus:outline-none"
+          className="p-2 rounded bg-gray-900 text-white focus:outline-none"
         >
           <option value="notes">Notes</option>
           <option value="pyq">PYQ</option>
@@ -124,7 +124,7 @@ export default function ManageResources() {
         {currentResources.length > 0 ? currentResources.map((res) => (
           <div
             key={res._id}
-            className="bg-gray-800 p-4 rounded-xl flex items-center justify-between hover:bg-gray-700 transition"
+            className="bg-gray-950 p-4 rounded-xl flex items-center justify-between hover:bg-gray-700 transition"
           >
             <div>
               <p className="text-white font-semibold">{res.title}</p>

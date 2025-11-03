@@ -17,10 +17,10 @@ export default function AdminLayout() {
   ];
 
   return (
-    <div className="flex h-screen bg-gray-900 text-white overflow-hidden">
+    <div className="flex h-screen  text-white overflow-hidden">
       {/* Sidebar */}
       <div
-        className={`fixed md:relative z-20 bg-gray-800 w-64 p-4 space-y-6 h-full transition-transform duration-300 ${
+        className={`fixed md:relative z-20 bg-slate-950 w-64 p-4 space-y-6 h-full transition-transform duration-300 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-64 md:translate-x-0"
         }`}
       >
@@ -66,7 +66,7 @@ export default function AdminLayout() {
         </div>
 
         {/* Page Content */}
-        <div className="p-6 overflow-auto flex-1">
+        <div className="p-1 md:p-5 overflow-auto flex-1">
           <Outlet />
         </div>
       </div>

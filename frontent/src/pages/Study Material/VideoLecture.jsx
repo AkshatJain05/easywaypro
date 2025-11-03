@@ -139,7 +139,7 @@ export default function VideoLectures() {
             placeholder="Search subjects or videos (e.g., 'React' or 'DBMS')"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full py-3 pl-12 pr-4 bg-gray-800 border border-gray-700 
+            className="w-full py-3 pl-12 pr-4 bg-gray-900 border border-gray-500 
             rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 
             transition shadow-lg"
           />
@@ -187,7 +187,7 @@ export default function VideoLectures() {
                           href={unit.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-3 p-3 pl-5 lg:pl-10 bg-gray-800/50 hover:bg-gray-700/80 
+                          className="flex items-center gap-3 p-3 pl-5 lg:pl-10 bg-gray-950 hover:bg-gray-700/40 
                           transition border-b border-gray-700 last:border-b-0"
                         >
                           <FaVideo className="text-sky-400" />

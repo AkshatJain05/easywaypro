@@ -20,8 +20,8 @@ function EasywayAI(){
         img:codeAnalyzer
       },
        {
-        name:"Todo List",
-        link:"/todo-list",
+        name:"Task Planner",
+        link:"/task-planner",
         img:todo
       }, 
       {

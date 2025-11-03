@@ -35,13 +35,13 @@ export default function Users() {
       <h1 className="text-3xl font-bold mb-6">Users</h1>
 
       {/* Total Users Card */}
-      <div className="bg-gray-800 p-4 rounded shadow w-full md:w-48 mb-6">
-        <h2 className="text-xl font-semibold">Total Users</h2>
-        <p className="text-3xl font-bold mt-2">{userCount}</p>
+      <div className="bg-gray-950 p-4 rounded shadow w-full md:w-48 mb-6 rounded-xl">
+        <h2 className="text-xl font-semibold text-center">Total Users</h2>
+        <p className="text-3xl font-bold mt-2 text-center">{userCount}</p>
       </div>
 
       {/* Users Table */}
-      <div className="bg-gray-800 p-4 rounded shadow overflow-auto">
+      <div className="bg-gray-950 p-4 rounded shadow overflow-auto">
         <table className="min-w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-gray-600">
@@ -57,7 +57,7 @@ export default function Users() {
           </thead>
           <tbody>
             {users.map((user, idx) => (
-              <tr key={user._id} className="border-b border-gray-700 hover:bg-gray-700">
+              <tr key={user._id} className="border-b border-gray-900 hover:bg-gray-700">
                 <td className="p-2">{idx + 1}</td>
                 <td className="p-2">{user.name}</td>
                 <td className="p-2">{user.email}</td>

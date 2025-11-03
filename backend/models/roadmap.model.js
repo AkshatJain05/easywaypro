@@ -1,66 +1,124 @@
 import mongoose from "mongoose";
 
-const StepSchema = new mongoose.Schema({
-  day: { type: String, required: true },
-  topic: { type: String, required: true },
-  details: { type: [String], required: true },
-  completed: { type: Boolean, default: false }, // Track if step is done
-});
-
-const MonthSchema = new mongoose.Schema({
-  month: { type: String, required: true },
-  steps: { type: [StepSchema], required: true },
-  monthProgress: {
-    type: Number,
-    default: 0, //  Percentage progress for this month (auto-calculated)
+/* -------------------------------------------------------------------------- */
+/*                                  STEP MODEL                                */
+/* -------------------------------------------------------------------------- */
+const StepSchema = new mongoose.Schema(
+  {
+    day: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    topic: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    details: {
+      type: [String],
+      required: true,
+      validate: {
+        validator: (arr) => arr.length > 0,
+        message: "Each step must contain at least one detail.",
+      },
+    },
   },
-});
+  { _id: false } //  prevents nested unnecessary _id fields
+);
 
+/* -------------------------------------------------------------------------- */
+/*                                 MONTH MODEL                                */
+/* -------------------------------------------------------------------------- */
+const MonthSchema = new mongoose.Schema(
+  {
+    month: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    steps: {
+      type: [StepSchema],
+      required: true,
+      validate: {
+        validator: (arr) => arr.length > 0,
+        message: "Each month must contain at least one step.",
+      },
+    },
+  },
+  { _id: false }
+);
+
+/* -------------------------------------------------------------------------- */
+/*                                ROADMAP MODEL                               */
+/* -------------------------------------------------------------------------- */
 const RoadmapSchema = new mongoose.Schema(
   {
-    title: { type: String, required: true, unique: true }, // e.g., "Java Full Stack Roadmap"
-    description: { type: String },
-    months: { type: [MonthSchema], required: true },
-
-    //  New Fields for Dashboard Progress
-    overallProgress: {
-      type: Number,
-      default: 0, // Total roadmap completion (0–100)
+    title: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      index: true, //  speeds up title searches
+    },
+    description: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    months: {
+      type: [MonthSchema],
+      required: true,
+      validate: {
+        validator: (arr) => arr.length > 0,
+        message: "Roadmap must have at least one month.",
+      },
     },
     totalSteps: {
       type: Number,
-      default: 0, // Calculated from all months’ steps
-    },
-    completedSteps: {
-      type: Number,
-      default: 0, // Count of completed steps
+      default: 0,
+      min: [0, "Total steps cannot be negative"],
     },
   },
   { timestamps: true }
 );
 
-// Optional pre-save hook to auto-update progress
+/* -------------------------------------------------------------------------- */
+/*                        AUTO-CALCULATE TOTAL STEPS                          */
+/* -------------------------------------------------------------------------- */
 RoadmapSchema.pre("save", function (next) {
-  const total = this.months.reduce(
-    (acc, m) => acc + (m.steps?.length || 0),
-    0
-  );
-  const done = this.months.reduce(
-    (acc, m) => acc + m.steps.filter((s) => s.completed).length,
-    0
-  );
-  this.totalSteps = total;
-  this.completedSteps = done;
-  this.overallProgress = total ? Math.round((done / total) * 100) : 0;
-
-  // Calculate month-wise progress
-  this.months.forEach((month) => {
-    const steps = month.steps.length;
-    const completed = month.steps.filter((s) => s.completed).length;
-    month.monthProgress = steps ? Math.round((completed / steps) * 100) : 0;
-  });
-
+  try {
+    this.totalSteps = this.months.reduce(
+      (acc, m) => acc + (m.steps?.length || 0),
+      0
+    );
+  } catch {
+    this.totalSteps = 0;
+  }
   next();
 });
 
-export default mongoose.model("Roadmap", RoadmapSchema);
+/*  Automatically recalc totalSteps on updates (findOneAndUpdate) */
+RoadmapSchema.pre("findOneAndUpdate", function (next) {
+  const update = this.getUpdate();
+  if (update.months || update.$set?.months) {
+    const months = update.months || update.$set?.months;
+    const totalSteps = months.reduce(
+      (acc, m) => acc + (m.steps?.length || 0),
+      0
+    );
+    if (!update.$set) update.$set = {};
+    update.$set.totalSteps = totalSteps;
+  }
+  next();
+});
+
+/* -------------------------------------------------------------------------- */
+/*                      VIRTUAL FIELD: FLATTEN ALL STEPS                      */
+/* -------------------------------------------------------------------------- */
+RoadmapSchema.virtual("allSteps").get(function () {
+  return this.months.flatMap((m) => m.steps.map((s) => ({ month: m.month, ...s })));
+});
+
+
+export const Roadmap = mongoose.model("Roadmap", RoadmapSchema);

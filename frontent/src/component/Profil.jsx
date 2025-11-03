@@ -1,55 +1,70 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-    FaEdit, 
-    FaSearch, 
-    FaArrowRight, 
-    FaGraduationCap, 
-    FaMapSigns, 
-    FaBookOpen, 
-    FaTimes,
-    FaPhone 
-} from "react-icons/fa"; 
 import { toast } from "react-hot-toast";
+import {
+  FaEdit,
+  FaTimes,
+  FaPhone,
+  FaArrowRight,
+  FaGraduationCap,
+  FaMapSigns,
+  FaUser,
+  FaAward,
+  FaCompass,
+  FaTrophy,
+  FaRoad,
+  FaCertificate,
+  FaChartLine,
+} from "react-icons/fa";
 import defaultPhoto from "../assets/photo.png";
-import Loading from "./Loading";
+import Loading from "../component/Loading";
 
-export default function Dashboard() {
+export default function Profile() {
   const API_URL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
 
   const [user, setUser] = useState(null);
   const [formData, setFormData] = useState({});
-  const [roadmaps, setRoadmaps] = useState([]);
-  const [certificates, setCertificates] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [updateLoading, setUpdateLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [roadmaps, setRoadmaps] = useState([]);
+  const [certificates, setCertificates] = useState([]);
 
-  // --- Utility Functions (Kept same for brevity) ---
+  // Pagination states
+  const [roadmapPage, setRoadmapPage] = useState(1);
+  const [certPage, setCertPage] = useState(1);
+  const roadmapPerPage = 4;
+  const certPerPage = 3;
+
+  useEffect(() => {
+    document.body.style.overflow = isModalOpen ? "hidden" : "auto";
+  }, [isModalOpen]);
+
+  /* ---------------------- Fetch Data ---------------------- */
   useEffect(() => {
     const fetchAll = async () => {
       try {
         const [profileRes, roadmapRes, certRes] = await Promise.all([
           axios.get(`${API_URL}/auth/profile`, { withCredentials: true }),
-          axios.get(`${API_URL}/roadmap`, { withCredentials: true }),
-          axios.get(`${API_URL}/quiz/user-certificates`, { withCredentials: true }),
+          axios.get(`${API_URL}/roadmap/user/all`, { withCredentials: true }),
+          axios.get(`${API_URL}/quiz/user-certificates`, {
+            withCredentials: true,
+          }),
         ]);
 
         setUser(profileRes.data);
         setFormData({ ...profileRes.data, profilePhoto: null });
-        setCertificates(certRes.data || []);
+        setRoadmaps(roadmapRes.data.roadmaps || []);
 
-        const rm = Array.isArray(roadmapRes.data)
-          ? roadmapRes.data
-          : roadmapRes.data?.roadmaps || [];
-        setRoadmaps(rm);
+        const certData = Array.isArray(certRes.data)
+          ? certRes.data
+          : certRes.data.certificates || certRes.data.certs || [];
+        setCertificates(certData);
       } catch (err) {
         toast.error("Please login first.");
-        navigate("/login");
       } finally {
         setLoading(false);
       }
@@ -57,361 +72,403 @@ export default function Dashboard() {
     fetchAll();
   }, [API_URL, navigate]);
 
-  const getProgress = (months) => {
-    if (!Array.isArray(months)) return 0;
-    const total = months.reduce((acc, m) => acc + (m.steps?.length || 0), 0);
-    const done = months.reduce(
-      (acc, m) => acc + (m.steps?.filter((s) => s.completed)?.length || 0),
-      0
-    );
-    return total ? Math.round((done / total) * 100) : 0;
-  };
-
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
-  
-  const handleFileChange = (e) => {
-      setFormData({ 
-          ...formData, 
-          profilePhoto: e.target.files[0] || null
-      });
-  };
+  /* ---------------------- Update Profile ---------------------- */
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleFileChange = (e) =>
+    setFormData({ ...formData, profilePhoto: e.target.files[0] || null });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUpdateLoading(true);
-    
     try {
       const fd = new FormData();
-      
-      for (let k in formData) {
-        if (k !== 'email' && formData[k] !== null) { 
-            if (k === 'profilePhoto' && formData[k] instanceof File) {
-                fd.append(k, formData[k]);
-            } else if (k !== 'profilePhoto') {
-                fd.append(k, formData[k]);
-            }
+      for (let key in formData) {
+        if (key !== "email" && formData[key] !== null) {
+          if (key === "profilePhoto" && formData[key] instanceof File) {
+            fd.append(key, formData[key]);
+          } else if (key !== "profilePhoto") {
+            fd.append(key, formData[key]);
+          }
         }
       }
-
       const { data } = await axios.put(`${API_URL}/auth/profile`, fd, {
         withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
       });
-      
+
       setUser(data);
       setFormData({ ...data, profilePhoto: null });
       toast.success("Profile updated!");
       setIsModalOpen(false);
-
-    } catch(err) {
-      console.error("Profile update error:", err.response || err);
-      const errMsg = err.response?.data?.message || "Update failed due to a server error.";
-      toast.error(errMsg);
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to update profile.");
     } finally {
       setUpdateLoading(false);
     }
   };
-  // --- End Utility Functions ---
+
+  /* ---------------------- Derived Data ---------------------- */
+  const activeRoadmaps = useMemo(
+    () => roadmaps.filter((r) => r.overallProgress >= 1),
+    [roadmaps]
+  );
+  const completedRoadmaps = useMemo(
+    () => roadmaps.filter((r) => r.overallProgress === 100),
+    [roadmaps]
+  );
+
+  // Pagination derived data
+  const totalRoadmapPages = Math.ceil(activeRoadmaps.length / roadmapPerPage);
+  const totalCertPages = Math.ceil(certificates.length / certPerPage);
+
+  const paginatedRoadmaps = useMemo(() => {
+    const start = (roadmapPage - 1) * roadmapPerPage;
+    return activeRoadmaps.slice(start, start + roadmapPerPage);
+  }, [roadmapPage, activeRoadmaps]);
+
+  const paginatedCerts = useMemo(() => {
+    const start = (certPage - 1) * certPerPage;
+    return certificates.slice(start, start + certPerPage);
+  }, [certPage, certificates]);
 
   if (loading) return <Loading />;
 
-  const startedRoadmaps = roadmaps.filter((r) => getProgress(r.months) > 0);
-  const filteredRoadmaps = startedRoadmaps.filter((r) =>
-    r.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  
-  const profileDetails = [
-    { label: "Phone", value: user?.phoneNo, icon: FaPhone },
-    { label: "College", value: user?.CollegeName, icon: FaGraduationCap },
-    { label: "Course", value: user?.Course, icon: FaMapSigns },
-    { label: "Branch", value: user?.BranchName, icon: FaMapSigns },
-    { label: "Year", value: user?.YearOfStudy, icon: FaGraduationCap },
-  ];
-
-  const totalCertificates = certificates.length;
-  const totalRoadmaps = roadmaps.length;
-  const activeRoadmaps = startedRoadmaps.length;
-
-
+  /* ---------------------- UI ---------------------- */
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#020202] to-[#0f0f0f] text-gray-100 px-4 sm:px-8 py-12">
-      <motion.h1
-        className="text-4xl sm:text-5xl font-extrabold mb-12 text-center bg-gradient-to-r from-sky-400 to-cyan-400 text-transparent bg-clip-text drop-shadow-lg"
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
+    <div className="min-h-screen bg-gradient-to-b from-[#020202] via-[#0a0a0a] to-[#0f0f0f] text-gray-100 px-4 sm:px-8 py-12">
+      {/* Hero Section */}
+      <motion.div
+        className="max-w-6xl mx-auto text-center mb-12"
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
       >
-        Personal Development Hub
-      </motion.h1>
+        <h1 className="text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-sky-400 to-cyan-400 text-transparent bg-clip-text mb-3">
+          Your Learning Profile
+        </h1>
+        <p className="text-gray-400 text-sm px-6 lg:text-lg">
+          Manage your details, explore active roadmaps, and celebrate your
+          achievements!
+        </p>
+      </motion.div>
 
-      {/* --- Section 1: Welcome Box and Key Stats --- */}
-      <section className="max-w-7xl mx-auto mb-16 grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Welcome Box */}
-        <div className="lg:col-span-2 bg-gradient-to-r from-blue-700 via-sky-600 to-cyan-600 p-0.5 rounded-3xl shadow-xl shadow-sky-900/40">
-          <div className="bg-[#0f0f0f] p-6 sm:p-8 rounded-[1.4rem]">
-            <h2 className="text-3xl font-bold text-white">
-              Welcome back, <span className="bg-gradient-to-r from-sky-400 to-cyan-400 text-transparent bg-clip-text">{user?.name}!</span>
-            </h2>
-            <p className="text-gray-400 mt-2 text-lg">
-              It's time to check your progress and conquer the next step in your learning journey.
-            </p>
-            <div className="mt-5 flex flex-wrap gap-4">
-              <button
-                onClick={() => navigate('/roadmap')}
-                className="flex items-center bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-4 rounded-full transition duration-300"
+      {/* Stats Summary */}
+      <motion.div
+        className="max-w-6xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-14"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        {[
+          {
+            title: "Total Roadmaps",
+            value: roadmaps.length,
+            icon: <FaRoad />,
+            color: "from-sky-500 to-blue-500",
+          },
+          {
+            title: "Active Roadmaps",
+            value: activeRoadmaps.length,
+            icon: <FaChartLine />,
+            color: "from-cyan-500 to-green-500",
+          },
+          {
+            title: "Completed",
+            value: completedRoadmaps.length,
+            icon: <FaTrophy />,
+            color: "from-yellow-400 to-orange-500",
+          },
+          {
+            title: "Certificates",
+            value: certificates.length,
+            icon: <FaCertificate />,
+            color: "from-purple-500 to-pink-500",
+          },
+        ].map((item, i) => (
+          <motion.div
+            key={i}
+            className={`rounded-2xl p-6 bg-gradient-to-br ${item.color} shadow-lg flex flex-col items-center justify-center text-white border-2 border-black mx-5 md:mx-0`}
+            whileHover={{ scale: 1.05 }}
+          >
+            <div className="text-4xl mb-2">{item.icon}</div>
+            <h3 className="text-3xl font-bold">{item.value}</h3>
+            <p className="text-lg opacity-90">{item.title}</p>
+          </motion.div>
+        ))}
+      </motion.div>
+
+      {/* Profile + Details */}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-10">
+        {/* Profile Card */}
+        <motion.div
+          className="bg-[#0a0a0a]/80 backdrop-blur-md border border-slate-800 rounded-3xl p-8 shadow-2xl relative flex flex-col items-center"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <img
+            src={user?.profilePhoto || defaultPhoto}
+            alt="Profile"
+            className="w-32 h-32 rounded-full border-4 border-sky-500 shadow-lg object-cover"
+          />
+          <h2 className="text-3xl font-bold mt-4">{user?.name}</h2>
+          <p className="text-sky-400">{user?.email}</p>
+
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="absolute top-6 right-6 bg-sky-500 hover:bg-sky-600 text-white p-3 rounded-full transition hover:scale-110"
+          >
+            <FaEdit />
+          </button>
+
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
+            {[
+              { label: "Phone", value: user?.phoneNo || "N/A", icon: <FaPhone /> },
+              { label: "College", value: user?.CollegeName || "N/A", icon: <FaGraduationCap /> },
+              { label: "Course", value: user?.Course || "N/A", icon: <FaMapSigns /> },
+              { label: "Branch", value: user?.BranchName || "N/A", icon: <FaUser /> },
+              { label: "Year", value: user?.YearOfStudy || "N/A", icon: "🎓" },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="flex flex-col bg-[#121212] p-4 rounded-xl border border-slate-800 hover:border-sky-500 transition"
               >
-                <FaBookOpen className="mr-2" /> Explore Roadmaps
-              </button>
-              <button
-                onClick={() => navigate('/quizzes')}
-                className="flex items-center bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-2 px-4 rounded-full transition duration-300"
-              >
-                <FaArrowRight className="mr-2" /> Take a Quiz
-              </button>
-            </div>
+                <div className="flex items-center text-gray-400 text-sm mb-1 gap-2">
+                  <span className="text-sky-400">{item.icon}</span> {item.label}
+                </div>
+                <span className="text-lg font-semibold text-white">{item.value}</span>
+              </div>
+            ))}
           </div>
-        </div>
-        {/* Stats */}
-        <div className="lg:col-span-1 grid grid-cols-3 lg:grid-cols-1 gap-6">
-          <motion.div
-            className="p-4 bg-[#181818] rounded-2xl border border-slate-800 shadow-lg text-center"
-            whileHover={{ scale: 1.05 }}
-          >
-            <p className="text-4xl font-bold text-sky-400">{totalCertificates}</p>
-            <p className="text-sm text-gray-400">Certificates Earned</p>
-          </motion.div>
-          <motion.div
-            className="p-4 bg-[#181818] rounded-2xl border border-slate-800 shadow-lg text-center"
-            whileHover={{ scale: 1.05 }}
-          >
-            <p className="text-4xl font-bold text-cyan-400">{activeRoadmaps}</p>
-            <p className="text-sm text-gray-400">Active Roadmaps</p>
-          </motion.div>
-          <motion.div
-            className="p-4 bg-[#181818] rounded-2xl border border-slate-800 shadow-lg text-center"
-            whileHover={{ scale: 1.05 }}
-          >
-            <p className="text-4xl font-bold text-gray-300">{totalRoadmaps}</p>
-            <p className="text-sm text-gray-400">Total Roadmaps</p>
-          </motion.div>
-        </div>
-      </section>
+        </motion.div>
 
-      {/* --- Section 2: Main Content (Profile/Certs vs. Roadmaps) --- */}
-      <section className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* Left Column: Profile and Certificates */}
-        <div className="lg:col-span-2 space-y-12 p-6 rounded-3xl bg-[#0a0a0a] border border-slate-800 shadow-2xl shadow-black/50">
-          
-          {/* Profile Card */}
-          <div className="bg-gradient-to-r from-blue-700 via-sky-600 to-cyan-600 p-0.5 rounded-3xl shadow-xl shadow-sky-900/40">
-            <div className="bg-[#0f0f0f] p-6 sm:p-8 rounded-[1.4rem] flex flex-col md:flex-row items-center gap-8 relative">
-              <img
-                src={user?.profilePhoto || defaultPhoto}
-                alt="Profile"
-                className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-4 border-sky-400 shadow-xl object-cover"
-              />
-              <div className="flex-1 text-center md:text-left">
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-1">Your Profile Details</h3>
-                <p className="text-sky-300 mb-4 font-mono"><span className="text-gray-400">email: </span>{user?.email}</p>
-                
-                {/* Profile Details Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-4 border-t border-slate-800">
-                  {profileDetails.map((item, index) => (
+        {/* Right Column */}
+        <div className="lg:col-span-2 space-y-12">
+          {/* Active Roadmaps */}
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
+            <h2 className="text-3xl font-bold mb-6 text-sky-400 flex items-center gap-2">
+              <FaCompass /> Active Roadmaps
+            </h2>
+
+            {activeRoadmaps.length === 0 ? (
+              <p className="text-gray-400">No active roadmaps (≥1% progress).</p>
+            ) : (
+              <>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {paginatedRoadmaps.map((r) => (
                     <motion.div
-                      key={index}
-                      className="flex flex-col items-center md:items-start"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.4, delay: index * 0.1 }}
+                      key={r._id}
+                      whileHover={{ scale: 1.04 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => navigate(`/roadmap/${r._id}`)}
+                      className="cursor-pointer bg-[#0b0b0b] border border-slate-800 rounded-2xl p-6 hover:border-sky-500 hover:shadow-lg hover:shadow-sky-800/40 transition relative overflow-hidden group"
                     >
-                      <div className="flex items-center text-sm text-gray-400 mb-1">
-                        <item.icon className="text-sky-500 mr-2" size={14} />
-                        {item.label}
+                      <div className="absolute inset-0 bg-gradient-to-r from-sky-500/10 to-cyan-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
+                      <div className="relative z-10">
+                        <h3 className="text-xl font-semibold mb-2 text-white flex items-center gap-2">
+                          <FaCompass className="text-sky-400 " /> {r.title}
+                        </h3>
+                        <p className="text-gray-400 text-sm line-clamp-2 mb-4">
+                          {r.description || "No description available"}
+                        </p>
+                        <div className="w-full bg-gray-700 h-2 rounded-full overflow-hidden mb-2">
+                          <motion.div
+                            className="bg-gradient-to-r from-sky-500 to-cyan-400 h-2"
+                            initial={{ width: 0 }}
+                            animate={{ width: `${r.overallProgress}%` }}
+                            transition={{ duration: 0.8 }}
+                          />
+                        </div>
+                        <p className="text-sm text-sky-400 font-medium flex justify-between">
+                          <span>{r.overallProgress}% completed</span>
+                          <span>{r.totalSteps} steps</span>
+                        </p>
                       </div>
-                      <span className="text-white text-lg font-bold truncate w-full text-center md:text-left">
-                        {item.value || "N/A"}
-                      </span>
                     </motion.div>
                   ))}
                 </div>
-              </div>
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="absolute top-4 right-4 bg-sky-500 hover:bg-sky-600 text-white p-3 rounded-full shadow-lg transition duration-300 hover:scale-110 active:scale-95"
-                aria-label="Edit Profile"
-              >
-                <FaEdit size={20} />
-              </button>
-            </div>
-          </div>
 
-          {/* Certificates Section */}
-          {certificates.length > 0 && (
-            <div>
-              <h2 className="text-3xl font-semibold mb-6 text-sky-400">
-                <span className="mr-2">🏅</span> Recent Certifications
-              </h2>
-              <section className="grid md:grid-cols-2 gap-6">
-                {certificates.slice(0, 2).map((cert, index) => (
-                  <motion.div
-                    key={cert._id}
-                    className="bg-[#181818] p-6 rounded-2xl shadow-xl border border-slate-800 hover:border-sky-500 transform transition duration-300 relative overflow-hidden"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    whileHover={{ scale: 1.03 }}
-                  >
-                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-sky-400 to-cyan-400"></div>
-                    <h3 className="text-xl font-bold text-white mt-2 mb-2">{cert.subject}</h3>
-                    <p className="text-sm text-gray-400 mb-4">
-                      Issued: <span className="text-gray-200 font-medium">{new Date(cert.date).toLocaleDateString()}</span>
-                    </p>
-                    <button
-                      onClick={() => navigate(`/certificate/${cert.certificateId}`)}
-                      className="w-full flex items-center justify-center bg-gradient-to-r from-sky-600 to-cyan-700 hover:from-sky-700 hover:to-cyan-800 text-white font-medium py-3 px-4 rounded-xl shadow-lg transition duration-300 active:scale-98"
-                    >
-                      Verify Certificate <FaArrowRight className="ml-2 h-4 w-4" />
-                    </button>
-                  </motion.div>
-                ))}
-              </section>
-              {certificates.length > 2 && (
-                <p className="text-right mt-4">
-                  <button onClick={() => navigate('/certificates')} className="text-sky-400 hover:text-sky-300 font-medium">
-                    View all {certificates.length} certificates &rarr;
-                  </button>
-                </p>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Right Column: Active Roadmaps */}
-        <div className="lg:col-span-1 space-y-8 p-6 rounded-3xl bg-[#0a0a0a] border border-slate-800 shadow-2xl shadow-black/50">
-          <h2 className="text-3xl font-semibold text-sky-400">
-            <span className="mr-2">🧭</span> Active Roadmaps
-          </h2>
-          <div className="relative">
-            <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search active learning tracks..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-[#181818] border border-slate-700 rounded-xl py-3 pl-12 pr-4 text-gray-200 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 outline-none transition-all duration-300 shadow-inner"
-            />
-          </div>
-          <div className="space-y-4">
-            {filteredRoadmaps.length > 0 ? (
-              filteredRoadmaps.map((r, index) => (
-                <motion.div
-                  key={r._id}
-                  onClick={() => navigate(`/roadmap/${r._id}`)}
-                  className="bg-[#181818] border border-slate-800 hover:border-sky-500 rounded-xl p-5 transition-all shadow-md cursor-pointer"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.05 }}
-                  whileHover={{ scale: 1.02 }}
-                >
-                  <h3 className="text-lg font-bold text-sky-300 mb-1 line-clamp-1">{r.title}</h3>
-                  <p className="text-gray-400 text-xs mb-3 line-clamp-2">{r.description}</p>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-500 font-medium">Progress</span>
-                    <span className="text-sky-400 font-bold">{getProgress(r.months)}%</span>
+                {/* Roadmap Pagination */}
+                {totalRoadmapPages > 1 && (
+                  <div className="flex justify-center mt-6 gap-2">
+                    {Array.from({ length: totalRoadmapPages }).map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setRoadmapPage(i + 1)}
+                        className={`px-4 py-2 rounded-lg border ${
+                          roadmapPage === i + 1
+                            ? "bg-sky-600 text-white border-sky-700"
+                            : "bg-[#0a0a0a] text-gray-400 border-slate-800 hover:bg-slate-800"
+                        } transition`}
+                      >
+                        {i + 1}
+                      </button>
+                    ))}
                   </div>
-                  <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden shadow-inner shadow-black/50">
-                    <motion.div
-                      className="h-2 bg-gradient-to-r from-sky-500 to-cyan-500 rounded-full"
-                      initial={{ width: 0 }}
-                      animate={{ width: `${getProgress(r.months)}%` }}
-                      transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
-                    />
-                  </div>
-                </motion.div>
-              ))
-            ) : (
-              <p className="text-center text-gray-500 p-6 bg-[#181818] rounded-xl border border-slate-800">
-                {searchTerm
-                  ? `No roadmaps found matching "${searchTerm}".`
-                  : "No active roadmaps. Start one now!"}
-              </p>
+                )}
+              </>
             )}
-          </div>
-        </div>
-      </section>
+          </motion.div>
 
-      {/* --- Edit Profile Modal (Kept the same) --- */}
+          {/* Certificates */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <h2 className="text-3xl font-bold mb-6 text-cyan-400 flex items-center gap-2">
+              🏅 Certificates
+            </h2>
+
+            {certificates.length === 0 ? (
+              <p className="text-gray-400">
+                No certificates yet. Complete quizzes to earn them!
+              </p>
+            ) : (
+              <>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {paginatedCerts.map((cert) => (
+                    <motion.div
+                      key={cert._id}
+                      whileHover={{ scale: 1.04 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="relative cursor-pointer bg-[#0b0b0b] border border-slate-800 rounded-2xl p-6 hover:border-cyan-500 hover:shadow-lg hover:shadow-cyan-800/40 transition overflow-hidden group"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
+                      <div className="relative z-10">
+                        <h3 className="text-xl font-semibold text-white flex items-center gap-2 mb-3">
+                          <FaAward className="text-cyan-400" />{" "}
+                          {cert.title || "Untitled Course"}
+                        </h3>
+                        <p className="text-gray-400 text-sm mb-1">
+                          Issued on:{" "}
+                          <span className="text-cyan-400 font-medium">
+                            {cert.date && !isNaN(new Date(cert.date))
+                              ? new Date(cert.date).toLocaleDateString("en-US", {
+                                  year: "numeric",
+                                  month: "short",
+                                  day: "numeric",
+                                })
+                              : "Date unavailable"}
+                          </span>
+                        </p>
+                        <p className="text-gray-400 text-sm mb-4">
+                          Score:{" "}
+                          <span className="text-cyan-400 font-medium">
+                            {cert.score || "Unavailable"}
+                          </span>
+                        </p>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/certificate/${cert.certificateId}`);
+                          }}
+                          className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-600 to-blue-700 hover:from-cyan-500 hover:to-blue-600 text-white font-medium py-2 px-4 rounded-lg shadow-md shadow-cyan-800/30 transition duration-300 opacity-90 group-hover:opacity-100"
+                        >
+                          View Certificate <FaArrowRight size={14} />
+                        </button>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Certificate Pagination */}
+                {totalCertPages > 1 && (
+                  <div className="flex justify-center mt-6 gap-2">
+                    {Array.from({ length: totalCertPages }).map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setCertPage(i + 1)}
+                        className={`px-4 py-2 rounded-lg border ${
+                          certPage === i + 1
+                            ? "bg-cyan-600 text-white border-cyan-700"
+                            : "bg-[#0a0a0a] text-gray-400 border-slate-800 hover:bg-slate-800"
+                        } transition`}
+                      >
+                        {i + 1}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+          </motion.div>
+        </div>
+      </div>
+
+      {/*  Edit Modal */}
       <AnimatePresence>
         {isModalOpen && (
           <motion.div
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-50 p-4"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <motion.div
-              className="bg-[#0f0f0f] w-full max-w-lg p-6 sm:p-8 rounded-3xl shadow-2xl shadow-sky-900/60 relative border border-sky-700 max-h-[90vh] overflow-y-auto"
+            {/* Scrollable Modal */}
+            <motion.form
+              onSubmit={handleSubmit}
+              className="relative bg-[#0d0d0d] border border-slate-800 rounded-3xl p-8 w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 100 }}
+              transition={{ duration: 0.3 }}
             >
               <button
+                type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="absolute top-5 right-5 text-gray-400 hover:text-white transition text-2xl p-2 rounded-full hover:bg-slate-800"
-                aria-label="Close Modal"
+                className="absolute top-4 right-4 text-gray-400 hover:text-red-500"
               >
-                <FaTimes size={20} />
+                <FaTimes size={22} />
               </button>
-              <h2 className="text-3xl font-bold mb-6 text-sky-400 text-center">Update Profile</h2>
-              <form onSubmit={handleSubmit} className="space-y-5">
+
+              <h2 className="text-2xl font-bold mb-6 text-center text-sky-400">
+                Edit Profile
+              </h2>
+
+              <div className="space-y-4">
                 {[
-                  { field: "name", label: "Full Name" },
-                  { field: "phoneNo", label: "Phone Number", type: "tel" }, 
-                  { field: "CollegeName", label: "College Name" },
-                  { field: "Course", label: "Course/Program" },
-                  { field: "BranchName", label: "Branch Name" },
-                  { field: "YearOfStudy", label: "Year of Study" },
-                ].map(({ field, label, type = "text" }) => (
-                  <div key={field}>
-                    <label className="block text-sm text-gray-300 font-medium mb-1">{label}</label>
+                  { label: "Name", name: "name" },
+                  { label: "Phone", name: "phoneNo" },
+                  { label: "College", name: "CollegeName" },
+                  { label: "Course", name: "Course" },
+                  { label: "Branch", name: "BranchName" },
+                  { label: "Year of Study", name: "YearOfStudy" },
+                ].map((f) => (
+                  <div key={f.name}>
+                    <label className="block text-sm text-gray-400 mb-1">
+                      {f.label}
+                    </label>
                     <input
-                      name={field}
-                      type={type}
-                      value={formData[field] || ""} 
+                      type="text"
+                      name={f.name}
+                      value={formData[f.name] || ""}
                       onChange={handleChange}
-                      className="w-full bg-[#181818] border border-slate-700 p-3 rounded-xl focus:border-sky-500 focus:ring-2 focus:ring-sky-500 outline-none text-gray-200 transition"
-                      disabled={field === 'email'} 
+                      className="w-full bg-[#1a1a1a] border border-slate-700 focus:border-sky-500 rounded-xl px-4 py-2 text-white outline-none transition"
                     />
                   </div>
                 ))}
-                <div>
-                  <label className="block text-sm text-gray-300 font-medium mb-1">Profile Photo (Optional)</label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="w-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sky-500 file:text-white hover:file:bg-sky-600 bg-[#181818] border border-slate-700 p-3 rounded-xl text-gray-200 cursor-pointer transition"
-                  />
-                </div>
-                <div className="flex justify-end gap-4 pt-6">
-                  <button
-                    type="button"
-                    onClick={() => setIsModalOpen(false)}
-                    className="px-6 py-2.5 bg-gray-700 text-white rounded-xl hover:bg-gray-600 transition font-semibold"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-6 py-2.5 bg-gradient-to-r from-sky-500 to-cyan-500 text-white rounded-xl shadow-lg hover:opacity-95 transition font-semibold disabled:opacity-50 active:scale-98"
-                    disabled={updateLoading}
-                  >
-                    {updateLoading ? "Saving Changes..." : "Save Changes"}
-                  </button>
-                </div>
-              </form>
-            </motion.div>
+              </div>
+
+              <div className="mt-4">
+                <label className="block text-sm text-gray-400 mb-1">
+                  Profile Photo
+                </label>
+                <input
+                  type="file"
+                  onChange={handleFileChange}
+                  className="w-full text-gray-300"
+                  accept="image/*"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={updateLoading}
+                className="mt-6 w-full bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white py-2 rounded-xl font-semibold transition"
+              >
+                {updateLoading ? "Updating..." : "Save Changes"}
+              </button>
+            </motion.form>
           </motion.div>
         )}
       </AnimatePresence>

@@ -354,9 +354,9 @@ export default function ChatBot() {
           <span className="hidden sm:block">Back</span>
         </button>
 
-        <div className="flex items-center gap-3">
-          <FaRobot className="text-blue-400 text-xl md:text-3xl" />
-          <h1 className="text-xl md:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
+        <div className="flex items-center gap-2">
+          <FaRobot className="text-cyan-400 text-xl md:text-3xl" />
+          <h1 className="text-xl md:text-2xl font-bold text-center bg-gradient-to-r from-purple-400 to-sky-400 text-transparent bg-clip-text">
             Easyway AI Chatbot
           </h1>
         </div>
