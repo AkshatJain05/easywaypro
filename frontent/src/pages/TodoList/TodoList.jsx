@@ -140,13 +140,13 @@ const TaskItem = ({ task, toggleTask, deleteTask, editTask, loadingTask }) => {
           type="date"
           value={editDate}
           onChange={(e) => setEditDate(e.target.value)}
-          className="px-3 py-2 rounded-lg bg-gray-900 border border-gray-600 text-gray-300 focus:ring-2 focus:ring-indigo-500"
+          className="px-3 py-2 rounded-lg bg-gray-900 placeholder-gray-400 border border-gray-600 text-gray-300 focus:ring-2 focus:ring-indigo-500"
         />
         <input
           type="time"
           value={editTime}
           onChange={(e) => setEditTime(e.target.value)}
-          className="px-3 py-2 rounded-lg bg-gray-900 border border-gray-600 text-gray-300 focus:ring-2 focus:ring-indigo-500"
+          className="px-3 py-2 rounded-lg bg-gray-900 border placeholder-gray-400 border-gray-600 text-gray-300 focus:ring-2 focus:ring-indigo-500"
         />
       </div>
 
@@ -442,13 +442,13 @@ export default function TodoList() {
                   type="date"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="flex-1 sm:flex-none px-2 py-2.5 rounded-lg bg-gray-900 border border-gray-700 text-gray-300 focus:ring-2 focus:ring-indigo-500 text-sm"
+                  className="flex-1 sm:flex-none px-2 py-2.5 rounded-lg placeholder-gray-400 bg-gray-900 border border-gray-700 text-gray-300 focus:ring-2 focus:ring-indigo-500 text-sm"
                 />
                 <input
                   type="time"
                   value={time}
                   onChange={(e) => setTime(e.target.value)}
-                  className="flex-1 sm:flex-none px-2 py-2.5 rounded-lg bg-gray-900 border border-gray-700 text-gray-300 focus:ring-2 focus:ring-indigo-500 text-sm"
+                  className="flex-1 sm:flex-none px-2 py-2.5 rounded-lg placeholder-gray-400 bg-gray-900 border border-gray-700 text-gray-300 focus:ring-2 focus:ring-indigo-500 text-sm"
                 />
               </div>
               <motion.button
