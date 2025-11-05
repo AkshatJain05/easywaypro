@@ -126,27 +126,27 @@ const TaskItem = ({ task, toggleTask, deleteTask, editTask, loadingTask }) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      className="p-4 rounded-2xl bg-gray-900/80 border border-indigo-500/50 space-y-3 shadow-lg backdrop-blur-md"
+      className="p-4 rounded-2xl bg-gray-900/40 border border-indigo-500/50 space-y-3 shadow-lg backdrop-blur-md"
     >
       <input
         type="text"
         value={editText}
         onChange={(e) => setEditText(e.target.value)}
-        className="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-600 text-gray-100 focus:ring-2 focus:ring-indigo-500"
+        className="w-full px-3 py-2 rounded-lg bg-gray-900 border border-gray-600 text-gray-100 focus:ring-2 focus:ring-indigo-500"
       />
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <input
           type="date"
           value={editDate}
           onChange={(e) => setEditDate(e.target.value)}
-          className="px-3 py-2 rounded-lg bg-gray-800 border border-gray-600 text-gray-300 focus:ring-2 focus:ring-indigo-500"
+          className="px-3 py-2 rounded-lg bg-gray-900 border border-gray-600 text-gray-300 focus:ring-2 focus:ring-indigo-500"
         />
         <input
           type="time"
           value={editTime}
           onChange={(e) => setEditTime(e.target.value)}
-          className="px-3 py-2 rounded-lg bg-gray-800 border border-gray-600 text-gray-300 focus:ring-2 focus:ring-indigo-500"
+          className="px-3 py-2 rounded-lg bg-gray-900 border border-gray-600 text-gray-300 focus:ring-2 focus:ring-indigo-500"
         />
       </div>
 
