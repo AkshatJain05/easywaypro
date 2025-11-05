@@ -20,7 +20,7 @@ const UserDetailsModal = ({ user, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-      <div className="bg-gray-900 border border-emerald-600/50 p-6 rounded-2xl shadow-[0_0_30px_rgba(16,185,129,0.3)] max-w-sm w-full relative transform transition-all scale-100 animate-fade-in">
+      <div className="bg-gray-900 border border-emerald-600/50 p-6 rounded-2xl max-w-sm w-full relative transform transition-all scale-100 animate-fade-in">
         {/* Close */}
         <button
           onClick={onClose}
@@ -140,7 +140,7 @@ export default function Users() {
                 className="border-b border-gray-800 hover:bg-gray-800/70 transition"
               >
                 <td className="p-3">{idx + 1}</td>
-                <td className="p-3 font-medium text-emerald-900">{user.name}</td>
+                <td className="p-3 font-medium text-emerald-400">{user.name}</td>
                 <td className="p-3 text-gray-300">{user.email}</td>
                 <td className="p-3 text-gray-300">{user.phoneNo || "-"}</td>
                 <td className="p-3 capitalize">
@@ -182,7 +182,7 @@ export default function Users() {
             className="p-4 flex justify-between items-center hover:bg-gray-800/70 transition"
           >
             <div className="flex items-center min-w-0 flex-grow mr-4">
-              <FaUserCircle className="text-3xl text-emerald-900 flex-shrink-0 mr-3" />
+              <FaUserCircle className="text-3xl text-emerald-400 flex-shrink-0 mr-3" />
               <div className="min-w-0">
                 <p className="text-base font-semibold text-white truncate">
                   {user.name}
