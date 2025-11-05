@@ -81,7 +81,8 @@ export default function RoadmapList() {
           Your Learning Roadmaps
         </h1>
         <p className="text-base md:text-lg text-gray-400 max-w-2xl mx-auto">
-          Explore your personalized learning journeys and track your progress easily.
+          Explore your personalized learning journeys and track your progress
+          easily.
         </p>
 
         <div className="relative mt-6 mb-8 flex items-center justify-center">
@@ -106,9 +107,15 @@ export default function RoadmapList() {
       {/*  Roadmap Grid */}
       <AnimatePresence>
         {filteredRoadmaps.length > 0 ? (
-          <motion.div layout className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <motion.div
+            layout
+            className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
             {filteredRoadmaps.map((r, i) => {
-              const progress = Math.min(Math.max(r.overallProgress || 0, 0), 100);
+              const progress = Math.min(
+                Math.max(r.overallProgress || 0, 0),
+                100
+              );
 
               return (
                 <motion.div
@@ -132,8 +139,10 @@ export default function RoadmapList() {
                       {r.title}
                     </h2>
 
-                    <p className="text-gray-400 text-sm md:text-base leading-relaxed line-clamp-4">
-                      {r.description || "No description available."}
+                    <p className="text-gray-400 text-sm md:text-base leading-relaxed text-justify">
+                      {r.description && r.description.length > 132
+                        ? r.description.slice(0, 132) + " ......."
+                        : r.description || "No description available."}
                     </p>
 
                     {/*  Progress Bar */}
@@ -158,7 +167,7 @@ export default function RoadmapList() {
                             transition={{ delay: 0.5, duration: 0.5 }}
                             className="absolute right-2 -top-6 text-emerald-400 text-xs font-semibold"
                           >
-                             Completed!
+                            Completed!
                           </motion.span>
                         )}
                       </div>

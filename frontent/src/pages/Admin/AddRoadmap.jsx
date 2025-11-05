@@ -4,23 +4,20 @@ import {
   FaPlus,
   FaTrash,
   FaEdit,
-  FaTable,
   FaTimes,
-  FaSave,
   FaListUl,
 } from "react-icons/fa";
 import toast from "react-hot-toast";
 
 export default function RoadmapAdmin() {
   const API_URL = import.meta.env.VITE_API_URL;
-  const [activeTab, setActiveTab] = useState("add");
 
+  const [activeTab, setActiveTab] = useState("add");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [months, setMonths] = useState([
     { month: "", steps: [{ day: "", topic: "", details: [""] }] },
   ]);
-  const [loading, setLoading] = useState(false);
   const [roadmaps, setRoadmaps] = useState([]);
   const [editingId, setEditingId] = useState(null);
 
@@ -28,8 +25,13 @@ export default function RoadmapAdmin() {
   const [limit] = useState(20);
   const [total, setTotal] = useState(0);
 
-  /* ------------------------------ Fetch Roadmaps ------------------------------ */
+  const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  // ------------------------ Fetch Roadmaps ------------------------
   const fetchRoadmaps = async () => {
+    setFetching(true);
     try {
       const res = await axios.get(
         `${API_URL}/roadmap?page=${page}&limit=${limit}`,
@@ -40,6 +42,8 @@ export default function RoadmapAdmin() {
     } catch (err) {
       console.error(err);
       toast.error("Failed to load roadmaps");
+    } finally {
+      setFetching(false);
     }
   };
 
@@ -47,7 +51,7 @@ export default function RoadmapAdmin() {
     if (activeTab === "list") fetchRoadmaps();
   }, [page, activeTab]);
 
-  /* ------------------------------ Add / Edit Submit ------------------------------ */
+  // ------------------------ Add / Edit Submit ------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (
@@ -80,23 +84,52 @@ export default function RoadmapAdmin() {
     } catch (err) {
       console.error(err);
       toast.error("Failed to save roadmap");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  /* ------------------------------ Delete Roadmap ------------------------------ */
+  // ------------------------ Delete Roadmap ------------------------
   const deleteRoadmap = async (id) => {
-    if (!confirm("Delete this roadmap?")) return;
-    try {
-      await axios.delete(`${API_URL}/roadmap/${id}`, { withCredentials: true });
-      toast.success("Roadmap deleted");
-      fetchRoadmaps();
-    } catch (err) {
-      toast.error("Error deleting roadmap");
-    }
+    toast(
+      (t) => (
+        <div className="flex flex-col gap-2 text-sm">
+          <p>Are you sure you want to delete this roadmap?</p>
+          <div className="flex gap-2 justify-end">
+            <button
+              onClick={async () => {
+                toast.dismiss(t.id);
+                setDeleting(true);
+                try {
+                  await axios.delete(`${API_URL}/roadmap/${id}`, {
+                    withCredentials: true,
+                  });
+                  toast.success("Roadmap deleted");
+                  fetchRoadmaps();
+                } catch (err) {
+                  toast.error("Error deleting roadmap");
+                } finally {
+                  setDeleting(false);
+                }
+              }}
+              className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
+            >
+              Delete
+            </button>
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ),
+      { duration: 4000 }
+    );
   };
 
-  /* ------------------------------ Edit Roadmap ------------------------------ */
+  // ------------------------ Edit Roadmap ------------------------
   const handleEdit = (r) => {
     setActiveTab("add");
     setEditingId(r._id);
@@ -113,7 +146,7 @@ export default function RoadmapAdmin() {
     setMonths([{ month: "", steps: [{ day: "", topic: "", details: [""] }] }]);
   };
 
-  /* ------------------------------ Month/Step/Detail helpers ------------------------------ */
+  // ------------------------ Month / Step / Detail ------------------------
   const addMonth = () =>
     setMonths([
       ...months,
@@ -146,270 +179,289 @@ export default function RoadmapAdmin() {
     setMonths(newMonths);
   };
 
-  /* ------------------------------ UI ------------------------------ */
+  // ------------------------ UI ------------------------
   return (
-    <div className="min-h-screen  px-2 md:px-10 py-8 text-gray-100">
-      <h1 className="text-2xl md:text-4xl font-extrabold text-center mb-4 md:mb-10 bg-gradient-to-r from-green-400 via-teal-400 to-lime-400 bg-clip-text text-transparent">
+    <div className="min-h-screen px-2 md:px-10 py-8 text-gray-100 relative">
+      {(fetching || deleting || loading) && (
+        <div className="absolute inset-0 bg-black/70 flex items-center justify-center rounded-2xl z-50">
+          <div className="flex flex-col items-center gap-2">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-green-400"></div>
+            <p className="text-green-400 font-semibold">
+              {deleting
+                ? "Deleting..."
+                : loading
+                ? "Saving..."
+                : "Loading..."}
+            </p>
+          </div>
+        </div>
+      )}
+
+      <h1 className="text-2xl md:text-4xl font-extrabold text-center mb-6 bg-gradient-to-r from-green-400 via-teal-400 to-lime-400 bg-clip-text text-transparent">
         ⚙️ Admin Roadmap Manager
       </h1>
 
       {/* Tabs */}
-      <div className="flex justify-center gap-4 mb-10 flex-wrap">
+      <div className="flex justify-center mb-6 gap-2 flex-wrap">
         <button
-          onClick={() => setActiveTab("add")}
-          className={`px-6 py-3 rounded-lg font-semibold flex items-center gap-2 transition-all ${
+          onClick={() => {
+            setActiveTab("add");
+            resetForm();
+          }}
+          className={`px-4 py-2 rounded-md ${
             activeTab === "add"
-              ? "bg-green-600 text-white"
+              ? "bg-green-600"
               : "bg-gray-800 hover:bg-gray-700"
           }`}
         >
-          <FaPlus /> Add / Edit Roadmap
+          <FaPlus className="inline mr-2" /> Add Roadmap
         </button>
         <button
           onClick={() => setActiveTab("list")}
-          className={`px-6 py-3 rounded-lg font-semibold flex items-center gap-2 transition-all ${
+          className={`px-4 py-2 rounded-md ${
             activeTab === "list"
-              ? "bg-green-600 text-white"
+              ? "bg-green-600"
               : "bg-gray-800 hover:bg-gray-700"
           }`}
         >
-          <FaTable /> View All
+          <FaListUl className="inline mr-2" /> View Roadmaps
         </button>
       </div>
 
-      {/* Add / Edit Form */}
+      {/* Add/Edit Form */}
       {activeTab === "add" && (
         <form
           onSubmit={handleSubmit}
           className="bg-gray-950 border border-gray-800 rounded-2xl p-4 space-y-6 shadow-lg shadow-green-500/10"
         >
-          <h2 className="text-2xl font-bold text-green-400 mb-3">
-            {editingId ? "✏️ Edit Roadmap" : "🧭 Add New Roadmap"}
-          </h2>
-
-          <div className="space-y-3">
+          <div>
+            <label className="block mb-2">Title</label>
             <input
               type="text"
-              placeholder="Roadmap Title"
+              className="w-full p-2 rounded-md bg-gray-800 border border-gray-700"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full p-3 bg-gray-900 rounded focus:ring-2 focus:ring-green-500 outline-none"
-            />
-            <textarea
-              placeholder="Description (optional)"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full p-3 bg-gray-900 rounded focus:ring-2 focus:ring-green-500 outline-none"
-              rows="3"
             />
           </div>
 
+          <div>
+            <label className="block mb-2">Description</label>
+            <textarea
+              className="w-full p-2 rounded-md bg-gray-800 border border-gray-700"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+
+          {/* Months */}
           {months.map((month, mi) => (
             <div
               key={mi}
-              className="bg-gray-900 p-4 rounded-lg space-y-4 border border-gray-700"
+              className="border border-gray-700 rounded-md p-4 bg-gray-900 mb-4"
             >
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center mb-2">
                 <input
                   type="text"
-                  placeholder={`Month ${mi + 1}`}
+                  placeholder="Month"
                   value={month.month}
                   onChange={(e) => {
                     const newMonths = [...months];
                     newMonths[mi].month = e.target.value;
                     setMonths(newMonths);
                   }}
-                  className="p-3 bg-gray-800 w-full rounded focus:ring-2 focus:ring-green-500 outline-none"
+                  className="p-2 rounded-md bg-gray-800 border border-gray-700 w-1/2"
                 />
-                {months.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeMonth(mi)}
-                    className="ml-3 text-red-500 hover:text-red-400"
-                  >
-                    <FaTrash />
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={() => removeMonth(mi)}
+                  className="text-red-400 hover:text-red-500"
+                >
+                  <FaTimes />
+                </button>
               </div>
 
+              {/* Steps */}
               {month.steps.map((step, si) => (
                 <div
                   key={si}
-                  className="bg-gray-800 p-3 rounded-lg space-y-3 border border-gray-700"
+                  className="border-t border-gray-700 pt-3 mt-3 space-y-2"
                 >
-                  <div className="flex flex-col md:flex-row gap-3">
-                    <input
-                      type="text"
-                      placeholder="Day"
-                      value={step.day}
-                      onChange={(e) => {
-                        const newMonths = [...months];
-                        newMonths[mi].steps[si].day = e.target.value;
-                        setMonths(newMonths);
-                      }}
-                      className="flex-1 p-3 bg-gray-900 rounded focus:ring-2 focus:ring-green-500 outline-none"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Topic"
-                      value={step.topic}
-                      onChange={(e) => {
-                        const newMonths = [...months];
-                        newMonths[mi].steps[si].topic = e.target.value;
-                        setMonths(newMonths);
-                      }}
-                      className="flex-1 p-3 bg-gray-900 rounded focus:ring-2 focus:ring-green-500 outline-none"
-                    />
-                    {month.steps.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => removeStep(mi, si)}
-                        className="text-red-400 hover:text-red-300"
-                      >
-                        <FaTrash />
-                      </button>
-                    )}
-                  </div>
-
-                  {/*  Details Points */}
-                  <div className="ml-0 sm:,ml-2 space-y-2">
-                    {step.details.map((detail, di) => (
-                      <div key={di} className="flex flex-col sm:flex-row sm:items-center gap-3 bg-gray-900/60 p-3 rounded-lg border border-gray-700">
-                        <FaListUl className="text-green-400 flex-shrink-0" />
-                        <input
-                          type="text"
-                          placeholder={`Point ${di + 1}`}
-                          value={detail}
-                          onChange={(e) => {
-                            const newMonths = [...months];
-                            newMonths[mi].steps[si].details[di] =
-                              e.target.value;
-                            setMonths(newMonths);
-                          }}
-                          className="flex-1 p-2 bg-gray-900 rounded focus:ring-2 focus:ring-green-500 outline-none"
-                        />
-                        {step.details.length > 1 && (
-                          <button
-                            type="button"
-                            onClick={() => removeDetail(mi, si, di)}
-                            className="text-red-400 hover:text-red-300"
-                          >
-                            <FaTrash />
-                          </button>
-                        )}
-                      </div>
-                    ))}
-
+                  <div className="flex flex-col sm:flex-row justify-between gap-2 sm:items-center">
+                    <div className="flex flex-col sm:flex-row gap-2 w-full">
+                      <input
+                        type="text"
+                        placeholder="Day"
+                        value={step.day}
+                        onChange={(e) => {
+                          const newMonths = [...months];
+                          newMonths[mi].steps[si].day = e.target.value;
+                          setMonths(newMonths);
+                        }}
+                        className="p-2 rounded-md bg-gray-800 border border-gray-700 sm:w-24 w-full"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Topic"
+                        value={step.topic}
+                        onChange={(e) => {
+                          const newMonths = [...months];
+                          newMonths[mi].steps[si].topic = e.target.value;
+                          setMonths(newMonths);
+                        }}
+                        className="p-2 rounded-md bg-gray-800 border border-gray-700 flex-1"
+                      />
+                    </div>
                     <button
                       type="button"
-                      onClick={() => addDetail(mi, si)}
-                      className="text-green-400 hover:text-green-300 flex items-center gap-2 mt-1 text-sm"
+                      onClick={() => removeStep(mi, si)}
+                      className="text-red-400 hover:text-red-500 self-end sm:self-auto"
                     >
-                      <FaPlus /> Add Point
+                      <FaTrash />
                     </button>
                   </div>
+
+                  {step.details.map((detail, di) => (
+                    <div key={di} className="flex gap-2 items-center">
+                      <input
+                        type="text"
+                        placeholder="Detail"
+                        value={detail}
+                        onChange={(e) => {
+                          const newMonths = [...months];
+                          newMonths[mi].steps[si].details[di] =
+                            e.target.value;
+                          setMonths(newMonths);
+                        }}
+                        className="p-2 rounded-md bg-gray-800 border border-gray-700 flex-1"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeDetail(mi, si, di)}
+                        className="text-red-400 hover:text-red-500"
+                      >
+                        <FaTimes />
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => addDetail(mi, si)}
+                    className="text-green-400 hover:text-green-500 text-sm"
+                  >
+                    + Add Detail
+                  </button>
                 </div>
               ))}
 
               <button
                 type="button"
                 onClick={() => addStep(mi)}
-                className="bg-green-700 hover:bg-green-800 text-white py-2 px-4 rounded shadow-md flex items-center gap-2"
+                className="text-green-400 hover:text-green-500 text-sm mt-2"
               >
-                <FaPlus /> Add Step
+                + Add Step
               </button>
             </div>
           ))}
 
-          <div className="flex flex-wrap gap-3">
-            <button
-              type="button"
-              onClick={addMonth}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-3 rounded flex items-center gap-2 shadow-md"
-            >
-              <FaPlus /> Add Month
-            </button>
+          <button
+            type="button"
+            onClick={addMonth}
+            className="bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-md w-full sm:w-auto"
+          >
+            + Add Month
+          </button>
 
+          <div className="flex flex-col sm:flex-row gap-3 sm:items-center mt-4">
             <button
               type="submit"
               disabled={loading}
-              className="bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded flex items-center gap-2 shadow-md"
+              className="bg-green-700 hover:bg-green-800 px-4 py-2 rounded-md text-white font-semibold w-full sm:w-auto"
             >
-              {loading ? (
-                "Processing..."
-              ) : editingId ? (
-                <>
-                  <FaSave /> Update
-                </>
-              ) : (
-                "Submit"
-              )}
+              {editingId ? "Update Roadmap" : "Save Roadmap"}
             </button>
 
             {editingId && (
               <button
                 type="button"
                 onClick={resetForm}
-                className="bg-red-500 hover:bg-red-600 text-white px-5 py-3 rounded flex items-center gap-2 shadow-md"
+                className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-md text-white font-semibold w-full sm:w-auto"
               >
-                <FaTimes /> Cancel
+                Cancel Edit
               </button>
             )}
           </div>
         </form>
       )}
 
-      {/* View All */}
+      {/* List */}
       {activeTab === "list" && (
-        <div className="bg-gray-950 border border-gray-800 rounded-2xl p-6 mt-6 shadow-lg shadow-green-500/10">
-          <h2 className="text-2xl font-bold mb-6 text-green-400">
-            📋 All Roadmaps
-          </h2>
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-sm text-gray-300">
-              <thead>
-                <tr className="border-b border-gray-700 text-gray-400">
-                  <th className="p-3 text-left">Title</th>
-                  {/* <th className="p-3 text-left">Created</th> */}
-                  <th className="p-3 text-left">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {roadmaps.length > 0 ? (
-                  roadmaps.map((r) => (
-                    <tr
-                      key={r._id}
-                      className="border-b border-gray-800 hover:bg-gray-800/60 transition"
+        <div className="bg-gray-950 border border-gray-800 rounded-2xl p-6 mt-6 shadow-lg shadow-green-500/10 overflow-x-auto">
+          <table className="min-w-full border border-gray-800 text-sm md:text-base">
+            <thead>
+              <tr className="bg-gray-800 text-left">
+                <th className="p-3 border-b border-gray-700">Title</th>
+                <th className="p-3 border-b border-gray-700 hidden sm:table-cell text-center">
+                  Description
+                </th>
+                <th className="p-3 border-b border-gray-700 hidden sm:table-cell">
+                  Months
+                </th>
+                <th className="p-3 border-b border-gray-700 text-center">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {roadmaps.map((r) => (
+                <tr
+                  key={r._id}
+                  className="border-b border-gray-800 hover:bg-gray-900/50"
+                >
+                  <td className="p-3 font-semibold">{r.title}</td>
+                  <td className="p-3 hidden sm:table-cell text-justify px-8 text-gray-400">
+                    {r.description}
+                  </td>
+                  <td className="p-3 hidden sm:table-cell text-center">
+                    {r.months?.length}
+                  </td>
+                  <td className="p-3 text-center flex justify-center gap-2">
+                    <button
+                      onClick={() => handleEdit(r)}
+                      className="text-blue-400 hover:text-blue-500"
                     >
-                      <td className="p-3">{r.title}</td>
-                      {/* <td className="p-3">
-                        {new Date(r.createdAt).toLocaleDateString()}
-                      </td> */}
-                      <td className="p-3 flex gap-4">
-                        <button
-                          onClick={() => handleEdit(r)}
-                          className="text-blue-400 hover:text-blue-500"
-                        >
-                          <FaEdit />
-                        </button>
-                        <button
-                          onClick={() => deleteRoadmap(r._id)}
-                          className="text-red-400 hover:text-red-500"
-                        >
-                          <FaTrash />
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="4" className="text-center py-6 text-gray-500">
-                      No roadmaps found.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                      <FaEdit />
+                    </button>
+                    <button
+                      onClick={() => deleteRoadmap(r._id)}
+                      className="text-red-400 hover:text-red-500"
+                    >
+                      <FaTrash />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {/* Pagination */}
+          <div className="flex justify-between items-center mt-4 text-sm sm:text-base">
+            <button
+              disabled={page <= 1}
+              onClick={() => setPage(page - 1)}
+              className="bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-md disabled:opacity-50"
+            >
+              Prev
+            </button>
+            <p>
+              Page {page} of {Math.ceil(total / limit) || 1}
+            </p>
+            <button
+              disabled={page >= Math.ceil(total / limit)}
+              onClick={() => setPage(page + 1)}
+              className="bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-md disabled:opacity-50"
+            >
+              Next
+            </button>
           </div>
         </div>
       )}

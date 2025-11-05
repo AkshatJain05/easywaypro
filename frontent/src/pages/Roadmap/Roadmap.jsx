@@ -79,7 +79,7 @@ export default function Roadmap() {
   /* ------------------------------- Main Render ------------------------------- */
   return (
     <div className="relative min-h-screen bg-[#050505] text-white py-10 px-4 sm:px-6 flex justify-center overflow-hidden">
-      <Toaster position="top-center" />
+      <Toaster position="top-right" />
 
       {/* Background Glow Effects */}
       <div className="absolute top-20 left-1/4 w-72 h-72 bg-fuchsia-500/10 blur-[110px] rounded-full" />
