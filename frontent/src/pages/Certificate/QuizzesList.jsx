@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Loading from "../../component/Loading";
@@ -6,9 +6,9 @@ import {
   FaArrowLeft,
   FaCheckCircle,
   FaPlayCircle,
-  FaAward,
   FaHourglassHalf,
   FaRegSmileBeam,
+  FaSearch,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 
@@ -16,6 +16,7 @@ export default function QuizzesList({ userId }) {
   const [quizzes, setQuizzes] = useState([]);
   const [completedQuizzes, setCompletedQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
 
@@ -62,6 +63,14 @@ export default function QuizzesList({ userId }) {
 
   const handleStartQuiz = (quizId) => navigate(`/quiz/${quizId}`);
 
+  // 🔍 Filter quizzes by search
+  const filteredQuizzes = useMemo(() => {
+    return quizzes.filter((q) =>
+      q.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (q.subject && q.subject.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+  }, [searchTerm, quizzes]);
+
   if (loading) return <Loading />;
 
   return (
@@ -80,23 +89,39 @@ export default function QuizzesList({ userId }) {
       </motion.button>
 
       {/* Header */}
-      <h1 className="text-2xl sm:text-3xl font-extrabold mb-10 text-center">
+      <h1 className="text-2xl sm:text-3xl font-extrabold mb-6 text-center">
         <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-purple-400 to-fuchsia-400 drop-shadow-lg">
           Quizzes & Certificates
         </span>
       </h1>
 
+      {/* Search Bar */}
+      <div className="flex justify-center mb-10">
+        <div className="relative w-full max-w-md">
+          <FaSearch className="absolute left-3 top-3 text-gray-400" />
+          <input
+            type="search"
+            placeholder="Search quiz by title or subject..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full bg-gray-900/30 border border-gray-700 rounded-lg pl-10 pr-4 py-2 text-gray-200 focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent outline-none transition"
+          />
+        </div>
+      </div>
+
       {/* No Quiz */}
-      {quizzes.length === 0 ? (
+      {filteredQuizzes.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-60 border border-gray-700/50 rounded-xl bg-gray-900/50">
           <FaHourglassHalf className="text-5xl text-gray-500 mb-3" />
           <p className="text-gray-400 text-center text-sm md:text-base font-medium">
-            No quizzes available at the moment. Please check back later!
+            {searchTerm
+              ? "No quizzes found matching your search."
+              : "No quizzes available at the moment. Please check back later!"}
           </p>
         </div>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {quizzes.map((q, index) => {
+          {filteredQuizzes.map((q, index) => {
             const completedQuiz = completedQuizzes.find(
               (cq) => cq.quiz._id === q._id
             );
@@ -108,7 +133,7 @@ export default function QuizzesList({ userId }) {
             return (
               <motion.div
                 key={q._id}
-                className={`bg-gradient-to-br from-gray-950 to-black  shadow-lg rounded-xl p-4 flex flex-col justify-between transition-all duration-300 transform border
+                className={`bg-gradient-to-br from-gray-950 to-black shadow-lg rounded-xl p-4 flex flex-col justify-between transition-all duration-300 transform border
                 ${
                   completed
                     ? "border-green-500/60 hover:shadow-green-500/20"
