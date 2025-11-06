@@ -192,7 +192,7 @@ export default function Notes() {
                           href={unit.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-3 p-3 pl-3 lg:pl-10 hover:bg-gray-700/40  transition border-b-1 border-gray-950 first:border-t-1 last:border-b-0"
+                          className="flex items-center gap-3 p-3 pl-3 lg:pl-10 hover:bg-gray-700/40  transition border-b-1 border-gray-700 first:border-t-1 last:border-b-0"
                         >
                           <FaStickyNote className="text-sky-400" />
                           <span className="text-gray-200 font-medium hover:text-white">

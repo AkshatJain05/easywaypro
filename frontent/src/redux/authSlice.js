@@ -1,88 +1,148 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+
 const API_URL = import.meta.env.VITE_API_URL;
 axios.defaults.withCredentials = true;
 
-export const fetchUser = createAsyncThunk("auth/fetchUser", async () => {
-  const res = await axios.get(`${API_URL}/auth/me`, { withCredentials: true });
-  return res.data.user;
-});
+//  Helper to handle API errors safely
+const handleApiError = (error) => {
+  if (error.response?.data?.message) {
+    return error.response.data.message;
+  }
+  if (error.message === "Network Error") {
+    return "Network error: Please check your internet connection.";
+  }
+  return "Something went wrong. Please try again.";
+};
 
+// ---------------------- Thunks ----------------------
 
-export const login = createAsyncThunk("auth/login", async ({ email, password }) => {
-  const res = await axios.post(
-    `${API_URL}/auth/login`,
-    { email, password },
-    { withCredentials: true }
-  );
-  return res.data.user;
-});
-
-export const adminLogin = createAsyncThunk(
-  "auth/adminLogin",
-  async ({ email, password }) => {
-    const res = await axios.post(
-      `${API_URL}/auth/admin/login`,
-      { email, password },
-      { withCredentials: true }
-    );
-    return res.data.user;
+//  Fetch current logged-in user
+export const fetchUser = createAsyncThunk(
+  "auth/fetchUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(`${API_URL}/auth/me`);
+      return res.data.user;
+    } catch (error) {
+      return rejectWithValue(handleApiError(error));
+    }
   }
 );
 
-export const logout = createAsyncThunk("auth/logout", async () => {
-  await axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true });
-  return null;
+//  Login (user)
+export const login = createAsyncThunk(
+  "auth/login",
+  async ({ email, password }, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${API_URL}/auth/login`, { email, password });
+      return res.data.user;
+    } catch (error) {
+      return rejectWithValue(handleApiError(error));
+    }
+  }
+);
+
+//  Admin login
+export const adminLogin = createAsyncThunk(
+  "auth/adminLogin",
+  async ({ email, password }, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${API_URL}/auth/admin/login`, { email, password });
+      return res.data.user;
+    } catch (error) {
+      return rejectWithValue(handleApiError(error));
+    }
+  }
+);
+
+// Logout
+export const logout = createAsyncThunk("auth/logout", async (_, { rejectWithValue }) => {
+  try {
+    await axios.post(`${API_URL}/auth/logout`);
+    return null;
+  } catch (error) {
+    return rejectWithValue(handleApiError(error));
+  }
 });
+
+// ---------------------- Slice ----------------------
 
 const authSlice = createSlice({
   name: "auth",
   initialState: {
     user: null,
     status: "idle", // idle | loading | succeeded | failed
-    initialized: false, // NEW: marks if fetchUser has been attempted
+    initialized: false,
+    error: null, // ✅ to store error messages
   },
-  reducers: {},
+  reducers: {
+    clearError: (state) => {
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchUser.pending, (state) => { state.status = "loading"; })
+      // ---- Fetch User ----
+      .addCase(fetchUser.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.user = action.payload;
         state.status = "succeeded";
         state.initialized = true;
       })
-      .addCase(fetchUser.rejected, (state) => {
+      .addCase(fetchUser.rejected, (state, action) => {
         state.user = null;
         state.status = "failed";
         state.initialized = true;
+        state.error = action.payload;
       })
-       .addCase(login.pending, (state) => { state.status = "loading"; })
+
+      // ---- Login ----
+      .addCase(login.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
       .addCase(login.fulfilled, (state, action) => {
         state.user = action.payload;
         state.status = "succeeded";
-        state.initialized = true;
+        state.error = null;
       })
-      .addCase(login.rejected, (state) => {
-        state.user = null;
+      .addCase(login.rejected, (state, action) => {
         state.status = "failed";
+        state.user = null;
+        state.error = action.payload;
       })
 
-      .addCase(logout.fulfilled, (state) => {
-        state.user = null;
-      })
+      // ---- Admin Login ----
       .addCase(adminLogin.pending, (state) => {
         state.status = "loading";
+        state.error = null;
       })
       .addCase(adminLogin.fulfilled, (state, action) => {
         state.user = action.payload;
         state.status = "succeeded";
-        state.initialized = true;
+        state.error = null;
       })
-      .addCase(adminLogin.rejected, (state) => {
-        state.user = null;
+      .addCase(adminLogin.rejected, (state, action) => {
         state.status = "failed";
+        state.user = null;
+        state.error = action.payload;
+      })
+
+      // ---- Logout ----
+      .addCase(logout.fulfilled, (state) => {
+        state.user = null;
+        state.status = "idle";
+        state.error = null;
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.error = action.payload;
       });
   },
 });
 
+export const { clearError } = authSlice.actions;
 export default authSlice.reducer;
