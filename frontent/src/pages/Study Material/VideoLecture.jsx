@@ -95,7 +95,7 @@ export default function VideoLectures() {
 
   return (
     <div className="min-h-screen text-gray-100 p-4 sm:p-6 relative">
-      {/* 🌌 Background */}
+      {/*  Background */}
       <div
         className="absolute top-0 left-0 -z-10 h-full w-full 
         bg-gradient-to-br from-[#050505] via-[#0a0a0a] to-[#1a1a1a]
@@ -103,17 +103,17 @@ export default function VideoLectures() {
         bg-[size:22px_22px] animate-bgMove"
       />
 
-      {/* 🔙 Back Button */}
+      {/*  Back Button */}
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-1 px-3 py-1.5 bg-gray-800 hover:bg-gray-700 
+        className="flex items-center gap-1 px-3 py-1.5 bg-gray-900 border border-gray-700 hover:bg-gray-800 
         text-gray-200 rounded-lg text-sm shadow-md transition-all mb-4"
       >
         <IoIosArrowBack className="w-4 h-4" />
         <span>Back</span>
       </button>
 
-      {/* 🧭 Header */}
+      {/*  Header */}
       <div className="max-w-4xl mx-auto relative">
         <motion.div
           initial={{ y: -20, opacity: 0 }}
@@ -126,7 +126,7 @@ export default function VideoLectures() {
           <div className="w-[70px]" />
         </motion.div>
 
-        {/* 🔍 Search Bar */}
+        {/*  Search Bar */}
         <motion.div
           initial={{ y: -10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -139,13 +139,13 @@ export default function VideoLectures() {
             placeholder="Search subjects or videos (e.g., 'React' or 'DBMS')"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full py-3 pl-12 pr-4 bg-gray-900 border border-gray-500 
+            className="w-full py-3 pl-12 pr-4 bg-gradient-to-br from-gray-950 to-black border border-gray-500 
             rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 
             transition shadow-lg"
           />
         </motion.div>
 
-        {/* 🎥 Video List */}
+        {/*  Video List */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -157,15 +157,15 @@ export default function VideoLectures() {
               <motion.div
                 key={subject.name}
                 variants={itemVariants}
-                className="bg-gray-900 rounded-xl shadow-2xl overflow-hidden 
+                className="bg-gradient-to-br from-gray-950 to-black rounded-xl shadow-2xl overflow-hidden 
                 border border-gray-700 hover:shadow-purple-500/10 transition"
               >
                 {/* Subject Header */}
                 <div
                   onClick={() => toggleSubject(subject.name)}
-                  className="flex items-center gap-4 cursor-pointer p-4 hover:bg-gray-800/80 transition duration-200"
+                  className="flex items-center gap-4 cursor-pointer p-4 hover:bg-gray-950 transition duration-200"
                 >
-                  <FaFolder className="text-purple-400 text-3xl flex-shrink-0" />
+                  <FaFolder className="text-purple-700 text-3xl flex-shrink-0" />
                   <h2 className="text-xl font-semibold text-white">{subject.name}</h2>
                   <span className="ml-auto text-gray-400 text-lg">
                     {openSubjects[subject.name] ? "▲" : "▼"}
@@ -187,14 +187,14 @@ export default function VideoLectures() {
                           href={unit.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-3 p-3 pl-5 lg:pl-10 bg-gray-950 hover:bg-gray-700/40 
-                          transition border-b border-gray-700 last:border-b-0"
+                          className="flex items-center gap-3 p-3 pl-5 lg:pl-10  hover:bg-gray-950
+                          transition border-b border-gray-600 first:border-t-1 last:border-b-0"
                         >
                           <FaVideo className="text-sky-400" />
                           <span className="text-gray-200 font-medium hover:text-white">
                             {unit.title}
                           </span>
-                          <span className="ml-auto text-sm text-purple-400 hover:text-purple-300">
+                          <span className="ml-auto text-sm text-cyan-400 hover:text-cyan-300 pr-4">
                             Watch
                           </span>
                         </a>
@@ -208,7 +208,7 @@ export default function VideoLectures() {
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-center text-gray-500 mt-10 p-4 bg-gray-900 rounded-lg border border-gray-700"
+              className="text-center text-gray-500 mt-10 p-4 bg-gradient-to-br from-gray-950 to-black rounded-lg border border-gray-700"
             >
               {searchTerm
                 ? `No videos found for "${searchTerm}". Try a different search.`

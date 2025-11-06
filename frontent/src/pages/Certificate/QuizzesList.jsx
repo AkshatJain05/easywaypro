@@ -108,7 +108,7 @@ export default function QuizzesList({ userId }) {
             return (
               <motion.div
                 key={q._id}
-                className={`bg-gray-900/60 shadow-lg rounded-xl p-4 flex flex-col justify-between transition-all duration-300 transform border
+                className={`bg-gradient-to-br from-gray-950 to-black  shadow-lg rounded-xl p-4 flex flex-col justify-between transition-all duration-300 transform border
                 ${
                   completed
                     ? "border-green-500/60 hover:shadow-green-500/20"

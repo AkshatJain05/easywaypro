@@ -140,7 +140,7 @@ const SortingPage = () => {
           <span>Back</span>
         </button>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-blue-300 mb-6 text-center tracking-wider">
+        <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-400 to-sky-400 text-transparent bg-clip-text mb-6 text-center tracking-wider">
           Sorting Algorithm Visualizer
         </h1>
 

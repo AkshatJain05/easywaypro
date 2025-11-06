@@ -131,7 +131,7 @@ const TreePage = () => {
         </button>
         {/* Header */}
         <header className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-purple-400 tracking-tight">
+          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-400 to-sky-400 text-transparent bg-clip-text tracking-tight">
             Tree Structure Visualizer
           </h1>
           <p className="text-gray-400 mt-2 text-lg">

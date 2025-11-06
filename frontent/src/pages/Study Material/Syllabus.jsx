@@ -32,7 +32,7 @@ export default function SyllabusLinks() {
                   <span>Back</span>
                 </button>
       {/* Title */}
-      <h1 className="text-4xl font-bold text-center text-indigo-200 mb-6">
+      <h1 className="text-4xl font-bold text-center text-cyan-300 mb-6">
         📘 B.Tech & GATE Syllabus Resources
       </h1>
       <p className="text-center text-gray-500 mb-10 max-w-2xl mx-auto">

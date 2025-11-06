@@ -16,6 +16,7 @@ export default function Roadmap() {
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState({});
   const [error, setError] = useState("");
+  const [markingStep, setMarkingStep] = useState(null); // 🔹 track which marker is loading
 
   /* ------------------------- Fetch Roadmap & Progress ------------------------- */
   useEffect(() => {
@@ -42,7 +43,11 @@ export default function Roadmap() {
   /* ---------------------------- Toggle Step Progress --------------------------- */
   const handleToggle = useCallback(
     async (monthIndex, stepIndex) => {
+      const key = `${monthIndex}-${stepIndex}`;
+      if (markingStep) return; // prevent multiple clicks
+
       try {
+        setMarkingStep(key); // start marker loading
         const res = await axios.put(
           `${API_URL}/roadmap/${id}/month/${monthIndex}/step/${stepIndex}/toggle`,
           {},
@@ -52,16 +57,17 @@ export default function Roadmap() {
         toast.success(res.data.message || "Progress updated!");
       } catch (err) {
         toast.error(err.response?.data?.message || "Failed to update progress.");
+      } finally {
+        setMarkingStep(null); // stop marker loading
       }
     },
-    [API_URL, id]
+    [API_URL, id, markingStep]
   );
 
   /* ----------------------------- Helper Functions ----------------------------- */
   const isStepDone = (mIdx, sIdx) => progress?.completed?.[`${mIdx}-${sIdx}`] || false;
   const toggleExpand = (key) => setExpanded((prev) => ({ ...prev, [key]: !prev[key] }));
 
-  //  Calculate progress safely
   const totalSteps =
     roadmap?.months?.reduce((count, month) => count + (month.steps?.length || 0), 0) || 0;
   const completedCount = Object.values(progress?.completed || {}).filter(Boolean).length;
@@ -184,6 +190,7 @@ export default function Roadmap() {
                       {/* Step Marker */}
                       <button
                         onClick={() => handleToggle(mIdx, sIdx)}
+                        disabled={markingStep === key}
                         className="absolute z-20 cursor-pointer group -mt-1 left-1/2 -translate-x-1/2"
                         aria-label={isDone ? "Mark as Incomplete" : "Mark as Complete"}
                       >
@@ -196,11 +203,15 @@ export default function Roadmap() {
                               : "border-fuchsia-400/70 bg-gray-900"
                           }`}
                         >
-                          <FaRegDotCircle
-                            className={`${
-                              isDone ? "text-emerald-400" : "text-fuchsia-400"
-                            } text-sm`}
-                          />
+                          {markingStep === key ? (
+                            <div className="w-4 h-4 border-2 border-t-transparent border-fuchsia-400 rounded-full animate-spin" />
+                          ) : (
+                            <FaRegDotCircle
+                              className={`${
+                                isDone ? "text-emerald-400" : "text-fuchsia-400"
+                              } text-sm`}
+                            />
+                          )}
                         </motion.span>
                       </button>
 
@@ -216,7 +227,7 @@ export default function Roadmap() {
                           className={`rounded-2xl p-5 border backdrop-blur-md transition-all duration-300 ${
                             isDone
                               ? "border-emerald-400/50 bg-gradient-to-r from-emerald-900/30 to-sky-900/30 shadow-emerald-900/40 shadow-2xl"
-                              : "border-white/10 bg-[#111]/80 shadow-lg"
+                              : "border-gray-700 bg-gradient-to-br from-gray-950 to-black shadow-lg"
                           }`}
                         >
                           <div className="flex justify-between items-center mb-2">

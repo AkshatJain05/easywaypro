@@ -38,11 +38,11 @@ const HomePage = () => {
                   <FaArrowLeft className="text-sm" />
                   <span>Back</span>
                 </button>
-    <div className="min-h-[calc(100vh-80px)]  text-white flex flex-col items-center justify-center py-12 px-6">
+    <div className="min-h-[calc(100vh-80px)]  text-white flex flex-col items-center justify-start py-7 px-6">
       {/* Back Button */}
       
       {/* Hero Section */}
-      <h1 className="text-3xl md:text-5xl font-extrabold text-blue-400 mb-6 text-center leading-tight animate-fadeIn">
+      <h1 className="text-3xl md:text-5xl font-extrabold bg-gradient-to-r from-purple-400 to-sky-400 text-transparent bg-clip-text mb-6 text-center leading-tight animate-fadeIn">
         Explore Algorithms Visually
       </h1>
       <p className="text-lg md:text-xl text-gray-300 mb-12 text-center max-w-3xl animate-fadeIn delay-200">

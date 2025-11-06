@@ -106,7 +106,7 @@ export default function PYQ() {
       {/*  Back Button */}
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-1 px-3 py-1.5 bg-gray-800 hover:bg-gray-700 
+        className="flex items-center gap-1 px-3 py-1.5 bg-gray-900 border border-gray-800 hover:bg-gray-700 
         text-gray-200 rounded-lg text-sm shadow-md transition-all mb-4"
       >
         <IoIosArrowBack className="w-4 h-4" />
@@ -140,7 +140,7 @@ export default function PYQ() {
             placeholder="Search subjects or PYQs (e.g., 'DSA' or 'OOPS')"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full py-3 pl-12 pr-4 bg-gray-900 border border-gray-400 
+            className="w-full py-3 pl-12 pr-4 bg-gradient-to-br from-gray-950 to-black border border-gray-400 
             rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 
             transition shadow-lg"
           />
@@ -158,15 +158,15 @@ export default function PYQ() {
               <motion.div
                 key={subject.name}
                 variants={itemVariants}
-                className="bg-gray-900 rounded-xl shadow-2xl overflow-hidden 
+                className="bg-gradient-to-br from-gray-950 to-black rounded-xl shadow-2xl overflow-hidden 
                 border border-gray-700 hover:shadow-purple-500/10 transition"
               >
                 {/* Subject Header */}
                 <div
                   onClick={() => toggleSubject(subject.name)}
-                  className="flex items-center gap-4 cursor-pointer p-4 hover:bg-gray-800/80 transition duration-200"
+                  className="flex items-center gap-4 cursor-pointer p-4 bg-gradient-to-br from-gray-950 to-black transition duration-200 "
                 >
-                  <FaFolder className="text-yellow-400 text-3xl flex-shrink-0" />
+                  <FaFolder className="text-purple-600 text-3xl flex-shrink-0" />
                   <h2 className="text-xl font-semibold text-white">{subject.name}</h2>
                   <span className="ml-auto text-gray-400 text-lg">
                     {openSubjects[subject.name] ? "▲" : "▼"}
@@ -188,14 +188,13 @@ export default function PYQ() {
                           href={unit.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-3 p-3 pl-5 lg:pl-10 bg-gray-950 hover:bg-gray-700/40 
-                          transition border-b border-gray-700 last:border-b-0"
+                          className="flex items-center gap-3 p-3 pl-3 lg:pl-10 hover:bg-gray-700/40  transition border-b-1 border-gray-500 first:border-t-1 last:border-b-0"
                         >
                           <FaFileAlt className="text-sky-400" />
                           <span className="text-gray-200 font-medium hover:text-white">
                             {unit.title}
                           </span>
-                          <span className="ml-auto text-sm text-purple-400 hover:text-purple-300">
+                          <span className="ml-auto text-sm text-cyan-400 hover:text-cyan-300 pr-4">
                             Open PYQ
                           </span>
                         </a>
@@ -209,7 +208,7 @@ export default function PYQ() {
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-center text-gray-500 mt-10 p-4 bg-gray-900 rounded-lg border border-gray-700"
+              className="text-center text-gray-500 mt-10 p-4 bg-gradient-to-br from-gray-950 to-black rounded-lg border border-gray-700"
             >
               {searchTerm
                 ? `No results found for "${searchTerm}". Try a different term.`

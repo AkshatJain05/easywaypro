@@ -251,7 +251,7 @@ export default function CertificateView() {
 
   // 3. Render (Responsive HTML/CSS)
   return (
-    <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-950 to-black flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
       {/* Control Buttons - Hidden on print */}
       <div className="no-print w-full max-w-5xl flex justify-between items-center mb-6">
         <button
@@ -274,7 +274,7 @@ export default function CertificateView() {
       {/* Certificate Container - This is what will be printed */}
       <div className="certificate-container w-full flex justify-center">
         <div
-          className="certificate-content relative w-full max-w-5xl aspect-[297/210] bg-white shadow-2xl flex flex-col justify-between p-6 sm:p-8 md:p-12"
+          className="certificate-content relative w-full max-w-5xl aspect-[297/210] bg-white shadow-2xl flex flex-col justify-between p-6 sm:p-8 md:p-12 border-8 border-slate-950 rounded-xl"
           style={{
             backgroundImage: `url(${Certificates})`,
             backgroundSize: "cover",
