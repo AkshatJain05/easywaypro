@@ -44,6 +44,9 @@ import Certificates from "./pages/Certificate/Certificates.jsx";
 import CertificateView from "./pages/Certificate/CertificateView.jsx";
 import QuizzesList from "./pages/Certificate/QuizzesList.jsx";
 import AdminCreateQuiz from "./pages/Admin/AdminCreateQuiz.jsx";
+import DocsList from "./pages/Study Material/Docs (Notes)/DocsList.jsx";
+import DocDetails from "./pages/Study Material/Docs (Notes)/DetailDocs.jsx";
+import AdminDocs from "./pages/Admin/AdminDocs.jsx";
 
 function App() {
   return (
@@ -92,6 +95,10 @@ function App() {
             <Route path="/result" element={<Result />} />
             <Route path="/certificates" element={<Certificates />} />
             <Route path="/quizzes" element={<QuizzesList />} />
+
+            
+            <Route path="/docs" element={<DocsList />} />
+            <Route path="/docs/:id" element={<DocDetails />} />
           </Route>
         </Route>
         <Route path="/admin/login" element={<AdminLogin />} />
@@ -111,6 +118,7 @@ function App() {
               <Route path="contacts" element={<AdminContacts />} />
               <Route path="add-roadmap" element={<AdminRoadmap />} />
               <Route path="create-quiz" element={<AdminCreateQuiz />} />
+              <Route path="docs" element={<AdminDocs />} />
             </Route>
           </Route>
         </Route>
