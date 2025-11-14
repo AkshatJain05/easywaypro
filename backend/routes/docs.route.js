@@ -16,8 +16,8 @@ import { protect, isAdmin } from "../middlewares/auth.middlerware.js";
 const router = express.Router();
 
 // --- DOC ROUTES ---
-router.get("/", protect,getAllDocs);
-router.get("/:id",protect, getDocById);
+router.get("/", protect, getAllDocs);
+router.get("/:id", protect, getDocById);
 router.post("/", protect, isAdmin, createDoc);
 router.put("/:id", protect, isAdmin, updateDoc);
 router.delete("/:id", protect, isAdmin, deleteDoc);
