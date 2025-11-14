@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { MdSearch, MdAdd } from "react-icons/md";
 
-const API_URL = "http://localhost:8000/api/docs";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function DocsList() {
   const [docs, setDocs] = useState([]);
@@ -12,7 +12,7 @@ export default function DocsList() {
 
   useEffect(() => {
     axios
-      .get(API_URL)
+      .get(`${API_URL}/docs`)
       .then((res) => {
         setDocs(res.data);
         setLoading(false);
