@@ -1,6 +1,6 @@
 import  { useState } from "react";
 import { Outlet, NavLink } from "react-router-dom";
-import { FaBook, FaUsers, FaFileAlt, FaEnvelope, FaBars, FaTimes } from "react-icons/fa";
+import { FaBook, FaUsers, FaFileAlt, FaEnvelope, FaBars, FaTimes,FaBookOpen } from "react-icons/fa";
 import { MdQuiz } from "react-icons/md";
 import UserMenu from "./UserMenu";
 
@@ -14,6 +14,9 @@ export default function AdminLayout() {
     { name: "Manage Contacts", icon: <FaEnvelope />, path: "/admin/contacts" },
      { name: "Create Quiz", icon: <MdQuiz />, path: "/admin/create-quiz" },
     { name: "Users", icon: <FaUsers />, path: "/admin/users" },
+       { name: "Manage Docs", icon: <FaBookOpen />, path: "/admin/docs" },
+
+   
   ];
 
   return (
@@ -21,7 +24,7 @@ export default function AdminLayout() {
       {/* Sidebar */}
       <div
         className={`fixed md:relative z-20 bg-slate-950 w-64 p-4 space-y-6 h-full transition-transform duration-300 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-64 md:translate-x-0"
+          sidebarOpen ? "translate-x-0" :"-translate-x-64 md:translate-x-0"
         }`}
       >
         <h1 className="text-2xl font-bold text-center mb-6">Admin Panel</h1>

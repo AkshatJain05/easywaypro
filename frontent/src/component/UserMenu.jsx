@@ -97,8 +97,8 @@ export default function UserMenu() {
           className="absolute z-120 right-0 mt-2 w-56 rounded-xl bg-gray-950 shadow-lg border border-gray-200 dark:border-gray-700 ring-1 ring-black/5 backdrop-blur"
         >
           <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
-            <p className="text-xs text-gray-500 dark:text-gray-400">Signed in as</p>
-            <p className="truncate text-sm font-medium text-gray-900 dark:text-gray-100 pt-1 cursor-pointer">
+            <p className="text-xstext-gray-400">Signed in as</p>
+            <p className="truncate text-sm font-medium text-gray-100 pt-1 cursor-pointer">
               {user?.name}
             </p>
           </div>
@@ -106,7 +106,7 @@ export default function UserMenu() {
           <div className="py-1">
             <Link
               to="/profile"
-              className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
+              className="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
               onClick={() => setOpen(false)}
             >
               Profile
@@ -114,14 +114,14 @@ export default function UserMenu() {
 
              <Link
               to="/certificates"
-              className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
+              className="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
               onClick={() => setOpen(false)}
             >
               Certificates
             </Link>
 
             <button
-              className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
+              className="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
               onClick={() => {
                 setOpen(false);
                 dispatch(logout());
