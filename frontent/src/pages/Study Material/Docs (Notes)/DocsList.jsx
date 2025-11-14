@@ -74,7 +74,7 @@ export default function DocsList() {
 
         {/* Docs Grid */}
         {!loading && (
-          <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 px-4">
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 px-4">
             {filteredDocs.map((doc, index) => (
               <Link
                 key={doc._id}
