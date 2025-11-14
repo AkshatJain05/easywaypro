@@ -285,7 +285,7 @@ export default function WebsiteOverview() {
                   <td className="px-6 py-4 text-center">
                     <a
                       href={feature.viewLink}
-                      className="inline-flex items-center px-3 py-1 bg-slate-950 border hover:bg-slate-900 text-white text-sm font-semibold rounded-md transition"
+                      className="inline-flex items-center px-3 py-1 bg-slate-950 border border-gray-700   hover:bg-slate-900 text-white text-sm font-semibold rounded-md transition"
                     >
                       Go <FaExternalLinkAlt className="ml-1 text-xs" />
                     </a>
