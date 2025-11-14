@@ -19,7 +19,7 @@ import { BiParagraph } from "react-icons/bi";
 // ----------------- Toast Imports -----------------
 import toast, { Toaster } from "react-hot-toast";
 
-const API_URL = "http://localhost:8000/api/docs";
+const API_URL = import.meta.env.VITE_API_URL;
 const CODE_STYLE = oneDark;
 
 /* ---------------------- Helper Component: Loading Spinner ---------------------- */
@@ -110,7 +110,7 @@ export default function AdminPanel() {
   const fetchDocs = useCallback(async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(API_URL);
+      const { data } = await axios.get(`${API_URL}/docs`);
       setDocs(data);
     } catch (err) {
       console.error(err);
@@ -157,7 +157,7 @@ export default function AdminPanel() {
 
   const performDelete = async (id) => {
     try {
-      await axios.delete(`${API_URL}/${id}`);
+      await axios.delete(`${API_URL}/docs/${id}`);
       fetchDocs();
       if (selectedDoc?._id === id) {
         handleCreateNew();
@@ -181,9 +181,9 @@ export default function AdminPanel() {
     try {
       let savePromise;
       if (selectedDoc._id) {
-        savePromise = axios.put(`${API_URL}/${selectedDoc._id}`, selectedDoc);
+        savePromise = axios.put(`${API_URL}/docs/${selectedDoc._id}`, selectedDoc);
       } else {
-        savePromise = axios.post(API_URL, selectedDoc);
+        savePromise = axios.post(`${API_URL}/docs`,selectedDoc);
       }
 
       await toast.promise(savePromise, {
