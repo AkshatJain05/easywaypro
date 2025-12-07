@@ -1,4 +1,4 @@
-# Easyway Pro – E-Learning Platform
+# Easyway Pro – AI-powered e-learning & career preparation platform
 
 **Easyway Pro** is a full-stack **e-learning platform** built using the **MERN stack** and **Tailwind CSS**.  
 It empowers students to **learn smarter and track their progress** with features like notes, quizzes, certificates, roadmaps, resume builder, and AI tools.
