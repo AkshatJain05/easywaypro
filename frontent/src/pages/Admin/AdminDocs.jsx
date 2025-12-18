@@ -350,7 +350,7 @@ export default function AdminPanel() {
   /* ---------------------- Render ---------------------- */
   return (
     <div className="min-h-screen text-gray-200 font-sans p-4 sm:p-6">
-      <Toaster position="top-right" reverseOrder={false} />
+      {/* <Toaster position="top-right" reverseOrder={false} /> */}
 
       <header className="max-w-7xl mx-auto mb-6 p-4 rounded-xl bg-[#01040a] shadow-2xl border border-[#334155]">
         <h1 className="text-2xl font-extrabold text-white mb-4">
