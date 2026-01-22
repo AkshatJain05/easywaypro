@@ -86,7 +86,6 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/profile" element={<Profile />} />
             <Route path="/resume-builder" element={<ResumeBuilder />} />
-            <Route path="/chatbot" element={<ChatBot />} />
             <Route path="/code-analyzer" element={<CodeAnalyzer />} />
             <Route path="//task-planner" element={<TodoList />} />
             <Route path="/roadmap" element={<RoadmapList />} />
@@ -96,7 +95,6 @@ function App() {
             <Route path="/result" element={<Result />} />
             <Route path="/certificates" element={<Certificates />} />
             <Route path="/quizzes" element={<QuizzesList />} />
-
             
             <Route path="/docs" element={<DocsList />} />
             <Route path="/docs/:id" element={<DocDetails />} />
@@ -108,6 +106,10 @@ function App() {
           path="/certificate/:certificateId"
           element={<CertificateView />}
         />
+
+          <Route element={<ProtectedRoute />}>
+                <Route path="/chatbot" element={<ChatBot />} />
+            </Route>
      
         <Route element={<AdminLayout />}>
           <Route element={<AdminProtectedRoute />}>
