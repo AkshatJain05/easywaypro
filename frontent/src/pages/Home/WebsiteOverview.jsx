@@ -102,7 +102,7 @@ export default function WebsiteOverview() {
       description:
         "Get instant help with coding, concepts, and interview tips.",
       icon: FaRobot,
-      viewLink: "/chatBot",
+      viewLink: "/easyway-ai",
     },
     {
       name: "Code Analyzer",
