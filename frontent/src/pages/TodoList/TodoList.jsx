@@ -1,4 +1,5 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
+import { FiCalendar, FiClock } from "react-icons/fi";
 import axios from "axios";
 import {
   FaTrash,
@@ -41,8 +42,8 @@ const TaskItem = ({ task, toggleTask, deleteTask, editTask, loadingTask }) => {
         transition={{ duration: 0.3 }}
         className={`flex flex-wrap sm:flex-nowrap justify-between items-start gap-4 p-4 rounded-2xl shadow-lg backdrop-blur-md ${
           isCompleted
-            ? "bg-green-800/15 border border-green-700/50 hover:bg-green-800/30"
-            : "bg-gray-800/20 border border-gray-700 hover:bg-gray-700/50"
+            ? "bg-green-900/15 border border-green-700/50 hover:bg-green-800/20"
+            : "bg-gray-800/20 border border-gray-700 hover:bg-gray-800/50"
         }`}
       >
         <div
@@ -67,10 +68,10 @@ const TaskItem = ({ task, toggleTask, deleteTask, editTask, loadingTask }) => {
           )}
           <div className="min-w-0">
             <p
-              className={`text-base break-words whitespace-pre-wrap ${
+              className={`text-base break-words pl-1 whitespace-pre-wrap ${
                 isCompleted
-                  ? "text-green-200 font-light"
-                  : "text-gray-200 font-medium"
+                  ? "text-green-100 font-light"
+                  : "text-gray-100 font-medium"
               }`}
               style={{ wordBreak: "break-word" }}
             >
@@ -78,18 +79,37 @@ const TaskItem = ({ task, toggleTask, deleteTask, editTask, loadingTask }) => {
             </p>
             {(task.date || task.time) && (
               <p
-                className={`text-xs mt-1 ${
-                  isCompleted ? "text-green-400/80" : "text-gray-400"
-                }`}
+                className={`flex items-center gap-3 text-xs mt-2 px-2 py-1  rounded-lg w-fit backdrop-blur-sm
+    ${
+      isCompleted
+        ? "text-green-200/80 bg-green-500/10"
+        : "text-gray-200 bg-white/5 hover:bg-white/10"
+    }
+    transition-all duration-200`}
               >
-                {task.date && `📅 ${task.date}`}{" "}
-                {task.time && `🕒 ${task.time}`}
+                {task.date && (
+                  <span className="flex text-xs items-center gap-1">
+                    <FiCalendar size={11} />
+                    {task.date}
+                  </span>
+                )}
+
+                {task.date && task.time && (
+                  <span className="w-[1px] h-3 bg-gray-500/30" />
+                )}
+
+                {task.time && (
+                  <span className="flex text-xs items-center gap-1">
+                    <FiClock size={11} />
+                    {task.time}
+                  </span>
+                )}
               </p>
             )}
           </div>
         </div>
 
-        <div className="flex gap-1 sm:gap-2 flex-shrink-0">
+        <div className="flex gap-1 sm:gap-2 flex-shrink-0 ml-auto">
           <motion.button
             onClick={(e) => {
               e.stopPropagation();
@@ -119,14 +139,13 @@ const TaskItem = ({ task, toggleTask, deleteTask, editTask, loadingTask }) => {
       </motion.li>
     );
 
-  // --- Edit Mode ---
   return (
     <motion.li
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      className="p-4 rounded-2xl bg-gray-900/40 border border-indigo-500/50 space-y-3 shadow-lg backdrop-blur-md"
+      className="py-4 rounded-2xl bg-gray-900/40 border border-indigo-500/50 space-y-3 shadow-lg backdrop-blur-md"
     >
       <input
         type="text"
@@ -177,9 +196,49 @@ export default function TodoList() {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [loading, setLoading] = useState(true);
-  const [loadingTask, setLoadingTask] = useState(null); // Track loading state for individual tasks
+  const [loadingTask, setLoadingTask] = useState(null);
   const API_URL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
+
+  // Track tasks that have already fired a notification during this session
+  const notifiedTasks = useRef(new Set());
+
+  // --- Notification System ---
+  useEffect(() => {
+    // Request permission on mount
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+
+    const checkReminders = setInterval(() => {
+      const now = new Date();
+      const currentLocalTime = now.toTimeString().slice(0, 5); // "HH:MM"
+      const currentLocalDate = now.toISOString().split("T")[0]; // "YYYY-MM-DD"
+
+      tasks.forEach((task) => {
+        if (
+          !task.completed &&
+          task.date === currentLocalDate &&
+          task.time === currentLocalTime
+        ) {
+          if (!notifiedTasks.current.has(task._id)) {
+            // Browser Notification
+            if (Notification.permission === "granted") {
+              new Notification("Task Reminder", {
+                body: task.text,
+                icon: "/favicon.ico", // Replace with your logo path
+              });
+            }
+            // In-app Toast
+            toast(task.text, { icon: "🔔", duration: 6000 });
+            notifiedTasks.current.add(task._id);
+          }
+        }
+      });
+    }, 30000); // Check every 30 seconds
+
+    return () => clearInterval(checkReminders);
+  }, [tasks]);
 
   useEffect(() => {
     fetchTasks();
@@ -212,7 +271,7 @@ export default function TodoList() {
       const res = await axios.post(
         `${API_URL}/tasks`,
         { text: input, date, time },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       setTasks([...tasks, res.data]);
       resetInputFields();
@@ -235,7 +294,7 @@ export default function TodoList() {
           <button
             onClick={() => {
               toast.dismiss(t.id);
-              toast("Cancelled — your tasks are safe ", { icon: "🛑" });
+              toast("Cancelled", { icon: "🛑" });
             }}
             className="px-3 py-1.5 text-sm bg-gray-700 rounded-lg hover:bg-gray-600 transition"
           >
@@ -245,25 +304,17 @@ export default function TodoList() {
           <button
             onClick={async () => {
               toast.dismiss(t.id);
-              const loadingToast = toast.loading("Clearing all tasks... ");
-
+              const loadingToast = toast.loading("Clearing...");
               try {
                 const { data } = await axios.delete(`${API_URL}/tasks/clear`, {
                   withCredentials: true,
                 });
-
-                await fetchTasks(); // refresh after clearing
+                await fetchTasks();
                 toast.dismiss(loadingToast);
-                toast.success(
-                  data.message || "✅ All tasks cleared successfully!"
-                );
+                toast.success(data.message || "Cleared!");
               } catch (error) {
-                console.error("Error clearing tasks:", error);
                 toast.dismiss(loadingToast);
-                toast.error(
-                  error.response?.data?.error ||
-                    "Failed to clear tasks. Please try again."
-                );
+                toast.error("Failed to clear.");
               }
             }}
             className="px-3 py-1.5 text-sm bg-red-600 rounded-lg hover:bg-red-500 transition font-medium"
@@ -281,7 +332,7 @@ export default function TodoList() {
       const res = await axios.put(
         `${API_URL}/tasks/${id}/toggle`,
         {},
-        { withCredentials: true }
+        { withCredentials: true },
       );
       setTasks(tasks.map((t) => (t._id === id ? res.data : t)));
     } catch {
@@ -296,9 +347,11 @@ export default function TodoList() {
       const res = await axios.put(
         `${API_URL}/tasks/${id}/edit`,
         { text, date, time },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       setTasks(tasks.map((t) => (t._id === id ? res.data : t)));
+      // Reset notification tracking for this task if it was edited
+      notifiedTasks.current.delete(id);
     } catch {
       toast.error("Error editing task");
     }
@@ -308,6 +361,7 @@ export default function TodoList() {
     try {
       await axios.delete(`${API_URL}/tasks/${id}`, { withCredentials: true });
       setTasks(tasks.filter((t) => t._id !== id));
+      notifiedTasks.current.delete(id);
     } catch {
       toast.error("Error deleting task");
     }
@@ -333,21 +387,25 @@ export default function TodoList() {
         <FaArrowLeft /> Back
       </motion.button>
 
-      <div className="min-h-screen p-4 pt-16 sm:p-8">
-        <div className="max-w-3xl mx-auto bg-gray-950 border border-gray-800 rounded-3xl shadow-2xl p-5 sm:p-8 text-gray-100">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-center text-indigo-400 mb-2 tracking-wide">
-            📋{" "}  
-            <span className="text-center bg-gradient-to-r from-purple-400 to-sky-400 text-transparent bg-clip-text">
-              Task Planner
+      <div className="min-h-screen p-0 sm:pt-16 sm:p-4">
+        <div className="max-w-4xl mx-auto bg-gray-950 border border-gray-800 sm:rounded-2xl shadow-2xl p-5 sm:p-8 text-gray-100">
+          <h1 className="text-3xl sm:text-4xl font-bold text-center mb-3 tracking-tight">
+            <span className="inline-flex items-center gap-2">
+              📋
+              <span className="bg-gradient-to-r from-sky-300 via-indigo-200 to-purple-400 bg-clip-text text-transparent">
+                Task Planner
+              </span>
             </span>
+            <div className="mt-2 mx-auto w-20 h-[2px] bg-gradient-to-r from-sky-400 to-purple-400 rounded-full" />
           </h1>
-          <p className="text-center mb-7 text-gray-400 px-5 text-sm">
+
+          <p className="text-center mb-7 text-gray-200 px-5 text-sm">
             Plan your day, track your goals, and stay productive.
           </p>
 
           {/* Progress Section */}
           <motion.div
-            className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-800 via-gray-900 to-black border border-gray-700 p-6 mb-10 shadow-[0_0_25px_rgba(99,102,241,0.3)]"
+            className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 via-gray-950 to-black border border-gray-700 p-6 mb-10 shadow-[0_0_25px_rgba(99,102,241,0.3)]"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -390,102 +448,92 @@ export default function TodoList() {
                   </defs>
                 </svg>
                 <div className="absolute text-center">
-                  <p className="text-3xl font-bold text-indigo-400">
+                  <p className="text-3xl font-bold text-indigo-100">
                     {progress}%
                   </p>
-                  <p className="text-xs text-gray-400 mt-1">Complete</p>
+                  <p className="text-xs text-gray-200 mt-1">Complete</p>
                 </div>
               </div>
 
               <div className="flex-1 text-center md:text-left">
-                <h3 className="text-xl md:text-2xl font-semibold text-indigo-300 mb-2">
+                <h3 className="text-xl md:text-2xl font-semibold text-cyan-200 mb-2">
                   Your Productivity Progress
                 </h3>
-                <p className="text-gray-400 text-sm mb-4">
+                <p className="text-gray-200 text-sm mb-4">
                   {completedTasks.length} of {tasks.length} tasks completed 🎯
                 </p>
-
-                <div className="md:hidden mb-3">
-                  <div className="w-full bg-gray-700 rounded-full h-3 overflow-hidden">
-                    <motion.div
-                      className="h-3 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"
-                      initial={{ width: 0 }}
-                      animate={{ width: `${progress}%` }}
-                      transition={{ duration: 0.8 }}
-                    />
-                  </div>
-                </div>
-
-                <p className="text-sm text-gray-500 italic">
+                <p className="text-sm text-gray-300 italic">
                   {progress === 100
-                    ? "🌟 Excellent! You’ve conquered all your goals today!"
+                    ? "🌟 Excellent! You’ve conquered all your goals!"
                     : progress >= 50
-                    ? "🔥 You’re over halfway there—keep up the great work!"
-                    : "🚀 Let’s crush more tasks and boost your streak!"}
+                      ? "🔥 You’re over halfway there!"
+                      : "🚀 Let’s crush more tasks!"}
                 </p>
               </div>
             </div>
           </motion.div>
 
-          {/* Input Section */}
-          <div className="bg-gray-900/20 p-4 rounded-xl border border-gray-700 mb-8 shadow-lg">
-            <div className="flex flex-col md:flex-row md:items-center gap-3">
+          {/* Input Section - Responsive Fixes */}
+          <div className="bg-gray-950 p-4 rounded-xl border border-gray-700 mb-8 shadow-lg">
+            <div className="flex flex-col gap-3">
               <input
                 type="text"
                 placeholder="Add a task..."
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                className="flex-grow px-3 py-2.5 rounded-lg bg-gray-900 border border-gray-700 text-gray-100 focus:ring-2 focus:ring-indigo-500 text-sm"
+                className="w-full px-3 py-2.5 rounded-lg bg-gray-950 border border-gray-700 text-gray-200 focus:ring-2 focus:ring-indigo-500 text-sm"
               />
-              <div className="flex gap-3 sm:gap-2 sm:w-auto w-full">
+              <div className="flex flex-wrap md:flex-nowrap gap-3 items-center">
                 <input
                   type="date"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="flex-1 sm:flex-none px-2 py-2.5 rounded-lg placeholder-gray-400 bg-gray-900 border border-gray-700 text-gray-300 focus:ring-2 focus:ring-indigo-500 text-sm"
+                  className="flex-1 min-w-[120px] px-2 py-2.5 rounded-lg bg-gray-950 border border-gray-700 text-gray-200 focus:ring-2 focus:ring-indigo-500 text-sm"
                 />
                 <input
                   type="time"
                   value={time}
                   onChange={(e) => setTime(e.target.value)}
-                  className="flex-1 sm:flex-none px-2 py-2.5 rounded-lg placeholder-gray-400 bg-gray-900 border border-gray-700 text-gray-300 focus:ring-2 focus:ring-indigo-500 text-sm"
+                  className="flex-1 min-w-[100px] px-2 py-2.5 rounded-lg bg-gray-950 border border-gray-700 text-gray-200 focus:ring-2 focus:ring-indigo-500 text-sm"
                 />
+                <div className="flex gap-2 w-full md:w-auto">
+                  <motion.button
+                    onClick={addTask}
+                    className="flex-1 md:flex-none flex items-center justify-center gap-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg px-4 py-2.5 text-sm font-semibold"
+                    whileHover={{ scale: 1.05 }}
+                    disabled={loadingTask === "adding"}
+                  >
+                    {loadingTask === "adding" ? (
+                      <FaSpinner className="animate-spin" />
+                    ) : (
+                      <>
+                        <FaPlus /> Add
+                      </>
+                    )}
+                  </motion.button>
+                  <motion.button
+                    onClick={handleClearAll}
+                    className="flex-1 md:flex-none flex items-center justify-center gap-1 bg-gray-950 hover:bg-gray-700 text-gray-300 rounded-lg px-4 py-2.5 text-sm font-semibold border border-gray-700"
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    <FaRedo /> Clear
+                  </motion.button>
+                </div>
               </div>
-              <motion.button
-                onClick={addTask}
-                className="flex items-center justify-center gap-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg px-4 py-2 text-sm font-semibold"
-                whileHover={{ scale: 1.05 }}
-                disabled={loadingTask === "adding"}
-              >
-                {loadingTask === "adding" ? (
-                  <FaSpinner className="animate-spin" />
-                ) : (
-                  <>
-                    <FaPlus /> Add
-                  </>
-                )}
-              </motion.button>
-              <motion.button
-                onClick={handleClearAll}
-                className="flex items-center justify-center gap-1 bg-gray-900 hover:bg-gray-600 text-gray-300 rounded-lg px-4 py-2 text-sm font-semibold"
-                whileHover={{ scale: 1.05 }}
-              >
-                <FaRedo /> Clear All
-              </motion.button>
             </div>
           </div>
 
-          {/* Task Lists */}
+          {/* Pending Tasks */}
           <section>
-            <h2 className="text-xl sm:text-2xl font-bold text-indigo-300 mb-3">
-              ⏳ Pending Tasks ({activeTasks.length})
+            <h2 className="text-xl sm:text-2xl font-bold text-cyan-300 mb-3">
+              ⏳ Pending ({activeTasks.length})
             </h2>
             {activeTasks.length === 0 ? (
-              <p className="text-gray-500 text-center py-6">
+              <p className="text-gray-200 text-center py-6">
                 🎉 All caught up!
               </p>
             ) : (
-              <ul className="space-y-3 text-justify">
+              <ul className="space-y-3">
                 <AnimatePresence>
                   {activeTasks.map((task) => (
                     <TaskItem
@@ -502,12 +550,13 @@ export default function TodoList() {
             )}
           </section>
 
+          {/* Completed Tasks */}
           {completedTasks.length > 0 && (
             <section className="mt-10">
               <h2 className="text-xl sm:text-2xl font-bold text-green-300 mb-3">
                 ✅ Completed ({completedTasks.length})
               </h2>
-              <ul className="space-y-3 text-justify">
+              <ul className="space-y-3">
                 <AnimatePresence>
                   {completedTasks.map((task) => (
                     <TaskItem
