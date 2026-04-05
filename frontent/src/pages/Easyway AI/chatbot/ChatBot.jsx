@@ -347,7 +347,7 @@ export default function ChatBot() {
       <div className="flex fixed w-full z-150  items-center justify-between px-4 py-3 bg-gradient-to-r from-slate-950 to-gray-950  border-b border-gray-800 shadow-xl">
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-1 px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-lg text-sm transition-all cursor-pointer shadow-md active:scale-95"
+          className="flex items-center gap-1 px-3 py-2 bg-gray-900 hover:bg-gray-700 text-gray-200 rounded-lg text-sm transition-all cursor-pointer shadow-md active:scale-95"
           aria-label="Go back"
         >
           <FaArrowLeft className="text-base" />
@@ -355,8 +355,8 @@ export default function ChatBot() {
         </button>
 
         <div className="flex items-center gap-2">
-          <FaRobot className="text-cyan-400 text-xl md:text-3xl" />
-          <h1 className="text-xl md:text-2xl font-bold text-center bg-gradient-to-r from-purple-400 to-sky-400 text-transparent bg-clip-text">
+          <FaRobot className="text-blue-500 text-xl md:text-3xl" />
+          <h1 className="text-xl md:text-2xl font-bold text-center bg-gradient-to-r from-blue-700 to-blue-400 text-transparent bg-clip-text">
             Easyway AI 
           </h1>
         </div>

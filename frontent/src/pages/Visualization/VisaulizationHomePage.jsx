@@ -90,7 +90,7 @@ const HomePage = () => {
             >
               <Link
                 to={feature.link}
-                className={`group relative block h-full p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 hover:border-white/20 transition-all overflow-hidden shadow-2xl hover:shadow-cyan-500/10`}
+                className={`group relative block h-full p-8 rounded-[2.5rem] bg-white/[0.04] border border-white/5 hover:border-white/20 transition-all overflow-hidden shadow-2xl hover:shadow-cyan-500/10`}
               >
                 {/* Background Gradient Hover */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />

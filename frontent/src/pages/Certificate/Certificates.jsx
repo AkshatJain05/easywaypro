@@ -89,7 +89,7 @@ export default function Certificates() {
           {/* LATEST */}
           <div className="bg-white/5 border border-white/10 rounded-xl p-5">
             <p className="text-gray-400 text-sm">Latest Achievement</p>
-            <h2 className="text-lg font-semibold text-purple-400 truncate">
+            <h2 className="text-lg font-semibold text-blue-400 truncate">
               {latest.subject}
             </h2>
           </div>
@@ -105,7 +105,7 @@ export default function Certificates() {
         </div>
 
         {/* ================= FEATURE CARD ================= */}
-        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 shadow-lg">
+        <div className="bg-gradient-to-r from-indigo-500 to-blue-600 rounded-2xl p-6 shadow-lg">
           <h2 className="text-2xl font-bold mb-2">
             🎯 Keep Learning!
           </h2>

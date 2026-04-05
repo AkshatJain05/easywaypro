@@ -121,7 +121,7 @@ function HeroSection() {
         />
 
         {/* ---- Main grid ---- */}
-        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center px-6 md:px-14 lg:px-24 py-14 lg:py-20">
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center px-6 md:px-14 lg:px-24 py-6 lg:py-16">
 
           {/* === LEFT CONTENT === */}
           <ScrollReveal from="left">
@@ -144,16 +144,24 @@ function HeroSection() {
               </h1>
 
               {/* Description — desktop */}
-              <p className="hidden md:block text-gray-400 mt-6 text-base lg:text-lg leading-relaxed max-w-lg">
-                Easyway Pro helps students learn smarter with AI-powered tools.
-                From Todo, roadmap, and notes to PYQs, quizzes, resume builder,
-                chatbot, and code analyzer — everything you need in one place.
-              </p>
+<p className="hidden md:block mt-6 max-w-xl text-gray-300 text-[15px] lg:text-[17px] leading-relaxed tracking-wide">
+  <span className="text-white font-semibold">
+    Easyway Pro
+  </span>{" "}
+  helps you <span className="text-sky-100 font-medium">learn smarter</span> with
+  powerful AI tools. Manage your{" "}
+  <span className="text-white/80">tasks, roadmaps, notes</span>, and explore{" "}
+  <span className="text-white/80">PYQs, quizzes, resume builder</span>, plus a{" "}
+  <span className="text-sky-100">smart chatbot</span> and{" "}
+  <span className="text-sky-100">code analyzer</span> — all in one place.
+</p>
 
-              {/* Description — mobile */}
-              <p className="md:hidden text-gray-400 mt-5 text-sm leading-relaxed">
-                Learn smarter with chatbot, code analyzer, notes & task manager — all in one place.
-              </p>
+{/* Description — mobile */}
+<p className="md:hidden mt-5 text-gray-300 text-[13px] leading-relaxed tracking-wide">
+  Learn smarter with{" "}
+  <span className="text-sky-100">AI tools</span> like chatbot, code analyzer,
+  notes & task manager — all in one place.
+</p>
 
               {/* Buttons */}
               <div className="mt-8 flex flex-wrap justify-center lg:justify-start gap-3">

@@ -80,7 +80,7 @@ function ContactUs() {
                 required
                 placeholder="John Doe"
                 className="w-full mt-2 px-4 py-3 rounded-lg 
-                           bg-black/40 border border-white/20 
+                            bg-transparent border border-white/20 
                            text-white placeholder-gray-500
                            focus:outline-none focus:ring-2 focus:ring-sky-500/50
                            focus:border-sky-400 transition"
@@ -98,7 +98,7 @@ function ContactUs() {
                 required
                 placeholder="example@email.com"
                 className="w-full mt-2 px-4 py-3 rounded-lg 
-                           bg-black/40 border border-white/20 
+                           bg-transparent border border-white/20 
                            text-white placeholder-gray-500
                            focus:outline-none focus:ring-2 focus:ring-sky-500/50
                            focus:border-sky-400 transition"
@@ -117,7 +117,7 @@ function ContactUs() {
               placeholder="Write your message..."
               rows={5}
               className="w-full mt-2 px-4 py-3 rounded-lg 
-                         bg-black/40 border border-white/20 
+                          bg-transparent border border-white/20 
                          text-white placeholder-gray-500 resize-none
                          focus:outline-none focus:ring-2 focus:ring-sky-500/50
                          focus:border-sky-400 transition"

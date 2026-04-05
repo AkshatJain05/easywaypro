@@ -28,7 +28,7 @@ const socials = [
 
 function Footer() {
   return (
-    <footer className="relative w-full bg-[#030009] text-slate-300 overflow-hidden pt-16">
+    <footer className="relative w-full bg-[#030009] text-slate-300 overflow-hidden pt-12">
       {/* ── Decorative Background Elements ── */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-sky-500/50 to-transparent" />
       <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[600px] h-48 bg-sky-500/10 blur-[120px] rounded-full pointer-events-none" />
@@ -37,7 +37,7 @@ function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
           
           {/* ── Brand Section ── */}
-          <div className="lg:col-span-5 space-y-6">
+          <div className="lg:col-span-5 space-y-5">
             <div className="flex items-center gap-3 group">
               <div className="relative">
                 <div className="absolute inset-0 bg-sky-500/20 blur-lg rounded-xl transition-all group-hover:bg-sky-500/40"></div>
@@ -57,9 +57,8 @@ function Footer() {
               </div>
             </div>
 
-            <p className="text-sm text-gray-400 max-w-sm">
-              The next-generation e-learning platform. Bridging the gap between 
-              traditional study and AI-driven excellence for AKTU students and beyond.
+            <p className="text-sm text-gray-400 max-w-sm text-justify">
+             Easyway Classes is your smart learning companion, offering tools like AI chatbot, code analyzer, quizzes, and study material to make learning effortless and engaging.
             </p>
 
             <div className="flex items-center gap-3">
@@ -132,7 +131,7 @@ function Footer() {
           </div>
           
           <div className="flex items-center gap-3">
-            <div className="text-[10px] text-gray-300 text-right max-w-[260px] leading-relaxed">
+            <div className="text-[10px] text-gray-300  max-w-[260px] leading-relaxed text-center md:text-right">
               <span className="text-sky-600 font-bold uppercase mr-1">Notice:</span> 
               AI-generated answers and Algorithm Visualizer may contain mistakes. Verify before use.
             </div>

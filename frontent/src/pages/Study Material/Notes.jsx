@@ -70,7 +70,9 @@ const Stat = ({ icon, label, value }) => (
   <div className="flex items-center gap-4 p-4 rounded-2xl bg-white/3  border border-blue-950 backdrop-blur-sm">
     <div className="p-2 rounded-lg bg-sky-500/10 text-slate-200">{icon}</div>
     <div>
-      <p className="text-md font-semibold text-gray-100 leading-tight">{value}</p>
+      <p className="text-md font-semibold text-gray-100 leading-tight">
+        {value}
+      </p>
       <p className="text-[11px] text-gray-500 uppercase tracking-tighter">
         {label}
       </p>
@@ -142,18 +144,26 @@ export default function Notes() {
   const [active, setActive] = useState("All");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
+    let mounted = true;
+
     const fetchData = async () => {
       try {
         const res = await axios.get(`${API_URL}/resources?type=notes`);
-        setData(res.data);
+        if (mounted) setData(res.data ?? []);
       } catch {
-        setData(MOCK_DATA);
+        if (mounted) setData(MOCK_DATA);
+      } finally {
+        mounted && setLoading(false);
       }
     };
+
     fetchData();
+
+    return () => (mounted = false);
   }, []);
 
   // Optimized Grouping
@@ -297,7 +307,18 @@ export default function Notes() {
 
         {/* Notes Grid */}
         <div className="flex-1">
-          {paginatedData.length > 0 ? (
+          {loading ? (
+            //  Loading Skeleton
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+              {[...Array(8)].map((_, i) => (
+                <div
+                  key={i}
+                  className="h-40 rounded-xl bg-white/[0.03] border border-white/[0.06] animate-pulse"
+                />
+              ))}
+            </div>
+          ) : paginatedData.length > 0 ? (
+            //  Notes Grid
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
               <AnimatePresence mode="popLayout">
                 {paginatedData.map((note, i) => (
@@ -306,6 +327,7 @@ export default function Notes() {
               </AnimatePresence>
             </div>
           ) : (
+            //  Empty State
             <div className="h-64 flex flex-col items-center justify-center text-gray-500 border-2 border-dashed border-white/5 rounded-3xl">
               <FiSearch size={40} className="mb-4 opacity-20" />
               <p>No notes found matching your criteria.</p>

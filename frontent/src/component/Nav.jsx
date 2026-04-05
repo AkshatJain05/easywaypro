@@ -25,7 +25,7 @@ function Nav() {
   return (
     <>
       <nav className="fixed top-0 left-0 w-full z-[150] bg-[#030014]/70 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
-        <div className="max-w-8xl  mx-auto flex items-center justify-between h-15 px-4 md:px-8 lg:px-16 text-white">
+        <div className="max-w-8xl  mx-auto flex items-center justify-between h-12 md:h-14 px-4 md:px-8 lg:px-16 text-white">
           {/* ── LOGO SECTION ── */}
           <NavLink to="/" className="flex items-center group relative">
             <div className="flex items-baseline gap-1">
@@ -70,7 +70,7 @@ function Nav() {
               <UserMenu />
             </div>
 
-            <div className="flex gap-3 items-center justify-center">
+            <div className="flex gap-2 items-center justify-center">
               <div className="sm:hidden  border-b border-white/5 ">
                 <UserMenu />
               </div>
@@ -83,7 +83,7 @@ function Nav() {
                 {open ? (
                   <RxCross2 size={29} className="text-red-400" />
                 ) : (
-                  <FaBarsStaggered size={24} className="text-cyan-100" />
+                  <FaBarsStaggered size={24} className="text-white" />
                 )}
               </button>
             </div>
@@ -178,7 +178,7 @@ function Nav() {
       </div>
 
       {/* Spacer */}
-      <div className="h-16"></div>
+      <div className="h-12 md:h-14"></div>
     </>
   );
 }

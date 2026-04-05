@@ -154,7 +154,7 @@ export default function SyllabusLinks() {
                           {link.branch}
                         </span>
                       </div>
-                      <h3 className="text-lg font-bold text-slate-100 group-hover:text-white transition-colors">
+                      <h3 className="text-md font-bold text-slate-100 group-hover:text-white transition-colors">
                         {link.name}
                       </h3>
                     </div>

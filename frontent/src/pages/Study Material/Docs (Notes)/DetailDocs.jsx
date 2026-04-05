@@ -426,14 +426,14 @@ export default function DocDetail() {
                     <div className="px-1 pt-5 pb-2 border-b border-white/[0.05]">
                       {/* Question number pill */}
                       <div className="flex items-start gap-2 px-5">
-                        <span className="flex-none mt-0.5 w-6 h-6 rounded-md bg-gradient-to-br from-gray-950 to-black border border-sky-500/20 flex items-center justify-center text-sky-400 text-xs font-bold syne">
+                        <span className="flex-none mt-0.5 w-6 h-6 rounded-md bg-gradient-to-br from-gray-800 to-black border border-sky-500/20 flex items-center justify-center text-sky-400 text-xs font-bold syne">
                           {gIdx + 1}
                         </span>
                         <div className="min-w-0">
-                          <h3 className="syne text-sm sm:text-base font-bold text-white  mb-4 border border-gray-900 p-2 rounded-xl">
+                          <h3 className="syne text-sm sm:text-base font-bold bg-gray-950 md:bg-transparent  text-white  mb-4 border border-gray-900 p-2 rounded-xl">
                             {q.title}
                           </h3>
-                          <p className="text-md sm:text-md md:text-lg text-gray-300 leading-relaxed right-6 relative">
+                          <p className="text-sm sm:text-md md:text-lg text-gray-300 leading-relaxed right-6 relative">
                             <span className="text-amber-400/80 font-semibold mr-1.5 syne tracking-tight">Q.</span>
                             {q.Q}
                           </p>
@@ -499,9 +499,9 @@ export default function DocDetail() {
                         // --- Bullet list ---
                         if (Array.isArray(a.content)) {
                           return (
-                            <ul key={j} className="space-y-2 bg-gradient-to-br from-gray-950 to-black border border-white/[0.06] rounded-xl p-4">
+                            <ul key={j} className="space-y-2 bg-gradient-to-br from-slate-950 to-black border border-white/[0.06] rounded-xl p-4">
                               {a.content.map((point, idx) => (
-                                <li key={idx} className="flex items-start gap-2.5 text-md sm:text-md text-gray-300">
+                                <li key={idx} className="flex items-start gap-2.5 text-sm text-justify sm:text-md text-gray-300">
                                   <span className="flex-none mt-1 w-1.5 h-1.5 rounded-full bg-sky-500/60 text-justify syne tracking-tight" />
                                   {point}
                                 </li>
@@ -512,9 +512,9 @@ export default function DocDetail() {
 
                         // --- Text block ---
                         return (
-                          <div key={j} className="bg-gradient-to-br from-gray-950 to-black border border-white/[0.05] rounded-xl p-4">
-                            <p className="text-md sm:text-md text-gray-300 text-justify leading-relaxed">
-                              <span className="text-amber-400/80 font-semibold mr-1.5 syne tracking-tight">Ans.</span>
+                          <div key={j} className="bg-gradient-to-br from-slate-950 to-black border border-white/[0.05] rounded-xl p-4">
+                            <p className="text-sm sm:text-md text-gray-300 text-justify leading-relaxed">
+                              <span className="text-amber-400/80 font-semibold text-justify mr-1.5 syne tracking-tight">Ans.</span>
                               {a.content}
                             </p>
                           </div>

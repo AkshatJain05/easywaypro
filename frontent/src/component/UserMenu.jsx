@@ -56,7 +56,7 @@ export default function UserMenu() {
         </motion.button>
         <button
           onClick={() => navigate("/login")}
-          className="md:hidden p-2 text-cyan-100 active:scale-90 transition-transform"
+          className="md:hidden p-2 text-white active:scale-90 transition-transform"
         >
           <MdLogin size={25} />
         </button>
