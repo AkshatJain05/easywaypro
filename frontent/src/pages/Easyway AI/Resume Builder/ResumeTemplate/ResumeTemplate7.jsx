@@ -75,36 +75,55 @@ const ResumeTemplate7 = ({ resumeData }) => {
           </p>
         </section>
       )}
+{/* --- EXPERIENCE --- */}
+{experience?.length > 0 && (
+  <section className="mb-6">
+    <h2 className="text-sm font-bold border-b border-gray-300 mb-3 uppercase tracking-wide text-gray-800">
+      Internships / Experience
+    </h2>
 
-      {/* --- EXPERIENCE --- */}
-      {experience?.length > 0 && (
-        <section className="mb-6">
-          <h2 className="text-sm font-bold border-b border-gray-300 mb-2 uppercase">
-            Internships / Experience
-          </h2>
-          {experience.map((exp) => (
-            <div key={exp.id} className="mb-4">
-              <div className="flex justify-between text-xs mb-0.5">
-                <span className="font-semibold">{exp.company}</span>
-                <span className="text-gray-600">
-                  {edu.startDate} {edu.endDate && "-"} {edu.endDate}
-                </span>
-              </div>
-              <p className="text-xs font-medium mb-1">{exp.position}</p>
-              {exp.points?.length > 0 && (
-                <ul className="list-disc pl-5 text-xs text-gray-700 space-y-1">
-                  {exp.points.map((point, idx) => (
-                    <li key={idx} className="leading-snug">
-                      {point}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          ))}
-        </section>
-      )}
+    <div className="space-y-4">
+      {experience.map((exp, index) => (
+        <div
+          key={exp.id || index}
+          className="pb-2 border-b border-gray-200 last:border-none"
+        >
+          {/* TOP ROW */}
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center text-xs gap-0.5">
+            <span className="font-semibold text-gray-900">
+              {exp.company || "Company Name"}
+            </span>
 
+            <span className="text-gray-500">
+              {exp.startDate || "Start"}{" "}
+              {exp.endDate ? `- ${exp.endDate}` : "- Present"}
+            </span>
+          </div>
+
+          {/* POSITION */}
+          <p className="text-xs font-medium text-gray-700 mt-0.5">
+            {exp.position || "Role"}
+          </p>
+
+          {/* POINTS OR DESCRIPTION */}
+          {exp.points?.length > 0 ? (
+            <ul className="mt-1.5 pl-5 list-disc text-xs text-gray-700 space-y-1 marker:text-gray-400">
+              {exp.points.map((point, idx) => (
+                <li key={`${exp.id}-${idx}`} className="leading-snug">
+                  {point}
+                </li>
+              ))}
+            </ul>
+          ) : exp.description ? (
+            <p className="mt-1.5 text-xs text-gray-700 leading-relaxed text-justify">
+              {exp.description}
+            </p>
+          ) : null}
+        </div>
+      ))}
+    </div>
+  </section>
+)}
       {/* --- SKILLS --- */}
       {skills?.length > 0 && (
         <section className="mb-6">

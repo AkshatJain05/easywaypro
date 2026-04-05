@@ -2,146 +2,199 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaPlus, FaTrash } from "react-icons/fa";
 
 const Projects = ({ resumeData, updateResumeData }) => {
+  //  Safe fallback
+  const projects = resumeData?.projects || [];
+
+  //  Add Project
   const handleAddProject = () => {
     const newProject = {
-      id: Date.now(),
+      id: Date.now() + Math.random(), // safer id
       name: "",
       technologies: "",
       link: "",
-      points: [],
+      points: [""], // better UX (auto one field)
     };
-    const updatedProjects = [...resumeData.projects, newProject];
-    updateResumeData("projects", updatedProjects);
+
+    updateResumeData("projects", [...projects, newProject]);
   };
 
+  //  Remove Project
   const handleRemoveProject = (id) => {
-    const updatedProjects = resumeData.projects.filter((proj) => proj.id !== id);
+    const updatedProjects = projects.filter((proj) => proj.id !== id);
     updateResumeData("projects", updatedProjects);
   };
 
+  //  Handle Input Change
   const handleChange = (id, e) => {
     const { name, value } = e.target;
-    const updatedProjects = resumeData.projects.map((proj) =>
+
+    const updatedProjects = projects.map((proj) =>
       proj.id === id ? { ...proj, [name]: value } : proj
     );
+
     updateResumeData("projects", updatedProjects);
   };
 
+  //  Add Bullet Point
   const handleAddPoint = (projectId) => {
-    const updatedProjects = resumeData.projects.map((proj) =>
-      proj.id === projectId ? { ...proj, points: [...proj.points, ""] } : proj
-    );
-    updateResumeData("projects", updatedProjects);
-  };
-
-  const handleRemovePoint = (projectId, index) => {
-    const updatedProjects = resumeData.projects.map((proj) =>
+    const updatedProjects = projects.map((proj) =>
       proj.id === projectId
-        ? { ...proj, points: proj.points.filter((_, i) => i !== index) }
+        ? { ...proj, points: [...(proj.points || []), ""] }
         : proj
     );
+
     updateResumeData("projects", updatedProjects);
   };
 
-  const handlePointChange = (projectId, index, value) => {
-    const updatedProjects = resumeData.projects.map((proj) =>
+  //  Remove Bullet Point
+  const handleRemovePoint = (projectId, index) => {
+    const updatedProjects = projects.map((proj) =>
       proj.id === projectId
         ? {
             ...proj,
-            points: proj.points.map((p, i) => (i === index ? value : p)),
+            points: (proj.points || []).filter((_, i) => i !== index),
           }
         : proj
     );
+
+    updateResumeData("projects", updatedProjects);
+  };
+
+  //  Update Bullet Point
+  const handlePointChange = (projectId, index, value) => {
+    const updatedProjects = projects.map((proj) =>
+      proj.id === projectId
+        ? {
+            ...proj,
+            points: (proj.points || []).map((p, i) =>
+              i === index ? value : p
+            ),
+          }
+        : proj
+    );
+
     updateResumeData("projects", updatedProjects);
   };
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-xl font-semibold bg-gradient-to-br from-gray-950 to-black text-gray-800 dark:text-white border-b pb-2 dark:border-gray-600">
+    <div className="space-y-6">
+      {/* TITLE */}
+      <h2 className="text-xl font-semibold bg-gradient-to-r from-indigo-500 to-blue-500 text-transparent bg-clip-text border-b border-gray-700 pb-2">
         Projects
       </h2>
+
+      {/* PROJECT LIST */}
       <AnimatePresence>
-        {resumeData.projects.map((proj) => (
+        {projects.length === 0 && (
+          <p className="text-gray-400 text-sm text-center">
+            No projects added yet. Click "Add Project"
+          </p>
+        )}
+
+        {projects.map((proj) => (
           <motion.div
             key={proj.id}
+            layout
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, x: -100, transition: { duration: 0.3 } }}
-            className="p-4  rounded-lg space-y-3 bg-gradient-to-br from-gray-950 to-black  relative border-1 border-gray-700"
+            exit={{ opacity: 0, x: -80 }}
+            transition={{ duration: 0.3 }}
+            className="p-4 sm:p-5 rounded-xl space-y-4 bg-gradient-to-br from-gray-950 to-black border border-gray-700 shadow-md relative"
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* REMOVE BUTTON */}
+            <button
+              type="button"
+              onClick={() => handleRemoveProject(proj.id)}
+              className="absolute top-3 right-3 text-red-400 hover:text-red-600 transition"
+            >
+              <FaTrash />
+            </button>
+
+            {/* INPUTS */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <input
                 type="text"
                 name="name"
                 placeholder="Project Name"
                 value={proj.name}
                 onChange={(e) => handleChange(proj.id, e)}
-                className="md:col-span-2 w-full p-2 border-1 rounded border-gray-700"
+                className="md:col-span-2 w-full p-2.5 rounded-lg  border border-gray-700 focus:ring-2 focus:ring-indigo-500 outline-none text-white"
               />
+
               <input
                 type="text"
                 name="technologies"
-                placeholder="Technologies Used (e.g., React, Node.js)"
+                placeholder="Technologies (React, Node.js...)"
                 value={proj.technologies}
                 onChange={(e) => handleChange(proj.id, e)}
-                className="w-full p-2 border-1 rounded border-gray-700"
+                className="w-full p-2.5 rounded-lg  border border-gray-700 focus:ring-2 focus:ring-indigo-500 outline-none text-white"
               />
+
               <input
                 type="text"
                 name="link"
-                placeholder="Project Link (GitHub / Live Demo)"
+                placeholder="Project Link"
                 value={proj.link}
                 onChange={(e) => handleChange(proj.id, e)}
-                className="w-full p-2 border-1 rounded border-gray-700"
+                className="w-full p-2.5 rounded-lg  border border-gray-700 focus:ring-2 focus:ring-indigo-500 outline-none text-white"
               />
             </div>
 
-            {/* Bullet Points */}
+            {/* POINTS */}
             <div className="space-y-2">
-              <h3 className="font-medium text-gray-700 dark:text-gray-300">Project Highlights</h3>
-              {proj.points.map((point, index) => (
-                <div key={index} className="flex items-center space-x-2">
+              <h3 className="text-sm font-medium text-gray-300">
+                Project Highlights
+              </h3>
+
+              {(proj.points || []).map((point, index) => (
+                <div
+                  key={`${proj.id}-${index}`}
+                  className="flex items-center gap-2"
+                >
                   <span className="text-gray-500">•</span>
+
                   <input
                     type="text"
                     value={point}
-                    onChange={(e) => handlePointChange(proj.id, index, e.target.value)}
-                    placeholder="Add a highlight / achievement"
-                    className="flex-1 p-2 border rounded border-gray-700"
+                    onChange={(e) =>
+                      handlePointChange(proj.id, index, e.target.value)
+                    }
+                    placeholder="Achievement / feature"
+                    className="flex-1 p-2 rounded-lg  border border-gray-700 focus:ring-2 focus:ring-indigo-500 outline-none text-white"
                   />
+
                   <button
+                    type="button"
                     onClick={() => handleRemovePoint(proj.id, index)}
-                    className="text-red-500 hover:text-red-700"
+                    className="text-red-400 hover:text-red-600 transition"
                   >
                     <FaTrash size={14} />
                   </button>
                 </div>
               ))}
+
+              {/* ADD POINT */}
               <button
+                type="button"
                 onClick={() => handleAddPoint(proj.id)}
-                className="flex items-center space-x-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm"
+                className="flex items-center gap-2 text-sm text-indigo-400 hover:text-indigo-300 transition"
               >
                 <FaPlus size={12} />
-                <span>Add Point</span>
+                Add Point
               </button>
             </div>
-
-            <button
-              onClick={() => handleRemoveProject(proj.id)}
-              className="absolute top-2 right-2 text-red-500 hover:text-red-700 transition-colors"
-              aria-label="Remove project entry"
-            >
-              <FaTrash />
-            </button>
           </motion.div>
         ))}
       </AnimatePresence>
+
+      {/* ADD PROJECT BUTTON */}
       <button
+        type="button"
         onClick={handleAddProject}
-        className="flex items-center space-x-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors"
+        className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 shadow-md transition text-white font-medium"
       >
         <FaPlus />
-        <span>Add Project</span>
+        Add Project
       </button>
     </div>
   );

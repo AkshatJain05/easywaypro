@@ -197,7 +197,7 @@ export default function RoadmapAdmin() {
         </div>
       )}
 
-      <h1 className="text-2xl md:text-4xl font-extrabold text-center mb-6 bg-gradient-to-r from-green-400 via-teal-400 to-lime-400 bg-clip-text text-transparent">
+      <h1 className="text-2xl md:text-4xl font-extrabold text-center mb-6 bg-gradient-to-r from-blue-800 via-blue-400 to-blue-800 bg-clip-text text-transparent">
         ⚙️ Admin Roadmap Manager
       </h1>
 
@@ -238,7 +238,7 @@ export default function RoadmapAdmin() {
             <label className="block mb-2">Title</label>
             <input
               type="text"
-              className="w-full p-2 rounded-md bg-gray-800 border border-gray-700"
+              className="w-full p-2 rounded-md bg-gray-900 border border-gray-700"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
@@ -247,7 +247,7 @@ export default function RoadmapAdmin() {
           <div>
             <label className="block mb-2">Description</label>
             <textarea
-              className="w-full p-2 rounded-md bg-gray-800 border border-gray-700"
+              className="w-full p-2 rounded-md bg-gray-900 border border-gray-700"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
@@ -257,7 +257,7 @@ export default function RoadmapAdmin() {
           {months.map((month, mi) => (
             <div
               key={mi}
-              className="border border-gray-700 rounded-md p-4 bg-gray-900 mb-4"
+              className="border border-gray-700 rounded-md p-4 bg-gray-950 mb-4"
             >
               <div className="flex justify-between items-center mb-2">
                 <input
@@ -269,7 +269,7 @@ export default function RoadmapAdmin() {
                     newMonths[mi].month = e.target.value;
                     setMonths(newMonths);
                   }}
-                  className="p-2 rounded-md bg-gray-800 border border-gray-700 w-1/2"
+                  className="p-2 rounded-md bg-gray-900 border border-gray-700 w-1/2"
                 />
                 <button
                   type="button"
@@ -297,7 +297,7 @@ export default function RoadmapAdmin() {
                           newMonths[mi].steps[si].day = e.target.value;
                           setMonths(newMonths);
                         }}
-                        className="p-2 rounded-md bg-gray-800 border border-gray-700 sm:w-24 w-full"
+                        className="p-2 rounded-md bg-gray-900 border border-gray-700 sm:w-24 w-full"
                       />
                       <input
                         type="text"
@@ -308,7 +308,7 @@ export default function RoadmapAdmin() {
                           newMonths[mi].steps[si].topic = e.target.value;
                           setMonths(newMonths);
                         }}
-                        className="p-2 rounded-md bg-gray-800 border border-gray-700 flex-1"
+                        className="p-2 rounded-md bg-gray-900 border border-gray-700 flex-1"
                       />
                     </div>
                     <button
@@ -332,7 +332,7 @@ export default function RoadmapAdmin() {
                             e.target.value;
                           setMonths(newMonths);
                         }}
-                        className="p-2 rounded-md bg-gray-800 border border-gray-700 flex-1"
+                        className="p-2 rounded-md bg-gray-900 border border-gray-700 flex-1"
                       />
                       <button
                         type="button"

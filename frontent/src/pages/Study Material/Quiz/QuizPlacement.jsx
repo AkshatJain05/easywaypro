@@ -26,7 +26,7 @@ export default function QuizPlacement() {
 
       {/* Content */}
       <main className="flex-grow flex items-start justify-center p-6">
-        <div className="w-full max-w-5xl">
+        <div className="w-full max-w-7xl">
           {!selectedQuizId && !result && (
             <div className="animate-fadeIn">
               <QuizList quizzes={quizzes} onSelect={(id) => setSelectedQuizId(id)} />

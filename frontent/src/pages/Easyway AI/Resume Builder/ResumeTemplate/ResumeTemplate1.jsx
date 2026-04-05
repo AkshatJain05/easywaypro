@@ -143,7 +143,7 @@ const ResumeTemplate1 = ({ resumeData }) => {
               ) : (
                 exp.description && (
                   <p className="text-sm text-gray-700 mt-1">
-                    {exp.description}
+                    {exp?.description}
                   </p>
                 )
               )}

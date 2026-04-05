@@ -7,12 +7,13 @@ import {
   FaCertificate,
   FaListAlt,
   FaRedoAlt,
+  FaBookOpen
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 import Loading from "../../component/Loading";
 import { toast } from "react-hot-toast";
 
-const PASS_SCORE = 60; // Passing threshold
+const PASS_SCORE = 60;
 
 export default function Result() {
   const navigate = useNavigate();
@@ -29,98 +30,102 @@ export default function Result() {
         setCertificateId(res.data.certificate?.certificateId || null);
         setLoading(false);
       })
-      .catch((error) => {
-        console.error("Result fetch error:", error);
-        toast.error(
-          "You must be logged in to view the result, or no recent result found."
-        );
+      .catch(() => {
+        toast.error("Login required or no result found");
         navigate("/login");
       });
   }, [navigate, API_URL]);
 
-  if (loading)
+  if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#050505] text-gray-300">
+      <div className="min-h-screen flex items-center justify-center bg-[#020617]">
         <Loading />
       </div>
     );
+  }
 
   const hasPassed = score >= PASS_SCORE;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#050505] px-6 py-10 text-gray-100">
+    <div className="min-h-screen flex items-center justify-center px-4 py-10 bg-gradient-to-br from-[#020617] via-[#0f172a] to-black text-white">
+
       <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, type: "spring", stiffness: 100 }}
-        className="bg-gradient-to-br from-gray-900 to-black rounded-2xl shadow-2xl p-8 sm:p-10 max-w-sm w-full text-center border border-blue-400 space-y-6"
+        initial={{ opacity: 0, y: 40, scale: 0.9 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.6 }}
+        className="w-full max-w-md rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl p-6 sm:p-8 text-center space-y-6"
       >
-        <h1 className="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-purple-400">
-          Final Result
+
+        {/* TITLE */}
+        <h1 className="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-emerald-400 via-cyan-400 to-indigo-400 text-transparent bg-clip-text">
+          Quiz Result
         </h1>
 
-        {/* Score Display */}
-        <div className="p-4 bg-gray-950/70 rounded-lg border border-gray-700">
-          <p className="text-lg text-gray-400 mb-1">Your Final Score</p>
-          <div
-            className={`text-5xl font-bold ${
-              hasPassed ? "text-green-400" : "text-red-400"
-            }`}
-          >
-            {score} / 100
+        {/* SCORE CARD */}
+        <div className="flex flex-col items-center">
+
+          <div className="w-32 h-32 rounded-full bg-gradient-to-tr from-emerald-500 to-indigo-500 flex items-center justify-center shadow-lg shadow-emerald-500/30">
+            <div className="w-24 h-24 rounded-full bg-[#020617] flex items-center justify-center">
+              <span className="text-3xl font-bold">{score}</span>
+            </div>
           </div>
+
+          <p className="mt-3 text-sm text-gray-400">Score out of 100</p>
         </div>
 
-        {/* Pass / Fail Status */}
+        {/* STATUS */}
         {hasPassed ? (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-4"
-          >
-            <FaCheckCircle className="text-green-500 text-5xl mx-auto" />
-            <p className="text-green-400 text-xl font-bold">
-              Congratulations! You passed.
+          <div className="space-y-3">
+            <FaCheckCircle className="text-emerald-400 text-5xl mx-auto animate-bounce" />
+            <p className="text-emerald-400 text-xl font-bold">
+              🎉 You Passed!
             </p>
-
-            {certificateId && (
-              <button
-                onClick={() => navigate(`/certificate/${certificateId}`)}
-                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-semibold py-3 rounded-xl transition-all shadow-md shadow-sky-800/50"
-              >
-                <FaCertificate /> View Certificate
-              </button>
-            )}
-          </motion.div>
+          </div>
         ) : (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-4"
-          >
-            <FaTimesCircle className="text-red-500 text-5xl mx-auto" />
+          <div className="space-y-3">
+            <FaTimesCircle className="text-red-400 text-5xl mx-auto" />
             <p className="text-red-400 text-xl font-bold">
-              Failed. Keep practicing!
+               Better Luck Next Time
             </p>
-
-            <button
-              onClick={() => navigate("/quizzes")}
-              className="w-full flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 rounded-xl transition-all shadow-md shadow-gray-800/50"
-            >
-              <FaRedoAlt /> Try Another Quiz
-            </button>
-          </motion.div>
+          </div>
         )}
 
-        {/* Divider */}
-        <div className="border-t border-gray-700 pt-6">
+        {/* ACTIONS */}
+        <div className="grid gap-3">
+
+          {hasPassed && certificateId && (
+            <button
+              onClick={() => navigate(`/certificate/${certificateId}`)}
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold bg-gradient-to-r from-emerald-500 to-indigo-500 hover:opacity-90 transition shadow-lg"
+            >
+              <FaCertificate /> View Certificate
+            </button>
+          )}
+
+         
+
+          {/* NEW: TRY OTHER COURSE */}
+          <button
+            onClick={() => navigate("/quizzes")}
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold bg-gradient-to-r from-indigo-500 to-purple-500 hover:opacity-90 transition shadow-lg"
+          >
+            <FaBookOpen /> Try Other Quiz
+          </button>
+
           <button
             onClick={() => navigate("/certificates")}
-            className="w-full flex items-center justify-center gap-2 text-gray-400 hover:text-purple-400 font-medium py-2 rounded transition-colors"
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-medium bg-white/5 hover:bg-white/10 transition"
           >
-            <FaListAlt /> View All Certificates
+            <FaListAlt /> All Certificates
           </button>
+
         </div>
+
+        {/* EXTRA INFO */}
+        <div className="text-xs text-gray-500 pt-2 border-t border-white/10">
+          Passing Score: {PASS_SCORE}%
+        </div>
+
       </motion.div>
     </div>
   );

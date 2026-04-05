@@ -146,7 +146,7 @@ const ResumeTemplate3 = ({ resumeData }) => {
                     if (!acc[skill.category]) acc[skill.category] = [];
                     acc[skill.category].push(skill.value);
                     return acc;
-                  }, {})
+                  }, {}),
                 ).map(([category, skillList]) => (
                   <div key={category} className="break-inside-avoid">
                     <h4 className="font-semibold text-gray-100 mb-1">
@@ -194,25 +194,46 @@ const ResumeTemplate3 = ({ resumeData }) => {
 
           {experience?.length > 0 && (
             <MainSection title="Experience">
-              <div className="space-y-4">
-                {experience.map((exp) => (
-                  <div key={exp.id} className="break-inside-avoid">
-                    <div className="flex justify-between items-baseline flex-wrap">
-                      <h4 className="text-base font-bold text-gray-800">
-                        {exp.position}
+              <div className="space-y-5">
+                {experience.map((exp, index) => (
+                  <div
+                    key={exp.id || index}
+                    className="break-inside-avoid pb-3 border-b border-gray-200 last:border-none"
+                  >
+                    {/* TOP ROW */}
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                      <h4 className="text-sm sm:text-base font-bold text-gray-900">
+                        {exp.position || "Role"}
                       </h4>
-                      <p className="text-xs font-medium text-gray-500">
-                        {exp.startDate} - {exp.endDate}
+
+                      <p className="text-xs sm:text-sm font-medium text-gray-500">
+                        {exp.startDate || "Start"}{" "}
+                        {exp.endDate ? `- ${exp.endDate}` : "- Present"}
                       </p>
                     </div>
+
+                    {/* COMPANY */}
                     <p className="text-sm font-semibold text-indigo-600 mb-1">
-                      {exp.company}
+                      {exp.company || "Company Name"}
                     </p>
-                    <ul className="list-disc pl-5 space-y-1 text-sm text-gray-700">
-                      {exp.points?.map((point, idx) => (
-                        <li key={idx}>{point}</li>
-                      ))}
-                    </ul>
+
+                    {/* POINTS OR DESCRIPTION */}
+                    {exp.points?.length > 0 ? (
+                      <ul className="mt-1.5 pl-5 list-disc space-y-1 text-sm text-gray-700 marker:text-gray-400">
+                        {exp.points.map((point, idx) => (
+                          <li
+                            key={`${exp.id}-${idx}`}
+                            className="leading-relaxed"
+                          >
+                            {point}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : exp.description ? (
+                      <p className="mt-1.5 text-sm text-gray-700 leading-relaxed text-justify">
+                        {exp.description}
+                      </p>
+                    ) : null}
                   </div>
                 ))}
               </div>

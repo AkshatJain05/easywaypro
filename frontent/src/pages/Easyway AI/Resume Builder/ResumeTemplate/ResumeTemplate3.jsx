@@ -144,33 +144,7 @@ const ResumeTemplate3 = ({ resumeData }) => {
         </section>
       )}
 
-      {/* --- EDUCATION --- */}
-      {education?.length > 0 && (
-        <section className="mb-6 print:mb-4">
-          <SectionTitle title="Education" />
-          {education.map((edu) => (
-            <div
-              key={edu.id}
-              className="mb-2 pb-1 border-b border-gray-100 last:border-b-0 last:mb-0"
-            >
-              <div className="flex justify-between items-baseline">
-                <h3 className="font-semibold text-gray-700 text-sm">
-                  {edu.school}
-                </h3>
-                <p className="text-xs text-gray-500">
-                  {edu.startDate} {edu.endDate && "-"} {edu.endDate}
-                </p>
-              </div>
-              <div className="flex justify-between text-sm mt-0.5">
-                <p className="italic text-gray-700">{edu.degree}</p>
-                {edu.marks && (
-                  <p className="font-semibold text-gray-700">{edu.marks}</p>
-                )}
-              </div>
-            </div>
-          ))}
-        </section>
-      )}
+     
 
       {/* --- SKILLS --- */}
       {skills?.length > 0 && (
@@ -238,6 +212,8 @@ const ResumeTemplate3 = ({ resumeData }) => {
           ))}
         </section>
       )}
+
+      
 
       {/* --- CERTIFICATIONS --- */}
       {certifications?.length > 0 && (

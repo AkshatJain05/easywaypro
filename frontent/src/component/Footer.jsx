@@ -1,90 +1,147 @@
+import React from "react";
 import { Link } from "react-router-dom";
-import logoEasyway from "../assets/logoEasyway.png";
+import { MdArrowOutward } from "react-icons/md";
+import { FaYoutube, FaGithub, FaLinkedin, FaInstagram } from "react-icons/fa";
+import logoEasyway from "../assets/logoEasyway.png"
+
+
+const quickLinks = [
+  { to: "/notes", label: "Notes" },
+  { to: "/quiz", label: "Quizzes" },
+  { to: "/video-lectures", label: "Video Lectures" },
+  { to: "/pyq", label: "PYQs" },
+];
+
+const supportLinks = [
+  { to: "/contact-us", label: "Contact Us" },
+  { to: "/privacy-policy", label: "Privacy Policy" },
+  { to: "/TAC", label: "Terms & Conditions" },
+  { to: "/syllabus", label: "Syllabus" },
+];
+
+const socials = [
+  { icon: FaYoutube, href: "https://www.youtube.com/@EasywayClasses2.0", label: "YouTube", color: "hover:text-red-500" },
+  { icon: FaGithub, href: "#", label: "GitHub", color: "hover:text-white" },
+  { icon: FaLinkedin, href: "#", label: "LinkedIn", color: "hover:text-blue-400" },
+  { icon: FaInstagram, href: "#", label: "Instagram", color: "hover:text-pink-500" },
+];
 
 function Footer() {
-  const quickLinks = [
-    { to: "/notes", label: "Notes" },
-    { to: "/quiz", label: "Quizzes" },
-    { to: "/video-lectures", label: "Video Lectures" },
-    { to: "/pyq", label: "PYQs" },
-  ];
-
-  const supportLinks = [
-    { to: "/contact-us", label: "Contact Us" },
-    { to: "/privacy-policy", label: "Privacy Policy" },
-    { to: "/TAC", label: "Terms & Conditions" },
-    { to: "/syllabus", label: "Syllabus" },
-  ];
-
   return (
-    <footer className="w-full bg-gradient-to-br from-gray-950 to-black border-t-1 border-gray-800 opacity-98 text-white ">
-      {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-12 flex flex-col md:flex-row justify-between gap-12">
-        
-        {/* Logo + About */}
-        <div className="flex-1 text-center md:text-left space-y-6 max-w-lg">
-          {/* <img
-            src={logo2Img}
-            alt="Easyway Logo"
-            className="h-16 sm:h-20 md:h-24 mx-auto md:mx-0 rounded-2xl border-2 border-yellow-400 shadow-lg"
-          /> */}
-          <div className="flex flex-col items-center md:flex-row md:items-center gap-3">
-  <img
-    src={logoEasyway}
-    alt="Easyway Logo"
-    className="h-12  sm:h-12 md:h-12 rounded-2xl border-2 border-yellow-400 shadow-lg"
-  />
-  <span className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-yellow-400 via-orange-400 to-pink-500 bg-clip-text text-transparent drop-shadow-md">
-    Easyway Pro
-  </span>
-</div>
-          <p className="text-sm  md:text-lg text-slate-300 text-center md:text-justify">
-            Easyway Classes is your smart learning companion, offering tools like AI chatbot,
-            code analyzer, quizzes, and study material to make learning effortless and engaging.
-          </p>
-        </div>
+    <footer className="relative w-full bg-[#030009] text-slate-300 overflow-hidden pt-16">
+      {/* ── Decorative Background Elements ── */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-sky-500/50 to-transparent" />
+      <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[600px] h-48 bg-sky-500/10 blur-[120px] rounded-full pointer-events-none" />
 
-        {/* Links Section */}
-        <div className="flex flex-1 justify-center md:justify-end gap-16 sm:gap-20 text-center md:text-left">
+      <div className="max-w-8xl mx-auto px-6 lg:px-20 pb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
           
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-lg md:text-xl font-semibold text-yellow-400 mb-4">Quick Links</h3>
-            <ul className="flex flex-col gap-3 text-slate-300 text-sm sm:text-base">
-              {quickLinks.map((link, idx) => (
-                <li key={idx}>
-                  <Link to={link.to} className="hover:text-yellow-400 transition">
-                    {link.label}
-                  </Link>
-                </li>
+          {/* ── Brand Section ── */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="flex items-center gap-3 group">
+              <div className="relative">
+                <div className="absolute inset-0 bg-sky-500/20 blur-lg rounded-xl transition-all group-hover:bg-sky-500/40"></div>
+                <div className="relative h-12 w-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-md">
+                   <img src={logoEasyway} alt="Logo" className="h-8 w-8 object-contain" />
+                   {/* <span className="text-sky-400 font-bold">E</span> */}
+                </div>
+              </div>
+              <div className="flex flex-col">
+                <h2 className="text-2xl font-black tracking-tight flex items-center">
+                  <span className="bg-gradient-to-r from-sky-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent">
+                    Easyway
+                  </span>
+                  <span className="text-white ml-1">Pro</span>
+                </h2>
+                <span className="text-[10px] uppercase tracking-[0.2em] text-gray-500 font-bold">Smart Learning </span>
+              </div>
+            </div>
+
+            <p className="text-sm text-gray-400 max-w-sm">
+              The next-generation e-learning platform. Bridging the gap between 
+              traditional study and AI-driven excellence for AKTU students and beyond.
+            </p>
+
+            <div className="flex items-center gap-3">
+              {socials.map(({ icon: Icon, href, label, color }) => (
+                <a
+                  key={label}
+                  href={href}
+                  className={`h-10 w-10 flex items-center justify-center rounded-xl bg-white/[0.03] border border-white/10 text-gray-500 transition-all duration-300 hover:-translate-y-1 hover:bg-white/[0.08] hover:border-sky-500/30 ${color}`}
+                  aria-label={label}
+                >
+                  <Icon size={18} />
+                </a>
               ))}
-            </ul>
+            </div>
           </div>
 
-          {/* Support */}
-          <div>
-            <h3 className="text-lg md:text-xl font-semibold text-yellow-400 mb-4">Support</h3>
-            <ul className="flex flex-col gap-3 text-slate-300 text-sm sm:text-base">
-              {supportLinks.map((link, idx) => (
-                <li key={idx}>
-                  <Link to={link.to} className="hover:text-yellow-400 transition">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          {/* ── Links Sections ── */}
+          <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8">
+            <div className="space-y-5">
+              <h3 className="text-[11px] font-bold uppercase tracking-[0.25em] text-white/90">Platform</h3>
+              <ul className="space-y-3">
+                {quickLinks.map(({ to, label }) => (
+                  <li key={to}>
+                    <Link to={to} className="group flex items-center gap-2 text-[14px] text-gray-400 hover:text-sky-400 transition-colors">
+                      <span className="h-px w-0 bg-sky-400 transition-all duration-300 group-hover:w-3" />
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="space-y-5">
+              <h3 className="text-[11px] font-bold uppercase tracking-[0.25em] text-white/90">Support</h3>
+              <ul className="space-y-3">
+                {supportLinks.map(({ to, label }) => (
+                  <li key={to}>
+                    <Link to={to} className="group flex items-center gap-2 text-[14px] text-gray-400 hover:text-sky-400 transition-colors">
+                      <span className="h-px w-0 bg-sky-400 transition-all duration-300 group-hover:w-3" />
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="col-span-2 sm:col-span-1 space-y-5">
+              <h3 className="text-[11px] font-bold uppercase tracking-[0.25em] text-white/90">Join Our Mission</h3>
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-white/[0.03] to-transparent border border-white/5 space-y-3">
+                <p className="text-[11px] text-gray-400 italic">Want to contribute notes or lectures?</p>
+                <Link to="/contact-us" className="w-full py-2 px-3 bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/20 text-sky-400 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-2">
+                  Contact Us <MdArrowOutward />
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom Bar */}
-      <div className="border-t border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-5 flex flex-col sm:flex-row items-center justify-between text-xs sm:text-sm text-slate-400 gap-2">
-          <p>© 2025 Easyway Classes. All rights reserved.</p>
-          <p className="text-center">
-            AI-generated answers and Algorithm Visualizer may contain mistakes.{" "}
-            <span className="text-yellow-400">Verify before use.</span>
-          </p>
+      {/* ── Bottom Bar ── */}
+      <div className="border-t border-white/5 py-3 bg-black/40 backdrop-blur-md">
+        <div className="max-w-8xl mx-auto px-4 md:px-20 flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex flex-col items-center md:items-start gap-1">
+            <p className="text-[11px] text-gray-300 font-medium tracking-wide">
+              © {new Date().getFullYear()} Easyway Classes. All rights reserved.
+            </p>
+            <p className="text-[10px] text-gray-500">
+              Designed & Developed by <span className="text-gray-500">Akshat Jain</span>
+            </p>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            <div className="text-[10px] text-gray-300 text-right max-w-[260px] leading-relaxed">
+              <span className="text-sky-600 font-bold uppercase mr-1">Notice:</span> 
+              AI-generated answers and Algorithm Visualizer may contain mistakes. Verify before use.
+            </div>
+            <div className="h-6 w-px bg-white/5 hidden sm:block" />
+            <div className="flex items-center gap-2 ">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+              <span className="text-[12px] font-bold text-emerald-500/80 uppercase tracking-widest hidden">Systems Online</span>
+            </div>
+          </div>
         </div>
       </div>
     </footer>

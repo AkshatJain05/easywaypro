@@ -1,5 +1,4 @@
-//IndigoPro — Modern Professional Design
-
+// IndigoPro — Modern Professional Design
 import {
   FaEnvelope,
   FaPhone,
@@ -17,15 +16,27 @@ const ACCENT_COLOR_LINK = "text-indigo-700";
 const TEXT_COLOR_BODY = "text-slate-950";
 const TEXT_COLOR_HEADER = "text-slate-900";
 
-const ResumeTemplate9 = ({ resumeData }) => {
+// --- Helper function to parse **semi-bold** text ---
+const parseBoldText = (text) => {
+  if (!text) return { __html: "" }; // ✅ FIX
+
+  const html = text.replace(
+    /\*\*(.*?)\*\*/g,
+    `<span class="font-medium">$1</span>`,
+  );
+
+  return { __html: html };
+};
+
+const ResumeTemplate10 = ({ resumeData }) => {
   const {
-    personalInfo,
-    education,
-    experience,
-    skills,
-    projects,
-    certifications,
-  } = resumeData;
+    personalInfo = {},
+    education = [],
+    experience = [],
+    skills = [],
+    projects = [],
+    certifications = [],
+  } = resumeData || {};
 
   // --- SectionTitle Component ---
   const SectionTitle = ({ title }) => (
@@ -42,23 +53,18 @@ const ResumeTemplate9 = ({ resumeData }) => {
   return (
     <div
       id="resume-preview"
-      // Added max-w-3xl for better readability on very large screens, but kept min-w-full
       className={`
         mx-auto bg-white shadow-xl rounded-lg overflow-hidden
-        w-full max-w-[794px] min-h-[1123px]  /* A4 size (210×297mm @96DPI) */
-        aspect-[210/297] p-8 print:p-6
+        w-full max-w-[794px] min-h-[1123px] 
+        aspect-[210/297] p-8 print:p-4
         print:shadow-none print:rounded-none
         font-sans text-sm leading-relaxed ${TEXT_COLOR_BODY}
       `}
     >
-      {/* ========================================
-        --- HEADER (Responsive 2-column for wide view/print) ---
-        ========================================
-      */}
+      {/* HEADER */}
       <header
-        className={`flex flex-col sm:flex-row justify-between sm:items-center border-b-4 ${ACCENT_COLOR_TITLE} pb-4 mb-6`}
+        className={`flex flex-col sm:flex-row justify-between sm:items-center border-b-3 ${ACCENT_COLOR_TITLE} pb-4 mb-4`}
       >
-        {/* Left — Name & Title */}
         <div className="mb-4 sm:mb-0">
           <h1 className={`text-3xl sm:text-4xl font-bold ${TEXT_COLOR_HEADER}`}>
             {personalInfo.name || "Your Name"}
@@ -68,7 +74,6 @@ const ResumeTemplate9 = ({ resumeData }) => {
           </p>
         </div>
 
-        {/* Right — Contact Info */}
         <div className="flex flex-col sm:items-end text-slate-700 gap-2 w-full sm:w-auto">
           <div className="flex flex-wrap gap-x-4 gap-y-1 justify-start sm:justify-end text-sm">
             {personalInfo.email && (
@@ -103,7 +108,7 @@ const ResumeTemplate9 = ({ resumeData }) => {
                 href={`https://${personalInfo.linkedin}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`${ACCENT_COLOR_LINK} flex items-center gap-1 hover:underline`}
+                className={`${ACCENT_COLOR_LINK} flex items-center gap-1 hover:underline underline`}
               >
                 <FaLinkedin />
                 LinkedIn
@@ -114,7 +119,7 @@ const ResumeTemplate9 = ({ resumeData }) => {
                 href={`https://${personalInfo.github}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`${ACCENT_COLOR_LINK} flex items-center gap-1 hover:underline`}
+                className={`${ACCENT_COLOR_LINK} flex items-center gap-1 hover:underline underline`}
               >
                 <FaGithub />
                 GitHub
@@ -125,7 +130,7 @@ const ResumeTemplate9 = ({ resumeData }) => {
                 href={personalInfo.portfolio}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`${ACCENT_COLOR_LINK} flex items-center gap-1 hover:underline`}
+                className={`${ACCENT_COLOR_LINK} flex items-center gap-1 hover:underline underline`}
               >
                 <FaGlobe />
                 Portfolio
@@ -135,23 +140,16 @@ const ResumeTemplate9 = ({ resumeData }) => {
         </div>
       </header>
 
-      {/* ========================================
-        --- MAIN CONTENT SECTIONS --- 
-        The main body naturally stacks on small screens (mobile/default flex-col)
-        and flows nicely for print/desktop.
-        ========================================
-      */}
-
       {/* PROFESSIONAL SUMMARY */}
       {personalInfo.summary && (
         <section className="mb-5 print:mb-4">
           <SectionTitle title="PROFESSIONAL SUMMARY" />
-          <p className="text-slate-700 leading-relaxed text-justify">
-            {personalInfo.summary}
-          </p>
+          <p
+            className="text-slate-700 leading-relaxed text-justify"
+            dangerouslySetInnerHTML={parseBoldText(personalInfo.summary)}
+          ></p>
         </section>
       )}
-
       {/* PROFESSIONAL EXPERIENCE */}
       {experience?.length > 0 && (
         <section className="mb-6 print:mb-4">
@@ -180,23 +178,27 @@ const ResumeTemplate9 = ({ resumeData }) => {
                 {/* ROLE */}
                 <p
                   className={`text-sm italic font-semibold ${ACCENT_COLOR_TITLE} mt-0.5`}
-                >
-                  {exp.position || "Role"}
-                </p>
+                  dangerouslySetInnerHTML={parseBoldText(
+                    exp.position || "Role",
+                  )}
+                />
 
                 {/* CONTENT */}
                 {exp.points?.length > 0 ? (
                   <ul className="mt-1.5 ml-5 list-disc space-y-1 text-sm text-slate-700 marker:text-slate-400">
                     {exp.points.map((point, idx) => (
-                      <li key={`${exp.id}-${idx}`} className="leading-relaxed">
-                        {point}
-                      </li>
+                      <li
+                        key={`${exp.id}-${idx}`}
+                        className="leading-relaxed"
+                        dangerouslySetInnerHTML={parseBoldText(point)}
+                      />
                     ))}
                   </ul>
                 ) : exp.description ? (
-                  <p className="mt-1.5 text-sm text-slate-700 leading-relaxed text-justify">
-                    {exp.description}
-                  </p>
+                  <p
+                    className="mt-1.5 text-sm text-slate-700 leading-relaxed text-justify"
+                    dangerouslySetInnerHTML={parseBoldText(exp.description)}
+                  />
                 ) : null}
               </div>
             ))}
@@ -229,14 +231,62 @@ const ResumeTemplate9 = ({ resumeData }) => {
         </section>
       )}
 
-      {/* --- EDUCATION --- */}
+      {/* KEY PROJECTS */}
+      {projects?.length > 0 && (
+        <section className="mb-5 print:mb-4">
+          <SectionTitle title="KEY PROJECTS" />
+          {projects.map((proj) => (
+            <div key={proj.id} className="mb-4 last:mb-0">
+              <div className="flex flex-col-reverse sm:flex-row justify-between items-start sm:items-baseline">
+                <h3 className={`font-bold text-base ${TEXT_COLOR_HEADER}`}>
+                  {proj.name}
+                </h3>
+                {proj.link && (
+                  <a
+                    href={proj.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`${ACCENT_COLOR_LINK} hover:underline text-sm inline-flex items-center gap-1 font-medium mb-1 sm:mb-0 underline`}
+                  >
+                    <FaLink className="w-3 h-3" />
+                    Project Link
+                  </a>
+                )}
+              </div>
+              {proj.technologies && (
+                <p className="text-sm text-slate-700 mb-1">
+                  <span className={`font-semibold ${ACCENT_COLOR_TITLE}`}>
+                    Tech Stack:{" "}
+                  </span>
+                  <span
+                    dangerouslySetInnerHTML={parseBoldText(proj.technologies)}
+                  />
+                </p>
+              )}
+              {proj.points?.length > 0 && (
+                <ul className="list-disc text-slate-700 space-y-1 ml-5">
+                  {proj.points.map((point, idx) => (
+                    <li
+                      key={idx}
+                      className="leading-snug text-justify"
+                      dangerouslySetInnerHTML={parseBoldText(point)}
+                    ></li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+        </section>
+      )}
+
+      {/* EDUCATION */}
       {education?.length > 0 && (
         <section className="mb-6 print:mb-4">
           <SectionTitle title="Education" />
           {education.map((edu) => (
             <div
               key={edu.id}
-              className="mb-1 pb-1 border-b border-gray-100 last:border-b-0 last:mb-0"
+              className="mb-1 border-b border-gray-100 last:border-b-0 last:mb-0"
             >
               <div className="flex justify-between items-baseline">
                 <h3 className="font-semibold text-gray-700 text-sm">
@@ -257,52 +307,6 @@ const ResumeTemplate9 = ({ resumeData }) => {
         </section>
       )}
 
-      {/* KEY PROJECTS */}
-      {projects?.length > 0 && (
-        <section className="mb-5 print:mb-4">
-          <SectionTitle title="KEY PROJECTS" />
-          {projects.map((proj) => (
-            <div key={proj.id} className="mb-4 last:mb-0">
-              {/* Added flex-col-reverse for sm:flex-row for link stacking on small screens */}
-              <div className="flex flex-col-reverse sm:flex-row justify-between items-start sm:items-baseline">
-                <h3 className={`font-bold text-base ${TEXT_COLOR_HEADER}`}>
-                  {proj.name}
-                </h3>
-                {/* Link stacking on small screens */}
-                {proj.link && (
-                  <a
-                    href={proj.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`${ACCENT_COLOR_LINK} hover:underline text-sm inline-flex items-center gap-1 font-medium mb-1 sm:mb-0`}
-                  >
-                    <FaLink className="w-3 h-3" />
-                    View Project
-                  </a>
-                )}
-              </div>
-              {proj.technologies && (
-                <p className="text-sm text-slate-700 mb-1">
-                  <span className={`font-semibold ${ACCENT_COLOR_TITLE}`}>
-                    Tech Stack:{" "}
-                  </span>
-                  {proj.technologies}
-                </p>
-              )}
-              {proj.points?.length > 0 && (
-                <ul className="list-disc text-slate-700 space-y-1 ml-5">
-                  {proj.points.map((point, idx) => (
-                    <li key={idx} className="leading-snug text-justify">
-                      {point}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          ))}
-        </section>
-      )}
-
       {/* CERTIFICATIONS & AWARDS */}
       {certifications?.length > 0 && (
         <section>
@@ -310,18 +314,19 @@ const ResumeTemplate9 = ({ resumeData }) => {
           <ul className="list-disc text-slate-700 space-y-1.5 ml-5">
             {certifications.map((cert, index) => (
               <li key={index} className="leading-snug">
-                <span className={`font-semibold ${TEXT_COLOR_HEADER}`}>
-                  {cert?.title}
-                </span>
+                <span
+                  className={`font-semibold ${TEXT_COLOR_HEADER}`}
+                  dangerouslySetInnerHTML={parseBoldText(cert?.title)}
+                ></span>
                 {cert?.link && (
                   <a
                     href={cert.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`ml-2 inline-flex items-center gap-1 ${ACCENT_COLOR_LINK} hover:underline font-medium`}
+                    className={`ml-2 inline-flex items-center gap-1 ${ACCENT_COLOR_LINK} hover:underline font-medium underline`}
                   >
                     <FaLink size={12} />
-                    View Credential
+                    Certificate Link
                   </a>
                 )}
               </li>
@@ -333,4 +338,4 @@ const ResumeTemplate9 = ({ resumeData }) => {
   );
 };
 
-export default ResumeTemplate9;
+export default ResumeTemplate10;

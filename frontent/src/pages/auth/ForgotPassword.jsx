@@ -1,8 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import {FaArrowLeft} from "react-icons/fa";
-
+import { FaArrowLeft, FaPaperPlane } from "react-icons/fa";
+import { MdLockReset, MdEmail } from "react-icons/md";
+import { motion, AnimatePresence } from "framer-motion";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -18,10 +19,8 @@ function ForgotPassword() {
     setError("");
     setLoading(true);
     try {
-      const res = await axios.post(`${API_URL}/auth/forgot-password`, {
-        email,
-      });
-      setMsg(res.data.message);
+      const res = await axios.post(`${API_URL}/auth/forgot-password`, { email });
+      setMsg(res.data.message || "Reset link sent to your inbox!");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to send reset email");
     } finally {
@@ -30,44 +29,102 @@ function ForgotPassword() {
   };
 
   return (
-    <>
-      <button
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-1 px-3 py-1.5 m-5 md:my-8 md:mx-18
-                               bg-gray-800 hover:bg-gray-700 text-gray-200 
-                               rounded-lg text-sm shadow-md transition-all cursor-pointer"
-      >
-        <FaArrowLeft className="text-sm" />
-        <span>Back</span>
-      </button>
+    <div className="min-h-screen bg-[#020617] flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      
+      {/* Background Ambient Glows */}
+      <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-600/10 blur-[120px] rounded-full" />
+      <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-indigo-500/10 blur-[120px] rounded-full" />
 
-      <div className="min-h-screen flex items-start justify-center p-4">
-        <div className="bg-gradient-to-br from-gray-950 to-black border-1 w-full max-w-md p-8 rounded-2xl shadow-lg text-white">
-          <h2 className="text-3xl font-bold text-center mb-6">
-            Forgot Password
-          </h2>
-          <form onSubmit={handleForgot} className="space-y-4">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3  text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 border-gray-100 border-2 rounded-xl"
-              required
-            />
-            <button
+      {/* Back Button (Floating) */}
+      <motion.button
+        whileHover={{ x: -4 }}
+        onClick={() => navigate(-1)}
+        className="absolute top-8 left-8 flex items-center gap-2 text-slate-500 hover:text-blue-400 font-bold text-xs uppercase tracking-widest transition-colors z-20"
+      >
+        <FaArrowLeft /> Back to Login
+      </motion.button>
+
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative z-10 w-full max-w-md"
+      >
+        <div className=" backdrop-blur-3xl border border-white/60 p-8 md:p-10 rounded-[2.5rem] shadow-2xl">
+          
+          {/* Icon and Title */}
+          <div className="text-center mb-8">
+            <div className="mx-auto w-16 h-16 bg-blue-600/10 border border-blue-500/20 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+              <MdLockReset className="text-blue-400 text-4xl" />
+            </div>
+            <h2 className="text-3xl font-black text-white tracking-tighter">
+              Reset <span className="text-blue-400">Password</span>
+            </h2>
+            <p className="mt-3 text-slate-500 text-sm leading-relaxed">
+              Enter your email and we'll send you a secure link to recover your account.
+            </p>
+          </div>
+
+          <form onSubmit={handleForgot} className="space-y-6">
+            <div className="group relative">
+              <MdEmail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-blue-400 transition-colors" />
+              <input
+                type="email"
+                placeholder="name@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-900/50 border border-slate-800 text-white placeholder-slate-600 outline-none transition-all focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10"
+                required
+              />
+            </div>
+
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={loading}
-              className="w-full bg-indigo-600 py-3 rounded hover:bg-indigo-500 transition font-semibold"
+              className="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-sm uppercase tracking-widest shadow-lg shadow-blue-500/20 flex items-center justify-center gap-3 disabled:opacity-50"
             >
-              {loading ? "Sending..." : "Send Reset Link"}
-            </button>
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <>
+                  <FaPaperPlane className="text-xs" />
+                  Send Reset Link
+                </>
+              )}
+            </motion.button>
           </form>
-          {msg && <p className="mt-4 text-green-400 text-center">{msg}</p>}
-          {error && <p className="mt-4 text-red-400 text-center">{error}</p>}
+
+          {/* Feedback Messages */}
+          <AnimatePresence mode="wait">
+            {msg && (
+              <motion.div 
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                className="mt-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm text-center font-medium"
+              >
+                {msg}
+              </motion.div>
+            )}
+
+            {error && (
+              <motion.div 
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                className="mt-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center font-medium"
+              >
+                {error}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-      </div>
-    </>
+
+        {/* Footer info */}
+        <p className="text-center mt-8 text-slate-600 text-xs font-bold tracking-widest uppercase">
+          Easyway Pro Security
+        </p>
+      </motion.div>
+    </div>
   );
 }
 

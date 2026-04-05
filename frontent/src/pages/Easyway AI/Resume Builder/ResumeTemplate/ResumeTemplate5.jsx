@@ -90,30 +90,52 @@ const ResumeTemplate5 = ({ resumeData }) => {
         </section>
       )}
 
-      {/* Experience */}
-      {experience?.length > 0 && (
-        <section className="mb-4">
-          <SectionTitle title="Experience" />
-          {experience.map((exp) => (
-            <div key={exp.id} className="mb-2 last:mb-0">
-              <div className="flex justify-between font-semibold text-sm">
-                <span>{exp.company}</span>
-                <span className="text-gray-500 text-xs">
-                  {exp.startDate} - {exp.endDate}
-                </span>
-              </div>
-              <p className="italic text-sm mt-0.5 mb-1">{exp.position}</p>
-              {exp.points?.length > 0 && (
-                <ul className="list-disc pl-5 space-y-0.5">
-                  {exp.points.map((point, idx) => (
-                    <li key={idx}>{point}</li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          ))}
-        </section>
-      )}
+   {/* EXPERIENCE */}
+{experience?.length > 0 && (
+  <section className="mb-6">
+    <SectionTitle title="Experience" />
+
+    <div className="space-y-3">
+      {experience.map((exp, index) => (
+        <div
+          key={exp.id || index}
+          className="pb-2 border-b border-gray-200 last:border-none"
+        >
+          {/* TOP ROW */}
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <span className="text-sm font-semibold text-gray-900">
+              {exp.company || "Company Name"}
+            </span>
+
+            <span className="text-xs sm:text-sm text-gray-500">
+              {exp.startDate || "Start"} — {exp.endDate || "Present"}
+            </span>
+          </div>
+
+          {/* POSITION */}
+          <p className="text-sm italic text-gray-700 mt-0.5">
+            {exp.position || "Role"}
+          </p>
+
+          {/* ✅ POINTS OR DESCRIPTION */}
+          {exp.points?.length > 0 ? (
+            <ul className="mt-1.5 pl-5 list-disc text-gray-700 text-sm space-y-1 marker:text-gray-400">
+              {exp.points.map((point, idx) => (
+                <li key={`${exp.id}-${idx}`} className="leading-relaxed">
+                  {point}
+                </li>
+              ))}
+            </ul>
+          ) : exp.description ? (
+            <p className="mt-1.5 text-sm text-gray-700 leading-relaxed text-justify">
+              {exp.description}
+            </p>
+          ) : null}
+        </div>
+      ))}
+    </div>
+  </section>
+)}
 
       {/* Education */}
       {education?.length > 0 && (

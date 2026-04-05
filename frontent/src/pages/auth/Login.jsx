@@ -8,6 +8,7 @@ import ScrollReveal from "../../component/ScllorAnimation";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 axios.defaults.withCredentials = true;
@@ -22,12 +23,12 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
-  // Redirect if already logged in
+  // Redirect if logged in
   useEffect(() => {
     if (user) navigate("/");
   }, [user, navigate]);
 
-  // Email/password login
+  // Handle login
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -39,7 +40,6 @@ const Login = () => {
         toast.error(resultAction.payload || "Login failed");
       }
     } catch (err) {
-      console.error(err);
       toast.error("Login failed");
     }
   };
@@ -57,16 +57,14 @@ const Login = () => {
         client_id: CLIENT_ID,
         callback: handleGoogleResponse,
       });
+
       window.google.accounts.id.renderButton(
         document.getElementById("googleButton"),
         {
           theme: "outline",
           size: "large",
           width: 265,
-          type: "standard",
           shape: "pill",
-          text: "signin_with",
-          logo_alignment: "left",
         }
       );
     };
@@ -79,10 +77,9 @@ const Login = () => {
   const handleGoogleResponse = async (response) => {
     setGoogleLoading(true);
     try {
-      const tokenId = response.credential;
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/auth/google`,
-        { tokenId },
+        { tokenId: response.credential },
         { withCredentials: true }
       );
 
@@ -94,7 +91,6 @@ const Login = () => {
         toast.error("Google login failed");
       }
     } catch (err) {
-      console.error(err);
       toast.error("Google login failed");
     } finally {
       setGoogleLoading(false);
@@ -103,104 +99,115 @@ const Login = () => {
 
   return (
     <ScrollReveal from="bottom">
-      <div className="h-[95vh] w-full px-5 flex justify-center items-center">
-        <form
+      <div className="min-h-[90vh] flex items-center justify-center bg-gradient-to-br from-slate-950 to-black relative overflow-hidden px-4">
+
+        {/* Background Glow */}
+        <div className="absolute w-[500px] h-[500px] bg-indigo-500/20 blur-[120px] rounded-full top-[-100px] left-[-100px] animate-pulse"></div>
+        <div className="absolute w-[400px] h-[400px] bg-yellow-500/10 blur-[100px] rounded-full bottom-[-100px] right-[-100px] animate-pulse"></div>
+
+        {/* Form */}
+        <motion.form
           onSubmit={handleSubmit}
           autoComplete="on"
-          className="max-w-96 w-full text-center border border-gray-300/30 rounded-2xl px-8 py-10 bg-gradient-to-bl from-slate-950 to-slate-900 shadow-lg shadow-slate-900"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="relative z-10 w-full max-w-md p-8 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl"
         >
-          <h1 className="text-gray-100 font-semibold text-3xl mb-2">Login</h1>
-          <p className="text-gray-300 text-sm mb-8">
-            Sign in to access your account
+          {/* Heading */}
+          <h1 className="text-3xl font-bold text-white text-center mb-2">
+            Welcome Back 👋
+          </h1>
+          <p className="text-gray-400 text-center mb-8 text-sm">
+            Login to continue your journey
           </p>
 
           {/* Email */}
-          <div className="flex items-center w-full mb-4 bg-slate-100 border border-yellow-500 h-12 rounded-full overflow-hidden pl-4 gap-2">
-            <MdEmail className="text-gray-800 h-6 w-6" />
+          <div className="relative mb-6">
+            <MdEmail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
             <input
               type="email"
-              placeholder="Email"
+              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              autoComplete="email"
-              className="bg-transparent text-gray-900 placeholder-gray-500 outline-none text-[16px] w-full h-full"
-              required
+              className="w-full pl-12 pr-4 py-3 rounded-full bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/30 outline-none transition-all"
+              placeholder="Enter your email"
             />
           </div>
 
           {/* Password */}
-          <div className="flex items-center w-full mb-1 bg-slate-100 border border-yellow-500 h-12 rounded-full overflow-hidden pl-4 gap-2">
-            <RiLockPasswordFill className="text-gray-800 h-6 w-6" />
+          <div className="relative mb-3">
+            <RiLockPasswordFill className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
             <input
               type={showPassword ? "text" : "password"}
-              placeholder="Password"
+              required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
-              className="bg-transparent text-gray-900 placeholder-gray-500 outline-none text-[16px] w-full h-full"
-              required
+              className="w-full pl-12 pr-12 py-3 rounded-full bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/30 outline-none transition-all"
+              placeholder="Enter your password"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="pr-4 text-gray-700 focus:outline-none"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
 
           {/* Forgot Password */}
-          <div className="w-full text-right mb-4">
+          <div className="text-right mb-6">
             <Link
               to="/forgot-password"
-              className="text-indigo-500 text-sm hover:underline"
+              className="text-indigo-400 text-sm hover:text-indigo-300"
             >
               Forgot Password?
             </Link>
           </div>
 
-          {/* Email/password login button */}
+          {/* Login Button */}
           <button
             type="submit"
             disabled={status === "loading"}
-            className={`w-full h-12 rounded-full text-white  bg-slate-950 hover:bg-gray-950 transition-all border-1 border-slate-100 mb-2 ${
-              status === "loading" ? "opacity-50 cursor-not-allowed" : ""
+            className={`w-full py-3 rounded-full font-semibold text-white bg-gradient-to-r from-indigo-500 to-cyan-500 hover:opacity-90 transition shadow-lg shadow-indigo-500/20 ${
+              status === "loading" && "opacity-50 cursor-not-allowed"
             }`}
           >
             {status === "loading" ? "Logging in..." : "Login"}
           </button>
 
-          <div className="flex justify-center my-4 text-gray-400">OR</div>
+          {/* Divider */}
+          <div className="flex items-center my-6">
+            <div className="flex-1 h-px bg-gray-600"></div>
+            <span className="px-3 text-gray-400 text-sm">OR</span>
+            <div className="flex-1 h-px bg-gray-600"></div>
+          </div>
 
-         {/* Google login */}
-<div className="flex justify-center mb-6">
-  {googleLoading ? (
-    <button
-      className="w-[265px] h-12 bg-gray-300 rounded-full text-gray-700 font-bold cursor-not-allowed flex items-center justify-center"
-      disabled
-    >
-      Logging in with Google...
-    </button>
-  ) : (
-    <div
-      id="googleButton"
-      className=""
-    ></div>
-  )}
-</div>
+          {/* Google Login */}
+          <div className="flex justify-center mb-6">
+            {googleLoading ? (
+              <div className="w-[265px] h-12 flex items-center justify-center rounded-full bg-white/10 text-gray-300">
+                Logging in...
+              </div>
+            ) : (
+              <div
+                id="googleButton"
+                className="scale-105 hover:scale-110 transition-transform"
+              ></div>
+            )}
+          </div>
 
-
-          {/* Sign up */}
-          <p className="text-gray-300 text-sm">
+          {/* Signup */}
+          <p className="text-gray-400 text-center text-sm">
             Don’t have an account?
             <Link
               to="/sign-up"
-              className="text-indigo-500 px-2 hover:underline"
+              className="text-indigo-400 ml-1 hover:text-indigo-300"
             >
               Sign up
             </Link>
           </p>
-        </form>
+        </motion.form>
       </div>
     </ScrollReveal>
   );

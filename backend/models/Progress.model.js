@@ -6,18 +6,18 @@ const progressSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true, //  speeds up user-based queries
+      index: true, // ✅ speeds up user-based queries
     },
     roadmapId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Roadmap",
       required: true,
-      index: true, // speeds up roadmap lookups
+      index: true, // ✅ improves roadmap lookups
     },
     completed: {
       type: Map,
       of: Boolean,
-      default: {},
+      default: new Map(), // ✅ ensure consistent Map instance
     },
     percentage: {
       type: Number,
@@ -39,43 +39,73 @@ const progressSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-//  Ensure unique progress per user-roadmap combo
+/* -------------------------------------------
+   🔒 Ensure one progress document per user+roadmap
+------------------------------------------- */
 progressSchema.index({ userId: 1, roadmapId: 1 }, { unique: true });
 
-//  Middleware to auto-update progress percentage before saving
-progressSchema.pre("save", function (next) {
-  const completedArray = [...this.completed.values()];
-  const completedCount = completedArray.filter(Boolean).length;
-
-  this.completedCount = completedCount;
+/* -------------------------------------------
+   ⚙️ Helper Method: safely recalc stats
+------------------------------------------- */
+progressSchema.methods.recalculateProgress = function () {
+  const completedArray = Array.from(this.completed?.values() || []);
+  this.completedCount = completedArray.filter(Boolean).length;
   this.percentage =
     this.totalSteps > 0
-      ? Math.round((completedCount / this.totalSteps) * 100)
+      ? Math.round((this.completedCount / this.totalSteps) * 100)
       : 0;
+};
 
+/* -------------------------------------------
+   🧩 Pre-save hook — auto sync before save()
+------------------------------------------- */
+progressSchema.pre("save", function (next) {
+  this.recalculateProgress();
   next();
 });
 
-//  automatically recalculate if completed map is modified
+/* -------------------------------------------
+   🧠 Pre-findOneAndUpdate hook — auto sync on updates
+------------------------------------------- */
 progressSchema.pre("findOneAndUpdate", function (next) {
-  const update = this.getUpdate();
-  if (update.completed || update.$set?.completed) {
-    const completedMap = update.completed || update.$set.completed;
-    const completedArray = Object.values(completedMap || {});
-    const completedCount = completedArray.filter(Boolean).length;
+  const update = this.getUpdate() || {};
+  const completedMap = update.completed || update.$set?.completed;
+  const totalSteps = update.totalSteps || update.$set?.totalSteps;
 
-    if (update.totalSteps || update.$set?.totalSteps) {
-      const total =
-        update.totalSteps || update.$set?.totalSteps || completedArray.length;
-      update.$set = {
-        ...update.$set,
-        completedCount,
-        percentage:
-          total > 0 ? Math.round((completedCount / total) * 100) : 0,
-      };
-    }
+  if (completedMap) {
+    const completedArray = Object.values(completedMap);
+    const completedCount = completedArray.filter(Boolean).length;
+    const total = totalSteps || completedArray.length;
+
+    if (!update.$set) update.$set = {};
+    update.$set.completedCount = completedCount;
+    update.$set.percentage =
+      total > 0 ? Math.round((completedCount / total) * 100) : 0;
   }
+
   next();
 });
+
+/* -------------------------------------------
+   ⚡ Static Helper — for easy upserts
+------------------------------------------- */
+progressSchema.statics.updateProgress = async function (
+  userId,
+  roadmapId,
+  completed,
+  totalSteps
+) {
+  const result = await this.findOneAndUpdate(
+    { userId, roadmapId },
+    {
+      $set: {
+        completed,
+        totalSteps,
+      },
+    },
+    { new: true, upsert: true, runValidators: true }
+  );
+  return result;
+};
 
 export const Progress = mongoose.model("Progress", progressSchema);

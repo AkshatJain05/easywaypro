@@ -75,14 +75,14 @@ export default function Quiz({ quiz, onFinish }) {
 
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-xl font-bold text-indigo-400 p-1">{quiz.name}</h3>
+          <h3 className="text-xl font-bold text-blue-400 p-1">{quiz.name}</h3>
           <p className="text-sm text-gray-400 p-1">
             {quiz.questions.length} Q • {Math.ceil(quiz.duration / 60)} min
           </p>
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 bg-gray-900 px-3 py-1 rounded-md">
+          <div className="flex items-center gap-2 bg-gray-950 px-3 py-1 rounded-md">
             <FaClock className="text-red-400" />
             <span className="font-mono">{fmt(timeLeft)}</span>
           </div>
@@ -98,7 +98,7 @@ export default function Quiz({ quiz, onFinish }) {
       </div>
 
       {/* question */}
-      <div className="bg-gray-900 p-5 rounded-2xl shadow mb-4">
+      <div className="bg-gray-950 p-5 rounded-2xl shadow mb-4">
         <div className="flex items-start justify-between">
           <div>
             <div className="text-sm text-gray-300 mb-2">
@@ -122,7 +122,7 @@ export default function Quiz({ quiz, onFinish }) {
                 className={`w-full text-left px-4 py-2 rounded-lg border flex items-center gap-3 ${
                   selected
                     ? "bg-indigo-600 border-indigo-600 text-white"
-                    : "bg-gray-700 border-gray-600 hover:bg-gray-600 text-gray-200"
+                    : "bg-gray-800 border-gray-600 hover:bg-gray-600 text-gray-200"
                 }`}
               >
                 <span className="font-semibold">{opt}</span>

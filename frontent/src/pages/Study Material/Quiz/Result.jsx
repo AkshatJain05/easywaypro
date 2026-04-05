@@ -6,7 +6,7 @@ export default function Result({ score, total, onRestart, userAnswers = {}, ques
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="bg-gradient-to-br from-gray-950 to-black border-1 border-gray-500 p-6 rounded-2xl shadow-lg text-center">
-        <h2 className="text-2xl font-bold text-indigo-400 mb-2">Quiz Result</h2>
+        <h2 className="text-2xl font-bold text-blue-500 mb-2">Quiz Result</h2>
         <p className="text-lg mb-4">
           Score: <span className="font-semibold text-green-400">{score}</span> /{" "}
           <span className="font-semibold text-yellow-400">{total}</span>

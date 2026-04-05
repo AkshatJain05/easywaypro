@@ -1,346 +1,365 @@
 import { useState } from "react";
-import {
-  FaClock,
-  FaRegQuestionCircle,
-  FaChevronDown,
-  FaChevronUp,
-} from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaExternalLinkAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import {
-  FaFileAlt,
-  FaRobot,
-  FaBook,
-  FaPlayCircle,
-  FaClipboardList,
-  FaCheckCircle,
-  FaProjectDiagram,
-  FaMap,
-  FaFolderOpen,
-  FaTasks,
-  FaFileInvoice,
-  FaCode,
+  FaFileAlt, FaRobot, FaBook, FaPlayCircle,
+  FaClipboardList, FaCheckCircle, FaProjectDiagram,
+  FaMap, FaFolderOpen, FaTasks, FaFileInvoice, FaCode,
 } from "react-icons/fa";
+import {
+  MdOutlineArrowOutward, MdExpandMore, MdExpandLess,
+  MdHelpOutline,
+} from "react-icons/md";
 
+// ─── Data ────────────────────────────────────────────────────────────────────
+
+const featuresData = [
+  { name: "Notes",                    icon: FaFileAlt,        viewLink: "/notes",                description: "Access curated study notes for various subjects and topics." },
+  { name: "PYQ",                      icon: FaClipboardList,  viewLink: "/pyq",                  description: "Previous Year Questions to practice and strengthen your concepts." },
+  { name: "Video Lecture",            icon: FaPlayCircle,     viewLink: "/video-lectures",       description: "Watch curated video lectures to understand topics visually." },
+  { name: "Syllabus",                 icon: FaBook,           viewLink: "/syllabus",             description: "Complete syllabus for each course and subject at one place." },
+  { name: "Quizzes",                  icon: FaCheckCircle,    viewLink: "/quiz",                 description: "Attempt timed quizzes to test your knowledge and improve speed." },
+  { name: "Quiz for Certificate",     icon: FaClipboardList,  viewLink: "/quizzes",              description: "Take quizzes and earn certificates upon successful completion." },
+  { name: "Algorithm Visualizer",     icon: FaProjectDiagram, viewLink: "/algorithm-visualizer", description: "Visualize and understand algorithms step by step." },
+  { name: "Roadmap",                  icon: FaMap,            viewLink: "/roadmap",              description: "Structured roadmap to plan your learning journey effectively." },
+  { name: "Documentation Hub",        icon: FaFolderOpen,     viewLink: "/docs",                 description: "Central hub for all guides, documentation, and references." },
+  { name: "Task Planner",             icon: FaTasks,          viewLink: "/task-planner",         description: "Plan, track, and complete your daily tasks efficiently." },
+  { name: "Resume Builder",           icon: FaFileInvoice,    viewLink: "/resume-builder",       description: "Create, customize, and print professional resumes quickly." },
+  { name: "AI Chatbot",               icon: FaRobot,          viewLink: "/easyway-ai",           description: "Get instant help with coding, concepts, and interview tips." },
+  { name: "Code Analyzer",            icon: FaCode,           viewLink: "/code-analyzer",        description: "Analyze, debug, and optimize your code effectively." },
+];
+
+const steps = [
+  { id: 1, emoji: "✦", title: "Create Account",  desc: "Sign up with your email and get instant access to all tools." },
+  { id: 2, emoji: "⬡", title: "Explore Tools",   desc: "Use resume builder, notes, AI chat, and more." },
+  { id: 3, emoji: "◈", title: "Practice & Learn", desc: "Access PYQs, analyze code, and strengthen concepts." },
+  { id: 4, emoji: "◎", title: "Build & Apply",    desc: "Prepare resumes, practice coding, and apply confidently." },
+];
+
+const whyUs = [
+  { title: "All-in-One Platform", desc: "Resume builder, AI chatbot, PYQs, notes, and code analyzer — all in one place.", color: "text-sky-400",    border: "rgba(56,189,248,0.2)",   bg: "rgba(56,189,248,0.06)"   },
+  { title: "Student-Friendly",    desc: "Simple UI, free resources, and guides crafted for students and beginners.",       color: "text-indigo-400", border: "rgba(129,140,248,0.2)", bg: "rgba(129,140,248,0.06)" },
+  { title: "Regular Updates",     desc: "Our team adds new notes, PYQs, and roadmap regularly.",                           color: "text-emerald-400", border: "rgba(52,211,153,0.2)", bg: "rgba(52,211,153,0.06)" },
+  { title: "Daily Task Tracking", desc: "Plan, manage, and complete your study goals every day with the task planner.",    color: "text-amber-400",  border: "rgba(251,191,36,0.2)",  bg: "rgba(251,191,36,0.06)"  },
+];
+
+const faqs = [
+  { q: "Is Easyway Classes free to use?",         a: "Yes, most features are completely free to use with no hidden charges." },
+  { q: "Can I print or save my resume as PDF?",   a: "Yes, you can print or save resumes in PDF format directly from the resume builder." },
+  { q: "Does the AI chatbot help with coding?",   a: "Yes, it can explain concepts, debug code, and give personalized learning tips." },
+  { q: "Are notes and PYQs updated regularly?",   a: "Yes, our team frequently updates study materials and question banks." },
+];
+
+// ─── Shared animation variants ────────────────────────────────────────────────
+const fadeUp = {
+  hidden:  { opacity: 0, y: 24 },
+  visible: (i = 0) => ({
+    opacity: 1, y: 0,
+    transition: { delay: i * 0.08, duration: 0.45, ease: [0.22, 1, 0.36, 1] },
+  }),
+};
+
+// ─── Sub-components ──────────────────────────────────────────────────────────
+
+function SectionHeader({ badge, title, highlight, subtitle }) {
+  return (
+    <div className="text-center mb-10">
+      <div className="flex justify-center mb-3">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest"
+          style={{ background: "rgba(14,165,233,0.08)", border: "1px solid rgba(14,165,233,0.18)", color: "#7dd3fc" }}>
+          <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
+          {badge}
+        </span>
+      </div>
+      <h2 className="syne text-2xl sm:text-3xl font-extrabold text-white">
+        {title}{" "}
+        {highlight && (
+          <span style={{
+            background: "linear-gradient(135deg,#38bdf8 0%,#818cf8 100%)",
+            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+          }}>{highlight}</span>
+        )}
+      </h2>
+      {subtitle && <p className="mt-2.5 text-sm text-gray-500 max-w-xl mx-auto leading-relaxed">{subtitle}</p>}
+      <div className="mt-5 h-px max-w-[180px] mx-auto bg-gradient-to-r from-transparent via-sky-500/25 to-transparent" />
+    </div>
+  );
+}
+
+// ─── Main Component ───────────────────────────────────────────────────────────
 export default function WebsiteOverview() {
-  const featuresData = [
-    {
-      name: "Notes",
-      description:
-        "Access curated study notes for various subjects and topics.",
-      icon: FaFileAlt,
-      viewLink: "/notes",
-    },
-    {
-      name: "PYQ",
-      description:
-        "Previous Year Questions to practice and strengthen your concepts.",
-      icon: FaClipboardList,
-      viewLink: "/pyq",
-    },
-    {
-      name: "Video Lecture",
-      description:
-        "Watch curated video lectures to understand topics visually.",
-      icon: FaPlayCircle,
-      viewLink: "/video-lectures",
-    },
-    {
-      name: "Syllabus",
-      description:
-        "Complete syllabus for each course and subject at one place.",
-      icon: FaBook,
-      viewLink: "/syllabus",
-    },
-    {
-      name: "Quizzes",
-      description:
-        "Attempt timed quizzes to test your knowledge and improve speed.",
-      icon: FaCheckCircle,
-      viewLink: "/quiz",
-    },
-    {
-      name: "Quiz Test for Certificate",
-      description:
-        "Take quizzes and earn certificates upon successful completion.",
-      icon: FaClipboardList,
-      viewLink: "/quizzes",
-    },
-    {
-      name: "Algorithm Visualizer",
-      description: "Visualize and understand algorithms step by step.",
-      icon: FaProjectDiagram,
-      viewLink: "/algorithm-visualizer",
-    },
-    {
-      name: "Roadmap",
-      description:
-        "Structured roadmap to plan your learning journey effectively.",
-      icon: FaMap,
-      viewLink: "/roadmap",
-    },
-    {
-      name: "Documentation Hub",
-      description: "Central hub for all guides, documentation, and references.",
-      icon: FaFolderOpen,
-      viewLink: "/docs",
-    },
-    {
-      name: "Task Planner",
-      description: "Plan, track, and complete your daily tasks efficiently.",
-      icon: FaTasks,
-      viewLink: "/task-planner",
-    },
-    {
-      name: "Resume Builder",
-      description: "Create, customize, and print professional resumes quickly.",
-      icon: FaFileInvoice,
-      viewLink: "/resume-builder",
-    },
-    {
-      name: "AI Chatbot",
-      description:
-        "Get instant help with coding, concepts, and interview tips.",
-      icon: FaRobot,
-      viewLink: "/chatBot",
-    },
-    {
-      name: "Code Analyzer",
-      description: "Analyze, debug, and optimize your code effectively.",
-      icon: FaCode,
-      viewLink: "/code-analyzer",
-    },
-  ];
-
-  const steps = [
-    {
-      id: 1,
-      title: "Create an account",
-      desc: "Sign up with your email and get instant access.",
-    },
-    {
-      id: 2,
-      title: "Explore tools",
-      desc: "Use resume builder, notes, AI chat, and more.",
-    },
-    {
-      id: 3,
-      title: "Practice & Learn",
-      desc: "Access PYQs, analyze code, and strengthen concepts.",
-    },
-    {
-      id: 4,
-      title: "Build & Apply",
-      desc: "Prepare resumes, practice coding, and apply confidently.",
-    },
-  ];
-
-  const faqs = [
-    { q: "Is Easyway Classes free to use?", a: "Yes, most features are free." },
-    {
-      q: "Can I print or save my resume as PDF?",
-      a: "Yes, you can print or save resumes in PDF format.",
-    },
-    {
-      q: "Does the AI chatbot help with coding?",
-      a: "Yes, it can explain concepts, debug code, and give learning tips.",
-    },
-    {
-      q: "Are notes and PYQs updated regularly?",
-      a: "Yes, our team frequently updates study materials and question banks.",
-    },
-  ];
-
   const [openFAQ, setOpenFAQ] = useState(null);
-  const toggleFAQ = (index) => setOpenFAQ(openFAQ === index ? null : index);
-
-  // Variants for scroll animations
-  const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: (i = 1) => ({
-      opacity: 1,
-      y: 0,
-      transition: { delay: i * 0.1, type: "spring", stiffness: 120 },
-    }),
-  };
 
   return (
-    <div className="min-h-screen  text-slate-100">
-      {/* Overview Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
-        <h2 className="text-3xl font-extrabold mb-4 text-center text-white">
-          How Easyway Works
-        </h2>
-        <p className="text-slate-400 max-w-2xl mx-auto text-center mb-12">
-          Easyway Classes brings together everything you need — from resumes to
-          AI-powered study tools. Here’s a simple journey:
-        </p>
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {steps.map((s, i) => (
-            <motion.div
-              key={s.id}
-              custom={i}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.3 }}
-              variants={cardVariants}
-              className="px-4 py-5 bg-gradient-to-br from-gray-950 to-black rounded-2xl shadow-md border border-slate-700 text-center cursor-pointer
-                         hover:scale-105 hover:shadow-xl transition-transform duration-300"
-            >
-              <div className="flex justify-center mb-4 text-indigo-300 text-3xl">
-                <FaClock />
-              </div>
-              <h3 className="font-semibold text-lg mb-2 text-white">
-                {s.title}
-              </h3>
-              <p className="text-sm text-slate-400">{s.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+    <>
+      <style>{`
+        // @import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@400;500;600&display=swap');
+        .overview-root { font-family: 'Inter', sans-serif; }
+        .syne { font-family: 'Syne', sans-serif; }
 
-      {/* Why Choose Us */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
-        <h2 className="text-3xl font-extrabold mb-4 text-center text-white">
-          Why Choose Easyway?
-        </h2>
-        <p className="text-slate-400 max-w-2xl mx-auto text-center mb-12">
-          Designed for students, freshers, and learners — here’s why Easyway
-          Classes stands out:
-        </p>
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[
-            {
-              title: "All-in-One Platform",
-              desc: "Resume builder, AI chatbot, PYQs, notes, and coding Analyzer all in one place.",
-            },
-            {
-              title: "Student-Friendly",
-              desc: "Simple UI, free resources, and guides crafted for students and beginners.",
-            },
-            {
-              title: "Regular Updates",
-              desc: "Our team adds new notes, PYQs, and roadmap regularly.",
-            },
-            {
-              title: "Daily Tasks",
-              desc: "Stay on track with Easyway – plan, manage, and complete your study goals every day.",
-            },
-          ].map((item, i) => (
-            <motion.div
-              key={i}
-              custom={i}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.3 }}
-              variants={cardVariants}
-              className="bg-gradient-to-br from-gray-950 to-black p-6 rounded-xl shadow-md border border-slate-700 text-center
-                         hover:scale-105 hover:shadow-xl transition-transform duration-300"
-            >
-              <h3 className="font-semibold mb-2 text-white">{item.title}</h3>
-              <p className="text-sm text-slate-400">{item.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+        .card-base {
+          background: #0a0a14;
+          border: 1px solid rgba(255,255,255,0.07);
+          border-radius: 16px;
+          transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .card-base:hover {
+          transform: translateY(-3px);
+          border-color: rgba(14,165,233,0.22);
+          box-shadow: 0 10px 28px -6px rgba(14,165,233,0.1);
+        }
 
-      {/* All Features Overview */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16 border border-gray-800 rounded-3xl">
-        <h2 className="text-3xl font-extrabold mb-4 text-center text-white">
-          {" "}
-          All Features Overview
-        </h2>
-        <p className="text-slate-400 text-center mb-10">
-          Access all core tools in one place. Hover rows for better readability.
-        </p>
+        /* step number */
+        .step-num {
+          font-family: 'Syne', sans-serif;
+          font-size: 2.5rem;
+          font-weight: 800;
+          line-height: 1;
+          background: linear-gradient(135deg, rgba(56,189,248,0.25), rgba(129,140,248,0.15));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
 
-        <div className="bg-gradient-to-br from-gray-950 to-black rounded-xl shadow-2xl border border-gray-700 overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-700">
-            <thead className="bg-gradient-to-br from-gray-950 to-black">
-              <tr>
-                <th className="px-6 py-3 text-left text-md font-bold text-white uppercase tracking-wider">
-                  Feature
-                </th>
-                <th className="px-6 py-3 text-left text-md font-bold  text-white uppercase tracking-wider hidden sm:table-cell">
-                  Description
-                </th>
-                <th className="px-6 py-3 text-center text-md text-bold font-medium text-white uppercase tracking-wider">
-                  View
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-800">
-              {featuresData.map((feature, index) => (
-                <tr
-                  key={index}
-                  className="bg-gradient-to-br from-gray-950 to-black hover:bg-gray-700 transition duration-300 cursor-pointer"
-                >
-                  <td className="px-6 py-4 whitespace-nowrap text-md font-medium text-white flex items-center gap-3">
-                    <feature.icon className="text-indigo-50 text-md" />
-                    {feature.name}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-slate-300 hidden sm:table-cell">
-                    {feature.description}
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    <a
-                      href={feature.viewLink}
-                      className="inline-flex items-center px-3 py-1 bg-slate-950 border border-gray-700   hover:bg-slate-900 text-white text-sm font-semibold rounded-md transition"
-                    >
-                      Go <FaExternalLinkAlt className="ml-1 text-xs" />
-                    </a>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
+        /* table row hover */
+        .feat-row { transition: background 0.18s ease; }
+        .feat-row:hover { background: rgba(14,165,233,0.05); }
 
-      {/* FAQ Section */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16">
-        <h2 className="text-3xl font-extrabold mb-4 text-center text-white">
-          Frequently Asked Questions
-        </h2>
-        <p className="text-slate-400 text-center mb-10">
-          Quick answers to common queries
-        </p>
-        <div className="space-y-4">
-          {faqs.map((faq, i) => (
-            <motion.div
-              key={i}
-              custom={i}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.3 }}
-              variants={cardVariants}
-              className="bg-gradient-to-br from-gray-950 to-black rounded-xl shadow border border-slate-700"
-            >
-              <button
-                onClick={() => toggleFAQ(i)}
-                className="w-full flex justify-between items-center p-4 text-left"
+        /* FAQ */
+        .faq-item {
+          background: #0a0a14;
+          border: 1px solid rgba(255,255,255,0.07);
+          border-radius: 14px;
+          overflow: hidden;
+          transition: border-color 0.2s ease;
+        }
+        .faq-item.faq-open { border-color: rgba(14,165,233,0.25); }
+
+        /* Dot-grid bg */
+        .dot-bg {
+          background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+          background-size: 26px 26px;
+        }
+      `}</style>
+
+      <div className="overview-root min-h-screen bg-[#030009] text-white">
+
+        {/* ══════════════════════════════════════
+            SECTION 1 — How It Works
+        ══════════════════════════════════════ */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
+          <SectionHeader
+            badge="Getting Started"
+            title="How Easyway"
+            highlight="Works"
+            subtitle="Easyway brings together everything you need — from resumes to AI-powered study tools. Here's your journey:"
+          />
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {steps.map((s, i) => (
+              <motion.div
+                key={s.id}
+                custom={i}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.3 }}
+                variants={fadeUp}
+                className="card-base p-5 sm:p-6 flex flex-col gap-3"
               >
-                <div className="flex items-center gap-2">
-                  <FaRegQuestionCircle className="text-indigo-300" />
-                  <span className="font-semibold text-white">{faq.q}</span>
+                {/* Step emoji + number */}
+                <div className="flex items-center justify-between">
+                  <span className="text-2xl">{s.emoji}</span>
+                  <span className="step-num">0{s.id}</span>
                 </div>
-                {openFAQ === i ? (
-                  <FaChevronUp className="text-slate-400" />
-                ) : (
-                  <FaChevronDown className="text-slate-400" />
-                )}
-              </button>
-              <AnimatePresence>
-                {openFAQ === i && (
-                  <div className="px-4 pb-4 text-sm text-slate-300 overflow-hidden">
-                    {faq.a}
-                  </div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          ))}
+                <div>
+                  <h3 className="syne text-sm sm:text-base font-bold text-white mb-1">{s.title}</h3>
+                  <p className="text-xs text-gray-500 leading-relaxed">{s.desc}</p>
+                </div>
+                {/* connector bar */}
+                <div className="mt-auto h-0.5 w-full rounded-full bg-gradient-to-r from-sky-500/30 to-transparent" />
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* Divider */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-8">
+          <div className="h-px bg-gradient-to-r from-transparent via-white/[0.07] to-transparent" />
         </div>
-      </section>
-    </div>
+
+        {/* ══════════════════════════════════════
+            SECTION 2 — Why Choose Us
+        ══════════════════════════════════════ */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
+          <SectionHeader
+            badge="Why Us"
+            title="Why Choose"
+            highlight="Easyway?"
+            subtitle="Designed for students, freshers, and learners — here's why Easyway Classes stands out:"
+          />
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {whyUs.map((item, i) => (
+              <motion.div
+                key={i}
+                custom={i}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.3 }}
+                variants={fadeUp}
+                className="card-base p-5 sm:p-6 flex flex-col gap-3"
+                style={{ "--hover-border": item.border }}
+              >
+                {/* Accent dot */}
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center"
+                  style={{ background: item.bg, border: `1px solid ${item.border}` }}>
+                  <span className={`text-lg ${item.color}`}>✦</span>
+                </div>
+                <div>
+                  <h3 className={`syne text-sm sm:text-base font-bold mb-1 ${item.color}`}>{item.title}</h3>
+                  <p className="text-xs text-gray-500 leading-relaxed">{item.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* Divider */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-8">
+          <div className="h-px bg-gradient-to-r from-transparent via-white/[0.07] to-transparent" />
+        </div>
+
+        {/* ══════════════════════════════════════
+            SECTION 3 — All Features Table
+        ══════════════════════════════════════ */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
+          <SectionHeader
+            badge="All Features"
+            title="Features"
+            highlight="Overview"
+            subtitle="Access all core tools in one place. Everything you need, listed clearly."
+          />
+
+          <div className="rounded-2xl overflow-hidden border border-white/[0.07]"
+            style={{ background: "#020108" }}>
+            {/* Table header */}
+            <div className="grid grid-cols-[1fr_2fr_80px] sm:grid-cols-[1.2fr_2.5fr_90px] gap-0 px-5 py-3 border-b border-white/[0.07]"
+              style={{ background: "rgba(14,165,233,0.04)" }}>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Feature</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 hidden sm:block">Description</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 text-center">Link</span>
+            </div>
+
+            {/* Rows */}
+            {featuresData.map((f, i) => (
+              <motion.div
+                key={i}
+                custom={i}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.1 }}
+                variants={fadeUp}
+                className={`feat-row grid grid-cols-[1fr_80px] sm:grid-cols-[1.2fr_2.5fr_90px] gap-0 items-center px-5 py-3.5 ${
+                  i < featuresData.length - 1 ? "border-b border-white/[0.04]" : ""
+                }`}
+              >
+                {/* Name + icon */}
+                <div className="flex items-center gap-3">
+                  <div className="w-7 h-7 rounded-lg flex-shrink-0 flex items-center justify-center"
+                    style={{ background: "rgba(14,165,233,0.08)", border: "1px solid rgba(14,165,233,0.14)" }}>
+                    <f.icon className="text-sky-400 text-xs" />
+                  </div>
+                  <span className="text-sm font-semibold text-white truncate syne">{f.name}</span>
+                </div>
+
+                {/* Description */}
+                <p className="text-sm text-gray-300 leading-relaxed line-clamp-2 hidden sm:block pr-4">
+                  {f.description}
+                </p>
+
+                {/* CTA */}
+                <div className="flex justify-center">
+                  <Link
+                    to={f.viewLink}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-sky-400 transition-all duration-200 hover:text-sky-300"
+                    style={{ background: "rgba(14,165,233,0.08)", border: "1px solid rgba(14,165,233,0.15)" }}
+                  >
+                    Open <MdOutlineArrowOutward size={11} />
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* Divider */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-8">
+          <div className="h-px bg-gradient-to-r from-transparent via-white/[0.07] to-transparent" />
+        </div>
+
+        {/* ══════════════════════════════════════
+            SECTION 4 — FAQ
+        ══════════════════════════════════════ */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
+          <SectionHeader
+            badge="FAQ"
+            title="Frequently Asked"
+            highlight="Questions"
+            subtitle="Quick answers to common queries about Easyway Pro."
+          />
+
+          <div className="space-y-3">
+            {faqs.map((faq, i) => {
+              const isOpen = openFAQ === i;
+              return (
+                <motion.div
+                  key={i}
+                  custom={i}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.3 }}
+                  variants={fadeUp}
+                  className={`faq-item ${isOpen ? "faq-open" : ""}`}
+                >
+                  <button
+                    onClick={() => setOpenFAQ(isOpen ? null : i)}
+                    className="w-full flex items-center justify-between gap-3 px-5 py-4 text-left"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 rounded-md flex-shrink-0 flex items-center justify-center"
+                        style={{ background: "rgba(14,165,233,0.08)", border: "1px solid rgba(14,165,233,0.15)" }}>
+                        <MdHelpOutline className="text-sky-400 text-xs" />
+                      </div>
+                      <span className="text-sm font-semibold text-white leading-snug">{faq.q}</span>
+                    </div>
+                    <span className="flex-shrink-0 text-gray-500">
+                      {isOpen ? <MdExpandLess size={20} /> : <MdExpandMore size={20} />}
+                    </span>
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        key="answer"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                        style={{ overflow: "hidden" }}
+                      >
+                        <div className="px-5 pb-4 ml-9 text-sm text-gray-400 leading-relaxed border-t border-white/[0.04] pt-3">
+                          {faq.a}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              );
+            })}
+          </div>
+        </section>
+
+      </div>
+    </>
   );
 }

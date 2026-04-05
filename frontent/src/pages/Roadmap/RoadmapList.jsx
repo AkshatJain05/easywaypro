@@ -2,212 +2,293 @@ import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaArrowLeft, FaSearch } from "react-icons/fa";
-import Loading from "../../component/Loading";
 import { toast } from "react-hot-toast";
+import {
+  FiArrowLeft, FiSearch, FiX, FiMap, FiCheckCircle,
+  FiClock, FiZap, FiChevronRight, FiTrendingUp, FiTarget,
+} from "react-icons/fi";
+import Loading from "../../component/Loading";
 
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+const clamp = (v, min = 0, max = 100) => Math.min(Math.max(v || 0, min), max);
+
+const progressMeta = (pct) => {
+  if (pct === 100) return { label: "Complete",   color: "text-emerald-400", bar: "bg-emerald-500",  ring: "border-emerald-500/20",  bg: "bg-emerald-500/8"  };
+  if (pct >= 60)  return { label: "On track",    color: "text-sky-400",    bar: "bg-sky-500",      ring: "border-sky-500/50",      bg: "bg-sky-500/5"      };
+  if (pct >= 20)  return { label: "In progress", color: "text-amber-400",  bar: "bg-amber-500",    ring: "border-amber-500/50",    bg: "bg-amber-500/5"    };
+  return             { label: "Not started",  color: "text-slate-500",  bar: "bg-slate-600",    ring: "border-slate-600",    bg: "bg-white/[0.01]"   };
+};
+
+// ─── Stat Card ────────────────────────────────────────────────────────────────
+const StatCard = ({ icon, label, value, accent, sub, delay = 0 }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 14 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.28, delay }}
+    className="bg-white/1 border border-cyan-900 rounded-2xl p-5 flex items-start gap-4 hover:border-white/[0.62] transition-all"
+  >
+    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${accent}`}>
+      {icon}
+    </div>
+    <div>
+      <p className="text-2xl font-black text-white tracking-tight leading-none">{value}</p>
+      <p className="text-[9px] font-bold uppercase tracking-widest text-white/35 mt-1">{label}</p>
+      {sub && <p className="text-[10px] text-white/50 mt-1">{sub}</p>}
+    </div>
+  </motion.div>
+);
+
+// ─── Roadmap Card ─────────────────────────────────────────────────────────────
+const RoadmapCard = ({ roadmap, index }) => {
+  const progress = clamp(roadmap.overallProgress);
+  const meta     = progressMeta(progress);
+  const stepsTotal    = roadmap.steps?.length || 0;
+  const stepsDone     = roadmap.steps?.filter(s => s.completed)?.length || 0;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.97 }}
+      transition={{ duration: 0.22, delay: index * 0.055 }}
+    >
+      <Link
+        to={`/roadmap/${roadmap._id}`}
+        className={`group flex flex-col h-full bg-white/2   border ${meta.ring} rounded-2xl p-5 hover:bg-white/2 hover:border-cyan-400 transition-all duration-300`}
+      >
+        {/* Top row */}
+        <div className="flex items-start justify-between gap-3 mb-3">
+          <div className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center shrink-0 group-hover:border-white/10 transition">
+            <FiMap size={14} className="text-white/30" />
+          </div>
+          <span className={`text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full ${meta.bg} ${meta.color} border ${meta.ring} mt-0.5`}>
+            {meta.label}
+          </span>
+        </div>
+
+        {/* Title & description */}
+        <div className="flex-1 mb-5">
+          <h2 className="text-sm font-black text-white group-hover:text-white leading-snug transition mb-2">
+            {roadmap.title}
+          </h2>
+          <p className="text-[12px] text-gray-300 leading-relaxed line-clamp-2">
+            {roadmap.description || "No description available."}
+          </p>
+        </div>
+
+        {/* Progress bar */}
+        <div className="mb-4">
+          <div className="h-1.5 bg-white/[0.09] rounded-full overflow-hidden">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 0.9, delay: index * 0.06 + 0.2, ease: "easeOut" }}
+              className={`h-full rounded-full ${meta.bar}`}
+            />
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="flex items-center justify-between pt-3 border-t border-white/[0.04]">
+          <div className="flex items-center gap-3">
+            <span className={`text-sm font-black ${meta.color}`}>{progress}%</span>
+            {stepsTotal > 0 && (
+              <span className="text-[10px] text-white/20 font-mono">{stepsDone}/{stepsTotal} steps</span>
+            )}
+          </div>
+          <FiChevronRight size={13} className="text-white/15 group-hover:text-white/50 group-hover:translate-x-0.5 transition-all" />
+        </div>
+      </Link>
+    </motion.div>
+  );
+};
+
+// ─── Empty State ──────────────────────────────────────────────────────────────
+const EmptyState = ({ hasSearch, onClear }) => (
+  <motion.div
+    initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+    className="flex flex-col items-center justify-center py-24 gap-4"
+  >
+    <div className="w-14 h-14 rounded-3xl bg-white/1 border border-cyan-400 flex items-center justify-center">
+      <FiMap size={22} className="text-white/15" />
+    </div>
+    <div className="text-center">
+      <p className="text-sm font-bold text-white/25">
+        {hasSearch ? "No roadmaps match your search" : "No roadmaps yet"}
+      </p>
+      <p className="text-[11px] text-white/1 mt-1">
+        {hasSearch ? "Try a different keyword" : "Create your first learning path to get started"}
+      </p>
+    </div>
+    {hasSearch && (
+      <button
+        onClick={onClear}
+        className="text-[11px] font-bold text-sky-400 hover:text-sky-300 transition flex items-center gap-1.5"
+      >
+        <FiX size={10} /> Clear search
+      </button>
+    )}
+  </motion.div>
+);
+
+
+// ─── Main Component ───────────────────────────────────────────────────────────
 export default function RoadmapList() {
-  const [roadmaps, setRoadmaps] = useState([]);
+  const [roadmaps, setRoadmaps]     = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading]       = useState(true);
 
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL  = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
 
-  /* ------------------------ Fetch User Roadmaps (Cookie-based) ------------------------ */
   useEffect(() => {
-    const fetchRoadmaps = async () => {
-      try {
-        setLoading(true);
-        const res = await axios.get(`${API_URL}/roadmap/user/all`, {
-          withCredentials: true,
-        });
-        const data = res.data?.roadmaps || [];
-        setRoadmaps(data);
-      } catch (err) {
-        console.error("Error fetching user roadmaps:", err);
+    axios
+      .get(`${API_URL}/roadmap/user/all`, { withCredentials: true })
+      .then(res => setRoadmaps(res.data?.roadmaps || []))
+      .catch(err => {
         if (err.response?.status === 401) {
-          toast.error("Please log in to view your roadmaps");
+          toast.error("Please login first");
           navigate("/login");
         } else {
-          toast.error("Unable to load your roadmaps");
+          toast.error("Failed to load roadmaps");
         }
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchRoadmaps();
+      })
+      .finally(() => setLoading(false));
   }, [API_URL, navigate]);
 
-  /* ------------------------------- Search Filtering ------------------------------- */
-  const filteredRoadmaps = useMemo(() => {
-    const term = searchTerm.toLowerCase();
+  // ── Derived stats ──
+  const stats = useMemo(() => {
+    const total     = roadmaps.length;
+    const completed = roadmaps.filter(r => clamp(r.overallProgress) === 100).length;
+    const inProg    = roadmaps.filter(r => { const p = clamp(r.overallProgress); return p > 0 && p < 100; }).length;
+    const avgProg   = total
+      ? Math.round(roadmaps.reduce((s, r) => s + clamp(r.overallProgress), 0) / total)
+      : 0;
+    return { total, completed, inProg, avgProg };
+  }, [roadmaps]);
+
+  const filtered = useMemo(() => {
+    const q = searchTerm.toLowerCase().trim();
+    if (!q) return roadmaps;
     return roadmaps.filter(
-      (r) =>
-        r.title?.toLowerCase().includes(term) ||
-        r.description?.toLowerCase().includes(term)
+      r => r.title?.toLowerCase().includes(q) || r.description?.toLowerCase().includes(q)
     );
   }, [roadmaps, searchTerm]);
 
-  if (loading) return <Loading />;
+  if (loading) return <Loading/>;
 
-  /* ----------------------------- Component Structure ----------------------------- */
   return (
-    <div
-      className="min-h-screen text-white px-6 md:px-16 py-6
-      bg-gradient-to-br from-[#050505] via-[#0a0a0a] to-[#1a1a1a]
-      bg-[radial-gradient(#ffffff1a_1px,transparent_1px)] bg-[size:22px_22px]
-      animate-bgMove"
-    >
-      {/* 🔙 Back Button */}
-      <button
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-2 px-4 py-2 mb-8 
-                   bg-gray-900 hover:bg-gray-800 text-gray-200 
-                   rounded-lg text-sm shadow-md transition-all cursor-pointer"
-      >
-        <FaArrowLeft className="text-sm" />
-        <span>Back</span>
-      </button>
+    <div className="min-h-screen  text-white font-sans px-4 sm:px-8 py-8 selection:bg-sky-500/25">
+      <div className="max-w-7xl mx-auto">
 
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="text-center mb-10"
-      >
-        <h1 className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-orange-600 via-yellow-400 to-yellow-600 bg-clip-text text-transparent tracking-wide mb-2 drop-shadow-[0_0_8px_rgba(250,204,21,0.4)]">
-          Your Learning Roadmaps
-        </h1>
-        <p className="text-base md:text-lg text-gray-400 max-w-2xl mx-auto">
-          Explore your personalized learning journeys and track your progress
-          easily.
-        </p>
+        {/* ── Page header ── */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
+          className="flex items-center justify-between mb-8"
+        >
+          <button
+            onClick={() => navigate(-1)}
+            className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.07] hover:border-white/[0.14] transition"
+          >
+            <FiArrowLeft size={15} />
+          </button>
 
-        <div className="relative mt-6 mb-8 flex items-center justify-center">
-          <div className="w-32 h-[2px] bg-gradient-to-r from-yellow-500 via-orange-400 to-yellow-500 animate-pulse rounded-full" />
+          <div className="text-right">
+            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/50">Learning paths</p>
+            <h1 className="text-xl font-black tracking-tight leading-none mt-0.5">
+              Roadmap <span className="text-sky-400">Dashboard</span>
+            </h1>
+          </div>
+        </motion.div>
+
+        {/* ── Stats ── */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
+          <StatCard
+            icon={<FiMap size={16} />}
+            label="Total roadmaps" value={stats.total}
+            sub="All learning paths"
+            accent="bg-sky-500/15 text-sky-400"
+            delay={0}
+          />
+          <StatCard
+            icon={<FiCheckCircle size={16} />}
+            label="Completed" value={stats.completed}
+            sub="100% progress"
+            accent="bg-emerald-500/15 text-emerald-400"
+            delay={0.07}
+          />
+          <StatCard
+            icon={<FiClock size={16} />}
+            label="In progress" value={stats.inProg}
+            sub="Actively working"
+            accent="bg-amber-500/15 text-amber-400"
+            delay={0.14}
+          />
+          <StatCard
+            icon={<FiTrendingUp size={16} />}
+            label="Avg. progress" value={`${stats.avgProg}%`}
+            sub="Across all paths"
+            accent="bg-violet-500/15 text-violet-400"
+            delay={0.21}
+          />
         </div>
-      </motion.div>
 
-      {/*  Search */}
-      <div className="max-w-md mx-auto mb-12 relative">
-        <FaSearch className="absolute left-4 top-3 text-gray-400" />
-        <input
-          type="text"
-          placeholder="Search your roadmaps..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 rounded-lg bg-gray-900 border border-gray-800 
-                     focus:outline-none focus:ring-2 focus:ring-yellow-500 text-gray-200 
-                     placeholder-gray-500 transition-all"
-        />
-      </div>
+        {/* ── Search ── */}
+        <div className="relative mb-6 max-w-md group">
+          <FiSearch
+            size={13}
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-sky-400 transition-colors pointer-events-none"
+          />
+          <input
+            type="text"
+            placeholder="Search roadmaps…"
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            className="w-full bg-[#111119] border border-slate-700 focus:border-sky-500/40 rounded-2xl pl-10 pr-10 py-3 text-sm text-white placeholder-white/30 outline-none focus:ring-2 focus:ring-sky-500/10 transition-all"
+          />
+          <AnimatePresence>
+            {searchTerm && (
+              <motion.button
+                initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }}
+                onClick={() => setSearchTerm("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-lg bg-white/[0.06] hover:bg-white/10 transition"
+              >
+                <FiX size={11} />
+              </motion.button>
+            )}
+          </AnimatePresence>
+        </div>
 
-      {/*  Roadmap Grid */}
-      <AnimatePresence>
-        {filteredRoadmaps.length > 0 ? (
-          <motion.div
-            layout
-            className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8"
+        {/* Result count */}
+        {searchTerm && (
+          <motion.p
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            className="text-[10px] font-bold uppercase tracking-widest text-white/20 mb-4"
           >
-            {filteredRoadmaps.map((r, i) => {
-              const progress = Math.min(
-                Math.max(r.overallProgress || 0, 0),
-                100
-              );
-
-              return (
-                <motion.div
-                  key={r._id || i}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.4 }}
-                >
-                  <Link
-                    to={`/roadmap/${r._id}`}
-                    className="group bg-gradient-to-br from-gray-950 to-black p-6 md:p-8 
-                               rounded-xl border border-gray-800 hover:border-yellow-500 
-                               hover:shadow-[0_0_25px_rgba(234,179,8,0.25)] transition-all duration-300 
-                               flex flex-col justify-between relative overflow-hidden"
-                  >
-                    {/* Top Glow Line */}
-                    <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-yellow-500 to-transparent opacity-70" />
-
-                    <h2 className="text-xl font-semibold mb-3 group-hover:text-yellow-400 transition-colors line-clamp-1">
-                      {r.title}
-                    </h2>
-
-                    <p className="text-gray-400 text-sm md:text-base leading-relaxed text-justify">
-                      {r.description && r.description.length > 132
-                        ? r.description.slice(0, 132) + " ......."
-                        : r.description || "No description available."}
-                    </p>
-
-                    {/*  Progress Bar */}
-                    <div className="mt-5">
-                      <div className="relative w-full bg-gray-800 rounded-full h-2.5 overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={{ width: `${progress}%` }}
-                          transition={{ duration: 1 }}
-                          className={`h-2.5 rounded-full ${
-                            progress < 40
-                              ? "bg-gradient-to-r from-red-500 to-yellow-500"
-                              : progress < 80
-                              ? "bg-gradient-to-r from-yellow-400 to-sky-500"
-                              : "bg-gradient-to-r from-sky-500 to-emerald-500"
-                          } shadow-[0_0_10px_rgba(234,179,8,0.4)]`}
-                        />
-                        {progress >= 100 && (
-                          <motion.span
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: 0.5, duration: 0.5 }}
-                            className="absolute right-2 -top-6 text-emerald-400 text-xs font-semibold"
-                          >
-                            Completed!
-                          </motion.span>
-                        )}
-                      </div>
-
-                      <div className="flex justify-between mt-1 text-sm text-gray-400">
-                        <span>Progress</span>
-                        <span className="text-yellow-400 font-semibold">
-                          {progress.toFixed(0)}%
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex flex-col items-center justify-center py-20 text-gray-400"
-          >
-            <p className="text-lg mb-4">No roadmaps found for your account.</p>
-            <button
-              onClick={() => navigate("/explore")}
-              className="px-6 py-2 bg-yellow-500 text-black font-semibold rounded-md hover:bg-yellow-400 transition-all"
-            >
-              Explore Roadmaps
-            </button>
-          </motion.div>
+            {filtered.length} result{filtered.length !== 1 ? "s" : ""} for "{searchTerm}"
+          </motion.p>
         )}
-      </AnimatePresence>
 
-      {/* Footer */}
-      <div className="relative mt-16 flex items-center justify-center">
-        <div className="w-48 h-[2px] bg-gradient-to-r from-yellow-500 via-orange-400 to-yellow-500 animate-pulse rounded-full" />
+        {/* ── Grid ── */}
+        <AnimatePresence mode="popLayout">
+          {filtered.length > 0 ? (
+            <motion.div
+              layout
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+            >
+              {filtered.map((r, i) => (
+                <RoadmapCard key={r._id || i} roadmap={r} index={i} />
+              ))}
+            </motion.div>
+          ) : (
+            <EmptyState
+              hasSearch={!!searchTerm}
+              onClear={() => setSearchTerm("")}
+            />
+          )}
+        </AnimatePresence>
+
       </div>
-      <p className="text-center text-gray-500 text-sm mt-4">
-        Keep learning — your progress matters.
-      </p>
     </div>
   );
 }

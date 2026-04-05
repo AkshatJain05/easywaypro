@@ -63,49 +63,119 @@ export default function QuizzesList({ userId }) {
 
   const handleStartQuiz = (quizId) => navigate(`/quiz/${quizId}`);
 
-  // 🔍 Filter quizzes by search
+  //  Filter quizzes by search
   const filteredQuizzes = useMemo(() => {
-    return quizzes.filter((q) =>
-      q.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (q.subject && q.subject.toLowerCase().includes(searchTerm.toLowerCase()))
+    return quizzes.filter(
+      (q) =>
+        q.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (q.subject &&
+          q.subject.toLowerCase().includes(searchTerm.toLowerCase())),
     );
   }, [searchTerm, quizzes]);
 
   if (loading) return <Loading />;
 
   return (
-    <div className="p-4 px-8 md:p-8 max-w-7xl mx-auto min-h-screen text-gray-100">
+    <div className="p-4 px-8 md:px-20 md:p-8 max-w-8xl mx-auto min-h-screen text-gray-100">
       {/* Back Button */}
       <motion.button
         onClick={() => navigate(-1)}
-        className="flex items-center space-x-2 mb-8 text-gray-400 hover:text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-fuchsia-500/50 rounded-md p-1"
-        whileHover={{ x: -5 }}
-        whileTap={{ scale: 0.95 }}
+        className="group relative flex items-center gap-3 mb-2 transition-all duration-300 outline-none"
+        whileHover="hover"
+        initial="initial"
       >
-        <FaArrowLeft className="text-lg" />
-        <span className="font-medium text-sm px-4 py-1 bg-black/60 rounded-lg border border-gray-700">
-          Back
-        </span>
+        {/* Icon Container (The "Keycap") */}
+        <motion.div
+          variants={{
+            initial: { x: 0, backgroundColor: "rgba(255, 255, 255, 0.05)" },
+            hover: {
+              x: -4,
+              backgroundColor: "rgba(6, 182, 212, 0.1)",
+              borderColor: "rgba(6, 182, 212, 0.4)",
+            },
+          }}
+          className="flex items-center justify-center w-10 h-10 rounded-xl border border-white/10 backdrop-blur-md transition-colors"
+        >
+          <FaArrowLeft className="text-slate-400 group-hover:text-cyan-400 transition-colors" />
+        </motion.div>
+
+        {/* Label Container */}
+        <div className="flex flex-col items-start">
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 group-hover:text-slate-300 transition-colors">
+            Return
+          </span>
+          <span className="text-sm font-bold text-slate-400 group-hover:text-white transition-colors -mt-1">
+            Back to Hub
+          </span>
+        </div>
+
+        {/* Subtle Underline Animation */}
+        <motion.div
+          variants={{
+            initial: { width: 0, opacity: 0 },
+            hover: { width: "100%", opacity: 1 },
+          }}
+          className="absolute -bottom-1 left-0 h-[1px] bg-gradient-to-r from-cyan-500/50 to-transparent"
+        />
       </motion.button>
 
-      {/* Header */}
-      <h1 className="text-2xl sm:text-3xl font-extrabold mb-6 text-center">
-        <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-purple-400 to-fuchsia-400 drop-shadow-lg">
-          Quizzes & Certificates
-        </span>
-      </h1>
+      {/* ── HEADER SECTION ── */}
+      <div className="relative mb-5 flex flex-col items-center text-center">
+        {/* Eyebrow Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 mb-6"
+        >
+          <div className="h-1.5 w-1.5  rounded-full bg-indigo-400 animate-pulse" />
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-indigo-400">
+            Academic Portal
+          </span>
+        </motion.div>
 
-      {/* Search Bar */}
-      <div className="flex justify-center mb-10">
-        <div className="relative w-full max-w-md">
-          <FaSearch className="absolute left-3 top-3 text-gray-400" />
-          <input
-            type="search"
-            placeholder="Search quiz by title or subject..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-gray-900/30 border border-gray-700 rounded-lg pl-10 pr-4 py-2 text-gray-200 focus:ring-2 focus:ring-fuchsia-500 focus:border-transparent outline-none transition"
-          />
+        {/* Main Title */}
+
+        <div className="flex flex-col justify-center items-center">
+          <h1 className="flex justify-center flex-wrap gap-1 text-4xl md:text-4xl font-black tracking-tighter mb-1">
+            <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-white/40">
+              Quizzes &
+            </span>
+            <span className="block bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-cyan-400 to-blue-500 drop-shadow-[0_0_15px_rgba(99,102,241,0.3)]">
+              Certifications
+            </span>
+          </h1>
+
+          {/* Subtitle */}
+          <p className="text-slate-500 text-sm md:text-base max-w-lg font-medium leading-relaxed">
+            Validate your technical expertise through our industry-standard
+            assessment modules and earn verifiable credentials.
+          </p>
+        </div>
+      </div>
+
+      {/* ── SEARCH BAR SECTION ── */}
+      <div className="flex justify-center mb-16 relative z-20">
+        <div className="relative w-full max-w-xl group">
+          {/* Background Glow Effect */}
+          <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-fuchsia-500 rounded-2xl blur opacity-0 group-focus-within:opacity-20 transition duration-500" />
+
+          <div className="relative flex items-center">
+            <FaSearch className="absolute left-5 text-slate-200 group-focus-within:text-fuchsia-400 transition-colors duration-300" />
+            <input
+              type="search"
+              placeholder="Filter by subject or module title..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full  backdrop-blur-xl border border-white/30 rounded-2xl pl-14 pr-6 py-4 text-sm text-white placeholder:text-slate-600 focus:border-fuchsia-500/50 outline-none transition-all shadow-2xl"
+            />
+
+            {/* Visual Shortcut Hint (Hidden on mobile) */}
+            <div className="absolute right-4 hidden md:flex items-center gap-1 px-2 py-1 rounded-md bg-white/5 border border-white/10">
+              <span className="text-[10px] font-bold text-slate-500 tracking-tighter italic">
+                ESC to clear
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -123,7 +193,7 @@ export default function QuizzesList({ userId }) {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredQuizzes.map((q, index) => {
             const completedQuiz = completedQuizzes.find(
-              (cq) => cq.quiz._id === q._id
+              (cq) => cq.quiz._id === q._id,
             );
             const completed = Boolean(completedQuiz);
             const certificateGenerated =
@@ -147,19 +217,19 @@ export default function QuizzesList({ userId }) {
                 <div>
                   <h2
                     className={`text-lg font-bold mb-2 ${
-                      completed ? "text-gray-300" : "text-white"
+                      completed ? "text-gray-100" : "text-white"
                     }`}
                   >
                     {q.title}
                   </h2>
-                  <p className="text-gray-400 text-xs mb-1">
-                    <span className="text-fuchsia-400 font-semibold">
+                  <p className="text-gray-300 text-xs mb-1">
+                    <span className="text-blue-400 font-semibold">
                       Subject:
                     </span>{" "}
                     {q.subject || "General"}
                   </p>
-                  <p className="text-gray-400 text-xs">
-                    <span className="text-fuchsia-400 font-semibold">
+                  <p className="text-gray-300 text-xs">
+                    <span className="text-blue-400 font-semibold">
                       Questions:
                     </span>{" "}
                     {q.questions.length}
@@ -168,7 +238,7 @@ export default function QuizzesList({ userId }) {
                   {/* Status Section */}
                   <div className="mt-3">
                     {!completed ? (
-                      <span className="inline-flex items-center bg-fuchsia-600/20 text-fuchsia-200 text-xs font-bold px-2.5 py-1 rounded-full border border-fuchsia-500/40">
+                      <span className="inline-flex items-center bg-gray-950 text-fuchsia-200 text-xs font-bold px-2.5 py-1 rounded-full border border-fuchsia-500/40">
                         <FaPlayCircle className="mr-1 text-xs" /> Not Attempted
                       </span>
                     ) : certificateGenerated ? (
@@ -197,7 +267,7 @@ export default function QuizzesList({ userId }) {
                   className={`mt-4 py-2 text-sm rounded-lg font-semibold uppercase tracking-wide transition duration-300 shadow-md flex justify-center items-center gap-2
                     ${
                       completed
-                        ? "bg-gray-700 text-gray-400 cursor-not-allowed border border-gray-600"
+                        ? "bg-gray-800 text-gray-400 cursor-not-allowed border border-gray-600"
                         : `text-white bg-gradient-to-r ${style.gradient} hover:shadow-md hover:shadow-${style.color}-500/30 focus:ring-4 focus:ring-${style.color}-500/30`
                     }`}
                 >

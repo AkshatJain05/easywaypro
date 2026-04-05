@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 function ContactUs() {
 
   const API_URL = import.meta.env.VITE_API_URL;
-  // ---------- State ----------
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -15,124 +15,137 @@ function ContactUs() {
 
   const [loading, setLoading] = useState(false);
 
-  // ---------- Input Handler ----------
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-const onSumbit = (e)=>{ 
-  e.preventDefault()
-  setLoading(true);
+  const onSumbit = (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-   axios.post(`${API_URL}/contacts`, formData, {
-    withCredentials: true,
-  })
-  .then((response) => {
-    toast.success("Contact message sent successfully!")
-    setFormData({
-      name: "",
-      email: "",
-      message: "",
-    });
-  })
-  .catch((error) => {
-    console.error("Error sending contact message:", error);
-    toast.error("Failed to send contact message.");
-  })
-  .finally(() => {
-    setLoading(false);
-  });
-
-}
+    axios.post(`${API_URL}/contacts`, formData, { withCredentials: true })
+      .then(() => {
+        toast.success("Message sent successfully");
+        setFormData({ name: "", email: "", message: "" });
+      })
+      .catch(() => toast.error("Failed to send message ❌"))
+      .finally(() => setLoading(false));
+  };
 
   return (
     <ScrollReveal from="bottom">
-      <section className="flex flex-col items-center px-5 py-12 md:py-16 text-slate-100">
-        
+      <section className="px-4 py-6 flex flex-col items-center text-white">
+
         {/* Heading */}
         <div className="text-center max-w-2xl">
-          <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-100">
-          Contact Us
-        </h2>
-        <div className="flex justify-center mt-1">
-          <hr className="bg-orange-500 h-1 rounded-full w-26 md:w-32 lg:w-38 border-0" />
-        </div>
-          <p className="mt-6 text-gray-300 text-base md:text-lg leading-relaxed">
-            Feel free to contact <span className="text-yellow-500 font-medium">Easyway Classes</span> —
-            we’re always here to help you learn better!
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full 
+                          bg-black border border-sky-400/20 text-sky-300 text-[10px] uppercase tracking-widest">
+            Contact
+          </div>
+
+          <h2 className="text-3xl md:text-4xl font-extrabold mt-4">
+            Get in{" "}
+            <span className="bg-gradient-to-r from-sky-400 to-indigo-500 bg-clip-text text-transparent">
+              Touch
+            </span>
+          </h2>
+
+          <p className="mt-3 text-gray-400 text-sm">
+            We’re here to help you anytime. Send us a message and we’ll respond soon.
           </p>
         </div>
 
         {/* Form */}
         <form
           onSubmit={onSumbit}
-          className="mt-10 w-full max-w-3xl bg-gradient-to-br from-gray-950 to-black opacity-95 p-8 md:p-10 rounded-2xl shadow-xl border border-gray-800"
+          className="mt-10 w-full max-w-3xl 
+                     bg-gradient-to-br from-gray-950 to-black backdrop-blur-xl
+                     border border-gray-600 
+                     rounded-2xl p-6 md:p-10 
+                     shadow-xl shadow-sky-500/10"
         >
-          {/* Name + Email */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex flex-col">
-              <label htmlFor="name" className="text-sm font-medium text-gray-300">
-                Your Name
-              </label>
+
+          {/* Inputs */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+            {/* Name */}
+            <div>
+              <label className="text-xs text-gray-400">Your Name</label>
               <input
-                id="name"
                 name="name"
                 type="text"
-                placeholder="Enter your name"
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="mt-2 h-12 px-4 rounded-lg  border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                placeholder="John Doe"
+                className="w-full mt-2 px-4 py-3 rounded-lg 
+                           bg-black/40 border border-white/20 
+                           text-white placeholder-gray-500
+                           focus:outline-none focus:ring-2 focus:ring-sky-500/50
+                           focus:border-sky-400 transition"
               />
             </div>
 
-            <div className="flex flex-col">
-              <label htmlFor="email" className="text-sm font-medium text-gray-300">
-                Your Email
-              </label>
+            {/* Email */}
+            <div>
+              <label className="text-xs text-gray-400">Your Email</label>
               <input
-                id="email"
                 name="email"
                 type="email"
-                placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="mt-2 h-12 px-4 rounded-lg  border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                placeholder="example@email.com"
+                className="w-full mt-2 px-4 py-3 rounded-lg 
+                           bg-black/40 border border-white/20 
+                           text-white placeholder-gray-500
+                           focus:outline-none focus:ring-2 focus:ring-sky-500/50
+                           focus:border-sky-400 transition"
               />
             </div>
           </div>
 
           {/* Message */}
-          <div className="mt-6 flex flex-col">
-            <label htmlFor="message" className="text-sm font-medium text-gray-300">
-              Message
-            </label>
+          <div className="mt-5">
+            <label className="text-xs text-gray-400">Message</label>
             <textarea
-              id="message"
               name="message"
-              placeholder="Write your message..."
               value={formData.message}
               onChange={handleChange}
               required
-              className="mt-2 h-40 p-4 rounded-lg border-1 border-gray-700 text-white placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-yellow-500"
-            ></textarea>
+              placeholder="Write your message..."
+              rows={5}
+              className="w-full mt-2 px-4 py-3 rounded-lg 
+                         bg-black/40 border border-white/20 
+                         text-white placeholder-gray-500 resize-none
+                         focus:outline-none focus:ring-2 focus:ring-sky-500/50
+                         focus:border-sky-400 transition"
+            />
           </div>
 
-          {/* Submit */}
+          {/* Button */}
           <div className="mt-8 flex justify-center">
             <button
               type="submit"
               disabled={loading}
-              className={`px-8 py-3 font-semibold rounded-lg shadow-md transition 
-                ${loading 
-                  ? "bg-gray-600 cursor-not-allowed" 
-                  : "bg-yellow-500 hover:bg-yellow-400 text-gray-950 active:scale-95"}`}
+              className={`
+                relative px-8 py-3 rounded-lg font-semibold transition-all duration-300
+                ${loading
+                  ? "bg-gray-700 cursor-not-allowed"
+                  : "bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-400 hover:to-indigo-400 hover:shadow-lg hover:shadow-sky-500/30 active:scale-95"
+                }
+              `}
             >
               {loading ? "Sending..." : "Send Message"}
+
+              {/* Glow */}
+              {!loading && (
+                <span className="absolute inset-0 rounded-lg bg-sky-400/20 blur-lg opacity-0 hover:opacity-100 transition" />
+              )}
             </button>
           </div>
+
         </form>
       </section>
     </ScrollReveal>

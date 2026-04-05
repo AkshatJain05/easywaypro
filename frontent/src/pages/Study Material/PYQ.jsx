@@ -6,16 +6,21 @@ import { motion, AnimatePresence } from "framer-motion";
 import Loading from "../../component/Loading";
 import { useNavigate } from "react-router-dom";
 
-// --- Framer Motion Variants ---
 const containerVariants = {
   visible: { transition: { staggerChildren: 0.05 } },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.35 } },
 };
-// ------------------------------
+
+// 🔹 Subject Count Badge
+const SubjectCount = ({ count }) => (
+  <span className="ml-3 px-2 py-0.5 text-[10px] font-semibold rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-300">
+    {count} PYQ{count !== 1 ? "s" : ""}
+  </span>
+);
 
 export default function PYQ() {
   const [allSubjects, setAllSubjects] = useState([]);
@@ -25,61 +30,56 @@ export default function PYQ() {
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
 
-  // Fetch all PYQs
-  const fetchPYQs = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.get(`${API_URL}/resources?type=pyq`);
-
-      if (!Array.isArray(res.data)) {
-        console.error("Unexpected API response:", res.data);
-        setAllSubjects([]);
-        setLoading(false);
-        return;
-      }
-
-      const grouped = res.data.reduce((acc, pyq) => {
-        const subject = pyq.subject || "General";
-        if (!acc[subject]) acc[subject] = [];
-        acc[subject].push(pyq);
-        return acc;
-      }, {});
-
-      const subjectArray = Object.keys(grouped).map((key) => ({
-        name: key,
-        units: grouped[key],
-      }));
-
-      setAllSubjects(subjectArray);
-      setLoading(false);
-    } catch (err) {
-      console.error("Error fetching PYQs:", err);
-      setLoading(false);
-    }
-  };
-
+  // Fetch PYQs
   useEffect(() => {
+    const fetchPYQs = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get(`${API_URL}/resources?type=pyq`);
+
+        if (!Array.isArray(res.data)) return setAllSubjects([]);
+
+        const grouped = res.data.reduce((acc, pyq) => {
+          const subject = pyq.subject || "General";
+          if (!acc[subject]) acc[subject] = [];
+          acc[subject].push(pyq);
+          return acc;
+        }, {});
+
+        setAllSubjects(
+          Object.keys(grouped).map((key) => ({
+            name: key,
+            units: grouped[key],
+          }))
+        );
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchPYQs();
   }, [API_URL]);
 
-  const toggleSubject = (subjectName) => {
-    setOpenSubjects((prev) => ({
-      ...prev,
-      [subjectName]: !prev[subjectName],
-    }));
+  const toggleSubject = (name) => {
+    setOpenSubjects((prev) => ({ ...prev, [name]: !prev[name] }));
   };
 
-  // --- Search Logic ---
+  // Search
   const filteredSubjects = useMemo(() => {
     if (!searchTerm) return allSubjects;
-    const lowerCaseSearch = searchTerm.toLowerCase();
+
+    const q = searchTerm.toLowerCase();
 
     return allSubjects
       .map((subject) => {
-        const subjectMatch = subject.name.toLowerCase().includes(lowerCaseSearch);
-        const filteredUnits = subject.units.filter((unit) =>
-          unit.title.toLowerCase().includes(lowerCaseSearch)
+        const subjectMatch = subject.name.toLowerCase().includes(q);
+
+        const filteredUnits = subject.units.filter((u) =>
+          u.title.toLowerCase().includes(q)
         );
+
         if (subjectMatch || filteredUnits.length > 0) {
           return {
             ...subject,
@@ -93,127 +93,126 @@ export default function PYQ() {
 
   if (loading) return <Loading />;
 
-  return (
-    <div className="min-h-screen text-gray-100 p-4 sm:p-6 relative">
-      {/* Background */}
-      <div
-        className="absolute top-0 left-0 -z-10 h-full w-full 
-        bg-gradient-to-br from-[#050505] via-[#0a0a0a] to-[#1a1a1a]
-        bg-[radial-gradient(#ffffff1a_1px,transparent_1px)]
-        bg-[size:22px_22px] animate-bgMove"
-      />
+  const totalPYQ = allSubjects.reduce((n, s) => n + s.units.length, 0);
 
-      {/*  Back Button */}
+  return (
+    <div className="min-h-screen bg-[#030009] text-gray-100 px-4 py-6 relative">
+      {/* Background */}
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(#ffffff0f_1px,transparent_1px)] bg-[size:22px_22px]" />
+
+      {/* Back Button */}
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-1 px-3 py-1.5 bg-gray-900 border border-gray-800 hover:bg-gray-700 
-        text-gray-200 rounded-lg text-sm shadow-md transition-all mb-4"
+        className="flex items-center gap-1 px-3 py-1.5 mb-5 rounded-lg text-sm
+        bg-white/5 border border-white/10 hover:bg-sky-500/10 hover:border-sky-500/30 transition"
       >
-        <IoIosArrowBack className="w-4 h-4" />
-        <span>Back</span>
+        <IoIosArrowBack />
+        Back
       </button>
 
-      {/*  Main Content */}
-      <div className="max-w-4xl mx-auto relative">
+      <div className="max-w-3xl mx-auto">
         {/* Heading */}
-        <motion.div
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="flex flex-col sm:flex-row items-center justify-center mb-3 md:mb-10 gap-4"
+        <motion.h1
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-3xl sm:text-4xl font-extrabold text-center mb-6"
         >
-          <h1 className="text-4xl font-extrabold text-center bg-gradient-to-r from-purple-400 to-sky-400 text-transparent bg-clip-text">
-            Previous Year Questions (PYQs)
-          </h1>
-          <div className="w-[70px]" />
-        </motion.div>
+          <span className="bg-gradient-to-r from-sky-400 to-indigo-500 bg-clip-text text-transparent">
+            Previous Year Questions
+          </span>
+        </motion.h1>
 
-        {/* Search Bar */}
-        <motion.div
-          initial={{ y: -10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.1 }}
-          className="relative mb-8"
-        >
-          <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500" />
+        {/* Stats */}
+        <div className="flex justify-center gap-3 mb-5 text-xs">
+          <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10">
+            📂 {allSubjects.length} Subjects
+          </span>
+          <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10">
+            📄 {totalPYQ} PYQs
+          </span>
+        </div>
+
+        {/* Search */}
+        <div className="relative mb-6">
+          <FaSearch className="absolute left-3 top-3.5 text-gray-500" />
           <input
             type="text"
-            placeholder="Search subjects or PYQs (e.g., 'DSA' or 'OOPS')"
+            placeholder="Search PYQs..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full py-3 pl-12 pr-4 bg-gradient-to-br from-gray-950 to-black border border-gray-400 
-            rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 
-            transition shadow-lg"
+            className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white/5 border border-white/10
+            focus:border-sky-500 outline-none text-sm"
           />
-        </motion.div>
+        </div>
 
-        {/* Subject Cards */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="space-y-4"
-        >
+        {/* Subject List */}
+        <motion.div variants={containerVariants} initial="hidden" animate="visible">
           {filteredSubjects.length > 0 ? (
-            filteredSubjects.map((subject) => (
-              <motion.div
-                key={subject.name}
-                variants={itemVariants}
-                className="bg-gradient-to-br from-gray-950 to-black rounded-xl shadow-2xl overflow-hidden 
-                border border-gray-700 hover:shadow-purple-500/10 transition"
-              >
-                {/* Subject Header */}
-                <div
-                  onClick={() => toggleSubject(subject.name)}
-                  className="flex items-center gap-4 cursor-pointer p-4 bg-gradient-to-br from-gray-950 to-black transition duration-200 "
-                >
-                  <FaFolder className="text-purple-600 text-3xl flex-shrink-0" />
-                  <h2 className="text-xl font-semibold text-white">{subject.name}</h2>
-                  <span className="ml-auto text-gray-400 text-lg">
-                    {openSubjects[subject.name] ? "▲" : "▼"}
-                  </span>
-                </div>
+            filteredSubjects.map((subject) => {
+              const isOpen = openSubjects[subject.name];
 
-                {/* PYQs inside subject */}
-                <AnimatePresence initial={false}>
-                  {openSubjects[subject.name] && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                    >
-                      {subject.units.map((unit, uidx) => (
-                        <a
-                          key={uidx}
-                          href={unit.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-3 p-3 pl-3 lg:pl-10 hover:bg-gray-700/40  transition border-b-1 border-gray-500 first:border-t-1 last:border-b-0"
-                        >
-                          <FaFileAlt className="text-sky-400" />
-                          <span className="text-gray-200 font-medium hover:text-white">
-                            {unit.title}
-                          </span>
-                          <span className="ml-auto text-sm text-cyan-400 hover:text-cyan-300 pr-4">
-                            Open PYQ
-                          </span>
-                        </a>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            ))
+              return (
+                <motion.div
+                  key={subject.name}
+                  variants={itemVariants}
+                  className={`mb-3 rounded-xl overflow-hidden border transition
+                  ${isOpen ? "border-sky-500/30 shadow-md shadow-sky-500/10" : "border-white/10"}
+                  bg-white/5`}
+                >
+                  {/* Header */}
+                  <div
+                    onClick={() => toggleSubject(subject.name)}
+                    className="flex items-center gap-3 p-3 cursor-pointer hover:bg-white/5 transition"
+                  >
+                    <FaFolder className="text-sky-400 text-xl" />
+
+                    <h2 className="font-semibold truncate flex-1">
+                      {subject.name}
+                    </h2>
+
+                    <SubjectCount count={subject.units.length} />
+
+                    <span className="text-gray-400 text-sm">
+                      {isOpen ? "▲" : "▼"}
+                    </span>
+                  </div>
+
+                  {/* Content */}
+                  <AnimatePresence>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                      >
+                        {subject.units.map((unit, i) => (
+                          <a
+                            key={i}
+                            href={unit.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-3 px-4 py-2 hover:bg-sky-500/10 transition text-sm border-t border-white/5"
+                          >
+                            <FaFileAlt className="text-sky-400 text-sm" />
+                            <span className="truncate">{unit.title}</span>
+
+                            <span className="ml-auto text-xs text-sky-400">
+                              Open →
+                            </span>
+                          </a>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              );
+            })
           ) : (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center text-gray-500 mt-10 p-4 bg-gradient-to-br from-gray-950 to-black rounded-lg border border-gray-700"
-            >
+            <p className="text-center text-gray-500 mt-10 text-sm">
               {searchTerm
-                ? `No results found for "${searchTerm}". Try a different term.`
-                : "No PYQs available in the system."}
-            </motion.p>
+                ? `No results for "${searchTerm}"`
+                : "No PYQs available"}
+            </p>
           )}
         </motion.div>
       </div>

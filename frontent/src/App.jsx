@@ -44,9 +44,11 @@ import Certificates from "./pages/Certificate/Certificates.jsx";
 import CertificateView from "./pages/Certificate/CertificateView.jsx";
 import QuizzesList from "./pages/Certificate/QuizzesList.jsx";
 import AdminCreateQuiz from "./pages/Admin/AdminCreateQuiz.jsx";
+
 import DocsList from "./pages/Study Material/Docs (Notes)/DocsList.jsx";
 import DocDetails from "./pages/Study Material/Docs (Notes)/DetailDocs.jsx";
 import AdminDocs from "./pages/Admin/AdminDocs.jsx";
+import ResumeDashboard from "./pages/Easyway AI/Resume Builder/ResumeDashboard.jsx";
 
 function App() {
   return (
@@ -69,7 +71,6 @@ function App() {
           <Route path="/video-lectures" element={<VideoLectures />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/TAC" element={<TermsAndConditions />} />
-
           <Route path="/algorithm-visualizer" element={<HomePage />} />
           <Route path="/sorting" element={<SortingPage />} />
           <Route path="/trees" element={<TreePage />} />
@@ -85,7 +86,14 @@ function App() {
           {/* Protected routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/profile" element={<Profile />} />
-            <Route path="/resume-builder" element={<ResumeBuilder />} />
+
+            {/* Dashboard - Shows All Resumes */}
+            <Route path="/resume/dashboard" element={<ResumeDashboard />} />
+
+            {/* Resume Editor - Specific Resume */}
+            <Route path="/editor/:id" element={<ResumeBuilder />} />
+
+            {/* <Route path="/resume-builder" element={<ResumeBuilder />} /> */}
             <Route path="/code-analyzer" element={<CodeAnalyzer />} />
             <Route path="//task-planner" element={<TodoList />} />
             <Route path="/roadmap" element={<RoadmapList />} />
@@ -96,7 +104,6 @@ function App() {
             <Route path="/certificates" element={<Certificates />} />
             <Route path="/quizzes" element={<QuizzesList />} />
 
-            
             <Route path="/docs" element={<DocsList />} />
             <Route path="/docs/:id" element={<DocDetails />} />
           </Route>

@@ -220,7 +220,7 @@ function ChatMessageContent({ text }) {
                   borderRadius: "0.5rem",
                   fontSize: "0.875rem",
                   padding: "1rem",
-                  backgroundColor: "#1e1e2f",
+                  backgroundColor: "rgba(10,10,20,0.97)",
                   margin: 0,
                   maxWidth: "100%", // Ensure responsiveness
                 }}
@@ -357,7 +357,7 @@ export default function ChatBot() {
         <div className="flex items-center gap-2">
           <FaRobot className="text-cyan-400 text-xl md:text-3xl" />
           <h1 className="text-xl md:text-2xl font-bold text-center bg-gradient-to-r from-purple-400 to-sky-400 text-transparent bg-clip-text">
-            Easyway AI Chatbot
+            Easyway AI 
           </h1>
         </div>
         <button
@@ -408,7 +408,7 @@ export default function ChatBot() {
 
               {/* Message Bubble */}
               <div
-                className={`rounded-xl max-w-[90%] md:max-w-[75%] lg:max-w-[65%] p-4 text-base shadow-xl ${
+                className={`rounded-xl max-w-[82%] md:max-w-[75%] lg:max-w-[65%] p-4 text-base shadow-xl ${
                   msg.sender === "user"
                     ? "bg-blue-800 rounded-br-none"
                     : "bg-gray-900 rounded-tl-none"
@@ -427,7 +427,7 @@ export default function ChatBot() {
         {/* Typing Indicator for Bot */}
         {loading && (
           <div className="flex justify-start p-2">
-            <div className="bg-gray-800 text-white rounded-xl p-3 max-w-[60%] flex items-center gap-1 shadow-lg">
+            <div className="bg-gray-900 text-white rounded-xl p-3 max-w-[60%] flex items-center gap-1 shadow-lg">
               <FaRobot className="text-blue-400 text-lg mr-1" />
               <span className="h-2 w-2 bg-blue-400 rounded-full animate-bounce"></span>
               <span className="h-2 w-2 bg-blue-400 rounded-full animate-bounce delay-150"></span>

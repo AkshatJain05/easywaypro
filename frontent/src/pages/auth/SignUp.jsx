@@ -1,13 +1,12 @@
 import ScrollReveal from "../../component/ScllorAnimation";
-import { FcGoogle } from "react-icons/fc";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
-import { FaUser } from "react-icons/fa";
+import { FaUser, FaEye, FaEyeSlash } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 function SignUp() {
   const [name, setName] = useState("");
@@ -15,6 +14,7 @@ function SignUp() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
 
@@ -23,11 +23,14 @@ function SignUp() {
     setLoading(true);
 
     try {
-      await axios.post(`${API_URL}/auth/register`, { name, email, password });
-      toast.success("Sign up successful!");
+      await axios.post(`${API_URL}/auth/register`, {
+        name,
+        email,
+        password,
+      });
+      toast.success("Account created successfully 🎉");
       navigate("/login");
     } catch (err) {
-      console.log(err);
       toast.error(err.response?.data?.message || "Sign up failed");
     } finally {
       setLoading(false);
@@ -36,88 +39,100 @@ function SignUp() {
 
   return (
     <ScrollReveal from="bottom">
-      <div className="h-[90vh] w-full px-5 flex justify-center items-center">
-        <form
+      <div className="min-h-[90vh] flex items-center justify-center bg-gradient-to-br from-slate-950 to-black relative overflow-hidden px-4">
+
+        {/* Background Glow */}
+        <div className="absolute w-[500px] h-[500px] bg-indigo-500/20 blur-[120px] rounded-full top-[-100px] left-[-100px] animate-pulse"></div>
+        <div className="absolute w-[400px] h-[400px] bg-yellow-500/10 blur-[100px] rounded-full bottom-[-100px] right-[-100px] animate-pulse"></div>
+
+        <motion.form
           onSubmit={onSubmitHandler}
-          autoComplete="on"   //  enables autofill
-          className="max-w-96 w-full text-center border border-gray-300/60 rounded-2xl px-5 sm:px-8 bg-gradient-to-bl from-slate-950 to-slate-900 shadow-sm shadow-slate-600"
+          autoComplete="on"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="relative z-10 w-full max-w-md p-8 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl"
         >
-          <h1 className="text-gray-100 font-semibold text-3xl mt-10">
-            Sign Up
+          {/* Heading */}
+          <h1 className="text-3xl font-bold text-white text-center mb-2">
+            Create Account 
           </h1>
-          <p className="text-gray-200 text-sm mt-2">
-            Please sign up to continue
+          <p className="text-gray-400 text-center mb-8 text-sm">
+            Join us and start your journey
           </p>
 
           {/* Name */}
-          <div className="flex items-center w-full mt-10 bg-slate-100 border border-yellow-500 h-11 rounded-full overflow-hidden pl-4 gap-2">
-            <FaUser className="text-gray-800 h-4 w-5" />
+          <div className="relative mb-5">
+            <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
+              required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Name"
-              autoComplete="name"   // autofill full name
-              className="bg-transparent text-gray-900 placeholder-gray-500 outline-none text-[16px] w-full h-full"
-              required
+              autoComplete="name"
+              placeholder="Full Name"
+              className="w-full pl-12 pr-4 py-3 rounded-full bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/30 outline-none transition-all"
             />
           </div>
 
           {/* Email */}
-          <div className="flex items-center w-full mt-4 bg-slate-100 border border-yellow-500 h-11 rounded-full overflow-hidden pl-4 gap-2">
-            <MdEmail className="text-gray-800 h-9 w-5" />
+          <div className="relative mb-5">
+            <MdEmail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="email"
+              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email id"
-              autoComplete="email"   // helps with email autofill
-              className="bg-transparent text-gray-900 placeholder-gray-500 outline-none text-[16px] w-full h-full"
-              required
+              autoComplete="email"
+              placeholder="Email address"
+              className="w-full pl-12 pr-4 py-3 rounded-full bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/30 outline-none transition-all"
             />
           </div>
 
           {/* Password */}
-          <div className="flex items-center mt-4 w-full bg-slate-100 border border-yellow-500 h-11 rounded-full overflow-hidden pl-4 gap-2 mb-5">
-            <RiLockPasswordFill className="text-gray-800 h-8 w-5" />
+          <div className="relative mb-6">
+            <RiLockPasswordFill className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type={showPassword ? "text" : "password"}
+              required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              autoComplete="new-password"   //  for signup forms
-              className="bg-transparent text-gray-900 placeholder-gray-500 outline-none text-sm w-full h-full"
-              required
+              autoComplete="new-password"
+              placeholder="Create password"
+              className="w-full pl-12 pr-12 py-3 rounded-full bg-white/10 text-white placeholder-gray-400 border border-white/10 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/30 outline-none transition-all"
             />
-            {/* Eye toggle */}
+
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="pr-4 text-gray-700 focus:outline-none"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
 
-          {/* Submit Button */}
+          {/* Button */}
           <button
             type="submit"
             disabled={loading}
-            className={`mt-2 w-full h-11 rounded-full text-white bg-slate-950 hover:opacity-90 border-1 border-slate-300 active:scale-[0.96] transition-all ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
+            className={`w-full py-3 rounded-full font-semibold text-white bg-gradient-to-r from-indigo-500 to-cyan-500 hover:opacity-90 transition shadow-lg shadow-indigo-500/20 ${
+              loading && "opacity-50 cursor-not-allowed"
             }`}
           >
-            {loading ? "Signing Up..." : "Sign Up"}
+            {loading ? "Creating Account..." : "Sign Up"}
           </button>
 
-          {/* Login Link */}
-          <p className="text-gray-200 text-sm mt-3 mb-9 ">
+          {/* Login */}
+          <p className="text-gray-400 text-center text-sm mt-5">
             Already have an account?
-            <NavLink className="text-indigo-500 px-2" to="/login">
+            <NavLink
+              to="/login"
+              className="text-indigo-400 ml-1 hover:text-indigo-300"
+            >
               Login
             </NavLink>
           </p>
-        </form>
+        </motion.form>
       </div>
     </ScrollReveal>
   );
