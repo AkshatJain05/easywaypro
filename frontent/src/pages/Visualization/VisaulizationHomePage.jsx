@@ -66,7 +66,7 @@ const HomePage = () => {
             Algorithm Lab 
           </div>
           
-          <h1 className="flex gap-2 text-3xl md:text-5xl font-black tracking-tighter mb-2 bg-gradient-to-b from-white to-slate-500 bg-clip-text text-transparent leading-[1.1] md:pl-13">
+          <h1 className="flex flex-wrap justify-center items-center gap-2 text-3xl md:text-4xl font-black tracking-tighter mb-2 bg-gradient-to-b from-white to-slate-500 bg-clip-text text-transparent leading-[1.1] md:pl-13">
             Explore Algorithms <br /> 
             <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
               Visually.
@@ -97,7 +97,7 @@ const HomePage = () => {
                 
                 <div className="relative z-10">
                   <div className="flex justify-between items-start mb-8">
-                    <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 group-hover:scale-110 group-hover:bg-white/[0.08] transition-all duration-500">
+                    <div className="p-2 rounded-2xl bg-white/[0.03] border border-white/10 group-hover:scale-110 group-hover:bg-white/[0.08] transition-all duration-500">
                       {feature.icon}
                     </div>
                     <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 border border-slate-800 px-3 py-1 rounded-full group-hover:border-white/20 transition-colors">

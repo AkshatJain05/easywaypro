@@ -79,9 +79,9 @@ export default function ManageResources() {
               value={form.type} onChange={e => setForm({...form, type: e.target.value})}
               className="w-28 bg-white/[0.03] border border-white/10 rounded-xl px-2 py-3 text-sm outline-none text-white/50"
             >
-              <option value="notes">Notes</option>
-              <option value="pyq">PYQ</option>
-              <option value="video">Video</option>
+              <option value="notes" className="bg-black text-white">Notes</option>
+              <option value="pyq" className="bg-black text-white">PYQ</option>
+              <option value="video" className="bg-black text-white">Video</option>
             </select>
           </div>
           <input 

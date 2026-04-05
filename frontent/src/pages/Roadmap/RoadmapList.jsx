@@ -15,7 +15,7 @@ const clamp = (v, min = 0, max = 100) => Math.min(Math.max(v || 0, min), max);
 const progressMeta = (pct) => {
   if (pct === 100) return { label: "Complete",   color: "text-emerald-400", bar: "bg-emerald-500",  ring: "border-emerald-500/20",  bg: "bg-emerald-500/8"  };
   if (pct >= 60)  return { label: "On track",    color: "text-sky-400",    bar: "bg-sky-500",      ring: "border-sky-500/50",      bg: "bg-sky-500/5"      };
-  if (pct >= 20)  return { label: "In progress", color: "text-amber-400",  bar: "bg-amber-500",    ring: "border-amber-500/50",    bg: "bg-amber-500/5"    };
+  if (pct > 0)  return { label: "In progress", color: "text-amber-400",  bar: "bg-amber-500",    ring: "border-amber-500/50",    bg: "bg-amber-500/5"    };
   return             { label: "Not started",  color: "text-slate-500",  bar: "bg-slate-600",    ring: "border-slate-600",    bg: "bg-white/[0.01]"   };
 };
 
@@ -25,7 +25,7 @@ const StatCard = ({ icon, label, value, accent, sub, delay = 0 }) => (
     initial={{ opacity: 0, y: 14 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.28, delay }}
-    className="bg-white/1 border border-cyan-900 rounded-2xl p-5 flex items-start gap-4 hover:border-white/[0.62] transition-all"
+    className="bg-white/2 border border-cyan-900 rounded-2xl p-5 flex items-start gap-4 hover:border-white/[0.62] transition-all"
   >
     <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${accent}`}>
       {icon}
@@ -71,7 +71,7 @@ const RoadmapCard = ({ roadmap, index }) => {
           <h2 className="text-sm font-black text-white group-hover:text-white leading-snug transition mb-2">
             {roadmap.title}
           </h2>
-          <p className="text-[12px] text-gray-300 leading-relaxed line-clamp-2">
+          <p className="text-[12px] text-gray-400 leading-relaxed line-clamp-2">
             {roadmap.description || "No description available."}
           </p>
         </div>
@@ -244,7 +244,7 @@ export default function RoadmapList() {
             placeholder="Search roadmaps…"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
-            className="w-full bg-[#111119] border border-slate-700 focus:border-sky-500/40 rounded-2xl pl-10 pr-10 py-3 text-sm text-white placeholder-white/30 outline-none focus:ring-2 focus:ring-sky-500/10 transition-all"
+            className="w-full bg-[#080813] border border-slate-700 focus:border-sky-500/40 rounded-2xl pl-10 pr-10 py-3 text-sm text-white placeholder-white/30 outline-none focus:ring-2 focus:ring-sky-500/10 transition-all"
           />
           <AnimatePresence>
             {searchTerm && (
