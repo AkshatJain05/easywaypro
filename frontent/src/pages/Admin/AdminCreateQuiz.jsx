@@ -190,10 +190,10 @@ export default function AdminQuizForm() {
 
               {/* MCQ Logic */}
               {q.type === "mcq" && (
-                <div className="space-y-3 bg-white/[0.01] p-1 rounded-2xl border border-white/[0.03]">
+                <div className="space-y-3 bg-white/[0.01]  p-1 rounded-2xl border border-white/[0.03]">
                   <p className="text-[9px] font-black uppercase tracking-widest text-white/50 mb-2">Options & Answers</p>
                   {q.options.map((opt, i) => (
-                    <div key={i} className="flex gap-3 items-center">
+                    <div key={i} className="flex gap-3 items-center flex-wrap">
                       <input
                         type="text"
                         className="flex-1 bg-white/[0.03] border border-white/5 rounded-xl px-4 py-2 text-xs text-white/70 outline-none focus:border-blue-500/20"

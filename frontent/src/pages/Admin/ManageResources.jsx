@@ -69,7 +69,7 @@ export default function ManageResources() {
             onChange={e => setForm({...form, title: e.target.value})}
             className="flex-1 bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500/50"
           />
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
             <input 
               type="text" placeholder="Subject" value={form.subject}
               onChange={e => setForm({...form, subject: e.target.value})}

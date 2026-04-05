@@ -25,7 +25,7 @@ const StatCard = ({ icon, label, value, accent, sub, delay = 0 }) => (
     initial={{ opacity: 0, y: 14 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.28, delay }}
-    className="bg-white/5 border border-cyan-900 rounded-2xl p-5 flex items-start gap-4 hover:border-white/[0.62] transition-all"
+    className="bg-gray-950 border border-cyan-900 rounded-2xl p-5 flex items-start gap-4 hover:border-white/[0.62] transition-all"
   >
     <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${accent}`}>
       {icon}
