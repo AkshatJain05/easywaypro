@@ -245,10 +245,10 @@ export default function DocDetail() {
       <div className="doc-root flex min-h-screen  text-gray-200">
 
         {/* ---- Mobile Header Bar ---- */}
-        <div className="fixed top-0 left-0 right-0 z-40 md:hidden flex items-center gap-3 px-4 py-3 bg-[#030009]/90 border-b border-white/5 backdrop-blur-sm" style={{ marginTop: "56px" }}>
+        <div className="fixed  top-[-7px] left-0 right-0 z-40 md:hidden flex items-center gap-3 px-4 py-3 bg-[#030009]/90 border-b border-white/5 backdrop-blur-sm" style={{ marginTop: "56px" }}>
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 hover:bg-sky-500/20 transition"
+            className="w-8 h-5 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 hover:bg-sky-500/20 transition"
           >
             {sidebarOpen ? <MdClose size={18} /> : <MdMenu size={18} />}
           </button>
