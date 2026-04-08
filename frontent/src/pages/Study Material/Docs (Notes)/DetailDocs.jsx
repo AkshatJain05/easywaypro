@@ -425,7 +425,7 @@ export default function DocDetail() {
                     {/* Card Header */}
                     <div className="px-1 pt-5 pb-2 border-b border-white/[0.05]">
                       {/* Question number pill */}
-                      <div className="flex items-start gap-2 px-5">
+                      <div className="flex items-start gap-2 px-2 md:px-5">
                         <span className="flex-none mt-0.5 w-6 h-6 rounded-md bg-gradient-to-br from-gray-800 to-black border border-sky-500/20 flex items-center justify-center text-sky-400 text-xs font-bold syne">
                           {gIdx + 1}
                         </span>
@@ -442,7 +442,7 @@ export default function DocDetail() {
                     </div>
 
                     {/* Answer blocks */}
-                    <div className="px-5 py-2 md:py-1 space-y-2">
+                    <div className="px-1 md:px-5 py-1 md:py-1 space-y-2">
                       {q.ans.map((a, j) => {
                         const codeIndex = `${gIdx}-${j}`;
 
