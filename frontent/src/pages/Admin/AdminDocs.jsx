@@ -518,9 +518,9 @@ export default function AdminPanel() {
                           <option value="jsx">JSX</option>
                           <option value="python">Python</option>
                           <option value="sql">SQL</option>
-                          <option value="Java">Java</option>
-                          <option value="C">C</option>
-                          <option value="C++">C++</option>
+                          <option value="java">Java</option>
+                          <option value="c">C</option>
+                          <option value="cpp">C++</option>
                           <option value="bash">Shell/Bash</option>
                         </select>
                       )}
