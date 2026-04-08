@@ -478,7 +478,7 @@ export default function DocDetail() {
                                 </button>
                               </div>
                               <SyntaxHighlighter
-                                language={a.language || "javascript"}
+                                language={a.language.toLowerCase() || "javascript"}
                                 style={CODE_STYLE}
                                 customStyle={{
                                   background: "black",
