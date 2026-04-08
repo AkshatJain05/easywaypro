@@ -418,7 +418,7 @@ export default function DocDetail() {
                     className={`qa-card rounded-2xl border-1 overflow-hidden ${
                       isActive
                         ? "active border-sky-400 bg-black"
-                        : "border-slate-200 bg-black hover:border-white/[0.14]"
+                        : "border-slate-600 bg-black hover:border-white/[0.14]"
                     }`}
                     style={{ animationDelay: `${cardIdx * 0.05}s` }}
                   >
