@@ -430,7 +430,7 @@ export default function DocDetail() {
                           {gIdx + 1}
                         </span>
                         <div className="min-w-0">
-                          <h3 className="syne text-sm sm:text-base font-bold bg-gray-950 md:bg-transparent  text-white  mb-4 border border-gray-900 p-2 rounded-xl">
+                          <h3 className="syne text-sm sm:text-base font-bold bg-gray-950 md:bg-transparent  text-white  mb-3 border border-gray-900 p-2 rounded-xl">
                             {q.title}
                           </h3>
                           <p className="text-sm sm:text-md md:text-lg text-gray-300 leading-relaxed right-6 relative">
@@ -442,7 +442,7 @@ export default function DocDetail() {
                     </div>
 
                     {/* Answer blocks */}
-                    <div className="px-5 py-4 space-y-3">
+                    <div className="px-5 py-2 md:py-1 space-y-2">
                       {q.ans.map((a, j) => {
                         const codeIndex = `${gIdx}-${j}`;
 
