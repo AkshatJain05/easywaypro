@@ -3,10 +3,22 @@ import { useNavigate } from "react-router-dom";
 import { memo, useMemo } from "react";
 import axios from "axios";
 import {
-  FiEdit3, FiTrash2, FiCopy, FiPlus, FiCheck,
-  FiSearch, FiClock, FiFileText, FiX, FiZap,
-  FiLayers, FiTrendingUp, FiStar, FiMoreVertical,
-  FiExternalLink, FiAlertTriangle,
+  FiEdit3,
+  FiTrash2,
+  FiCopy,
+  FiPlus,
+  FiCheck,
+  FiSearch,
+  FiClock,
+  FiFileText,
+  FiX,
+  FiZap,
+  FiLayers,
+  FiTrendingUp,
+  FiStar,
+  FiMoreVertical,
+  FiExternalLink,
+  FiAlertTriangle,
 } from "react-icons/fi";
 import Loading from "../../../component/Loading";
 import { toast } from "react-hot-toast";
@@ -14,16 +26,27 @@ import { toast } from "react-hot-toast";
 const MAX_RESUMES = 5;
 
 const fmt = (d) =>
-  new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  new Date(d).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 
-
+const Spinner = () => (
+  <div className="w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+);
 
 /* ─────────────────────────────────────────────
    Dummy Generator (fallback data)
 ───────────────────────────────────────────── */
 const getDummyData = (title) => {
   const names = ["Akshat Jain", "Ansh", "Aayush", "Arish"];
-  const roles = ["Frontend Dev", "Backend Dev", "Full Stack Dev", "UI Designer"];
+  const roles = [
+    "Frontend Dev",
+    "Backend Dev",
+    "Full Stack Dev",
+    "UI Designer",
+  ];
   const skills = ["React", "Node", "MongoDB", "Tailwind", "JS"];
 
   return {
@@ -40,30 +63,36 @@ const ResumeThumbnail = memo(({ title = "" }) => {
   const data = useMemo(() => getDummyData(title), [title]);
 
   const initials = useMemo(() => {
-    return data.name
-      .split(" ")
-      .slice(0, 2)
-      .map((w) => w?.[0]?.toUpperCase() || "")
-      .join("") || "RE";
+    return (
+      data.name
+        .split(" ")
+        .slice(0, 2)
+        .map((w) => w?.[0]?.toUpperCase() || "")
+        .join("") || "RE"
+    );
   }, [data.name]);
 
   return (
-    <div className="relative w-full h-full rounded-xl overflow-hidden
+    <div
+      className="relative w-full h-full rounded-xl overflow-hidden
       bg-gradient-to-br from-slate-900 via-[#0f172a] to-slate-950
-      group">
-
+      group"
+    >
       {/* top accent */}
-      <div className="absolute top-0 left-0 right-0 h-[3px]
-        bg-gradient-to-r from-violet-500 via-blue-500 to-cyan-400" />
+      <div
+        className="absolute top-0 left-0 right-0 h-[3px]
+        bg-gradient-to-r from-violet-500 via-blue-500 to-cyan-400"
+      />
 
       {/* content */}
       <div className="absolute inset-0 p-4 pt-5 flex flex-col gap-2">
-
         {/* HEADER */}
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full
+          <div
+            className="w-8 h-8 rounded-full
             bg-gradient-to-br from-violet-500 to-blue-500
-            flex items-center justify-center text-[10px] font-bold text-white shadow-md">
+            flex items-center justify-center text-[10px] font-bold text-white shadow-md"
+          >
             {initials}
           </div>
 
@@ -109,12 +138,16 @@ const ResumeThumbnail = memo(({ title = "" }) => {
       </div>
 
       {/* hover glow */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100
-        transition duration-300 bg-gradient-to-t from-violet-600/10 via-transparent to-transparent" />
+      <div
+        className="absolute inset-0 opacity-0 group-hover:opacity-100
+        transition duration-300 bg-gradient-to-t from-violet-600/10 via-transparent to-transparent"
+      />
 
       {/* bottom fade */}
-      <div className="absolute inset-0
-        bg-gradient-to-t from-[#020617]/80 via-transparent to-transparent" />
+      <div
+        className="absolute inset-0
+        bg-gradient-to-t from-[#020617]/80 via-transparent to-transparent"
+      />
     </div>
   );
 });
@@ -125,29 +158,47 @@ const ResumeThumbnail = memo(({ title = "" }) => {
    Stat chip
 ───────────────────────────────────────────── */
 const Chip = ({ icon: Icon, value, label, cls }) => (
-  <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold ${cls}`}>
+  <div
+    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold ${cls}`}
+  >
     <Icon size={12} className="shrink-0" />
     <span className="tabular-nums">{value}</span>
-    <span className="text-current opacity-50 font-normal hidden sm:inline">{label}</span>
+    <span className="text-current opacity-50 font-normal hidden sm:inline">
+      {label}
+    </span>
   </div>
 );
 
 /* ─────────────────────────────────────────────
    Card overflow menu
 ───────────────────────────────────────────── */
-const OverflowMenu = ({ onOpen, onEdit, onDuplicate, onDelete, isDuplicating }) => {
+const OverflowMenu = ({
+  onOpen,
+  onEdit,
+  onDuplicate,
+  onDelete,
+  isDuplicating,
+}) => {
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
   const items = [
     { icon: FiExternalLink, label: "Open", fn: onOpen },
-    { icon: FiEdit3,        label: "Rename", fn: onEdit },
-    { icon: FiCopy,         label: isDuplicating ? "Duplicating…" : "Duplicate", fn: onDuplicate, disabled: isDuplicating },
-    { icon: FiTrash2,       label: "Delete", fn: onDelete, danger: true },
+    { icon: FiEdit3, label: "Rename", fn: onEdit },
+    {
+      icon: FiCopy,
+      label: isDuplicating ? "Duplicating…" : "Duplicate",
+      fn: onDuplicate,
+      disabled: isDuplicating,
+    },
+    { icon: FiTrash2, label: "Delete", fn: onDelete, danger: true },
   ];
   return (
     <div className="relative">
       <button
-        onClick={(e) => { e.stopPropagation(); setOpen((v) => !v); }}
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpen((v) => !v);
+        }}
         className="p-1.5 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-white/8 transition-all"
         aria-label="More options"
       >
@@ -156,13 +207,19 @@ const OverflowMenu = ({ onOpen, onEdit, onDuplicate, onDelete, isDuplicating }) 
       {open && (
         <>
           <div className="fixed inset-0 z-10" onClick={close} />
-          <div className="absolute right-0 top-9 z-20 w-38 bg-slate-900/95 backdrop-blur-sm
-            border border-white/10 rounded-xl shadow-2xl shadow-black/60 overflow-hidden py-1 min-w-[140px]">
+          <div
+            className="absolute right-0 top-9 z-20 w-38 bg-slate-900/95 backdrop-blur-sm
+            border border-white/10 rounded-xl shadow-2xl shadow-black/60 overflow-hidden py-1 min-w-[140px]"
+          >
             {items.map(({ icon: Icon, label, fn, danger, disabled }) => (
               <button
                 key={label}
                 disabled={disabled}
-                onClick={(e) => { e.stopPropagation(); close(); fn?.(); }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  close();
+                  fn?.();
+                }}
                 className={`w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium transition-colors
                   ${danger ? "text-red-400 hover:bg-red-500/10" : "text-slate-300 hover:bg-white/5"}
                   disabled:opacity-40 disabled:cursor-not-allowed`}
@@ -182,14 +239,22 @@ const OverflowMenu = ({ onOpen, onEdit, onDuplicate, onDelete, isDuplicating }) 
    Resume card
 ───────────────────────────────────────────── */
 const ResumeCard = ({
-  resume, animDelay,
-  editingId, editingTitle, duplicatingId,
-  setEditingId, setEditingTitle,
-  onOpen, onDuplicate, onDelete, onSaveTitle,
+  resume,
+  animDelay,
+  editingId,
+  editingTitle,
+  duplicatingId,
+  setEditingId,
+  setEditingTitle,
+  onOpen,
+  onDuplicate,
+  onDelete,
+  onSaveTitle,
+  deletingId,
 }) => {
-  const isEditing    = editingId    === resume._id;
+  const isEditing = editingId === resume._id;
   const isDuplicating = duplicatingId === resume._id;
-
+  const isDeleting = deletingId === resume._id;
   return (
     <article
       className="group flex flex-col bg-gradient-to-br from-gray-950 to-gray-950 border border- mx-2 md:mx-0 border-cyan-900 rounded-2xl overflow-hidden
@@ -208,13 +273,17 @@ const ResumeCard = ({
       >
         <ResumeThumbnail title={resume.title} />
         {/* hover pill */}
-        <div className="absolute inset-0 flex items-center justify-center
+        <div
+          className="absolute inset-0 flex items-center justify-center
           opacity-0 group-hover:opacity-100
-          transition-opacity duration-200">
-          <span className="flex items-center gap-1.5 px-4 py-2 rounded-xl
+          transition-opacity duration-200"
+        >
+          <span
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl
             bg-gray-800 backdrop-blur-sm border border-white/15
             text-xs font-semibold text-white
-            translate-y-2 group-hover:translate-y-0 transition-transform duration-200">
+            translate-y-2 group-hover:translate-y-0 transition-transform duration-200"
+          >
             <FiExternalLink size={11} />
             Open Editor
           </span>
@@ -238,25 +307,34 @@ const ResumeCard = ({
                 px-3 py-1.5 text-sm text-white outline-none
                 focus:border-violet-400 focus:ring-2 focus:ring-violet-500/15 transition-all"
             />
-            <button onClick={onSaveTitle}
-              className="shrink-0 p-1.5 bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 rounded-lg transition-colors">
+            <button
+              onClick={onSaveTitle}
+              className="shrink-0 p-1.5 bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 rounded-lg transition-colors"
+            >
               <FiCheck size={13} />
             </button>
-            <button onClick={() => setEditingId(null)}
-              className="shrink-0 p-1.5 bg-white/5 hover:bg-white/10 text-slate-500 rounded-lg transition-colors">
+            <button
+              onClick={() => setEditingId(null)}
+              className="shrink-0 p-1.5 bg-white/5 hover:bg-white/10 text-slate-500 rounded-lg transition-colors"
+            >
               <FiX size={13} />
             </button>
           </div>
         ) : (
           <div className="flex items-start justify-between gap-2">
-            <button onClick={onOpen}
+            <button
+              onClick={onOpen}
               className="flex-1 min-w-0 text-left text-sm font-semibold text-slate-100
-                hover:text-violet-300 transition-colors line-clamp-2 leading-snug">
+                hover:text-violet-300 transition-colors line-clamp-2 leading-snug"
+            >
               {resume.title || "Untitled Resume"}
             </button>
             <OverflowMenu
               onOpen={onOpen}
-              onEdit={() => { setEditingId(resume._id); setEditingTitle(resume.title); }}
+              onEdit={() => {
+                setEditingId(resume._id);
+                setEditingTitle(resume.title);
+              }}
               onDuplicate={onDuplicate}
               onDelete={onDelete}
               isDuplicating={isDuplicating}
@@ -272,27 +350,32 @@ const ResumeCard = ({
 
         {/* actions */}
         <div className="flex gap-2 mt-auto pt-3 border-t border-white/5">
-          <button onClick={onOpen}
+          <button
+            onClick={onOpen}
             className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl
               bg-violet-600 hover:bg-violet-500 active:scale-[0.97]
-              text-xs font-semibold text-white transition-all">
+              text-xs font-semibold text-white transition-all"
+          >
             <FiExternalLink size={11} />
             Edit
           </button>
-          <button onClick={onDuplicate} disabled={isDuplicating}
+          <button
+            onClick={onDuplicate}
+            disabled={isDuplicating}
             className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl
-              bg-white/5 hover:bg-white/9 active:scale-[0.97]
-              text-xs font-semibold text-slate-400 hover:text-slate-200
-              border border-white/6 transition-all disabled:opacity-40">
-            <FiCopy size={11} />
-            {isDuplicating ? "…" : "Copy"}
+    bg-white/5 text-xs font-semibold border border-white/6
+    disabled:opacity-40"
+          >
+            {isDuplicating ? <Spinner /> : <FiCopy size={11} />}
           </button>
-          <button onClick={onDelete}
+          <button
+            onClick={onDelete}
+            disabled={isDeleting}
             className="flex items-center justify-center px-2.5 py-2 rounded-xl
-              bg-white/5 hover:bg-red-500/12 active:scale-[0.97]
-              text-slate-600 hover:text-red-400
-              border border-white/6 transition-all">
-            <FiTrash2 size={12} />
+    bg-white/5 border border-white/6
+    disabled:opacity-40"
+          >
+            {isDeleting ? <Spinner /> : <FiTrash2 size={12} />}
           </button>
         </div>
       </div>
@@ -308,16 +391,25 @@ const CreateModal = ({ onClose, onCreate }) => {
   const submit = () => title.trim() && onCreate(title.trim());
   return (
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={onClose} />
-      <div className="relative w-full max-w-md bg-[#0c1018] border border-white/10 rounded-2xl
-        shadow-2xl shadow-black/80 animate-[modalPop_0.28s_cubic-bezier(.16,1,.3,1)_both]">
+      <div
+        className="absolute inset-0 bg-black/70 backdrop-blur-md"
+        onClick={onClose}
+      />
+      <div
+        className="relative w-full max-w-md bg-[#0c1018] border border-white/10 rounded-2xl
+        shadow-2xl shadow-black/80 animate-[modalPop_0.28s_cubic-bezier(.16,1,.3,1)_both]"
+      >
         <div className="flex items-start justify-between px-6 pt-6 pb-5">
           <div>
             <h2 className="text-lg font-bold text-white">Create New Resume</h2>
-            <p className="text-xs text-slate-500 mt-0.5">Give your resume a memorable name</p>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Give your resume a memorable name
+            </p>
           </div>
-          <button onClick={onClose}
-            className="p-1.5 text-slate-500 hover:text-slate-200 hover:bg-white/6 rounded-xl transition-all mt-0.5">
+          <button
+            onClick={onClose}
+            className="p-1.5 text-slate-500 hover:text-slate-200 hover:bg-white/6 rounded-xl transition-all mt-0.5"
+          >
             <FiX size={16} />
           </button>
         </div>
@@ -338,18 +430,23 @@ const CreateModal = ({ onClose, onCreate }) => {
             Tip: Include role + company for easy lookup later
           </p>
           <div className="flex gap-3">
-            <button onClick={onClose}
+            <button
+              onClick={onClose}
               className="flex-1 py-2.5 rounded-xl text-sm font-semibold
-                bg-white/5 hover:bg-white/8 text-slate-300 transition-colors border border-white/6">
+                bg-white/5 hover:bg-white/8 text-slate-300 transition-colors border border-white/6"
+            >
               Cancel
             </button>
-            <button onClick={submit} disabled={!title.trim()}
+            <button
+              onClick={submit}
+              disabled={!title.trim()}
               className="flex-1 py-2.5 rounded-xl text-sm font-semibold
                 bg-gradient-to-r from-violet-600 to-blue-600
                 hover:from-violet-500 hover:to-blue-500
                 text-white active:scale-[0.98] transition-all
                 disabled:opacity-40 disabled:cursor-not-allowed
-                shadow-lg shadow-violet-900/30">
+                shadow-lg shadow-violet-900/30"
+            >
               Create Resume
             </button>
           </div>
@@ -363,18 +460,24 @@ const CreateModal = ({ onClose, onCreate }) => {
    Dashboard root
 ───────────────────────────────────────────── */
 const ResumeDashboard = () => {
-  const [resumes,         setResumes]         = useState([]);
+  const [resumes, setResumes] = useState([]);
   const [filteredResumes, setFilteredResumes] = useState([]);
-  const [search,          setSearch]          = useState("");
-  const [showModal,       setShowModal]       = useState(false);
-  const [editingId,       setEditingId]       = useState(null);
-  const [editingTitle,    setEditingTitle]    = useState("");
-  const [loading,         setLoading]         = useState(true);
-  const [limitBanner,     setLimitBanner]     = useState(false);
-  const [duplicatingId,   setDuplicatingId]   = useState(null);
+  const [search, setSearch] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [editingTitle, setEditingTitle] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [limitBanner, setLimitBanner] = useState(false);
+  const [duplicatingId, setDuplicatingId] = useState(null);
 
-  const navigate  = useNavigate();
-  const API_URL   = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  const [actionLoading, setActionLoading] = useState({
+    create: false,
+    deleteId: null,
+    duplicateId: null,
+  });
 
   /* data */
   const fetchResumes = useCallback(async () => {
@@ -389,70 +492,101 @@ const ResumeDashboard = () => {
     }
   }, [API_URL]);
 
-  useEffect(() => { fetchResumes(); }, [fetchResumes]);
+  useEffect(() => {
+    fetchResumes();
+  }, [fetchResumes]);
 
   useEffect(() => {
     const q = search.toLowerCase();
-    setFilteredResumes(resumes.filter((r) => r.title?.toLowerCase().includes(q)));
+    setFilteredResumes(
+      resumes.filter((r) => r.title?.toLowerCase().includes(q)),
+    );
   }, [search, resumes]);
 
   /* guards */
   const atLimit = () => {
-    if (resumes.length >= MAX_RESUMES) { setLimitBanner(true); return true; }
+    if (resumes.length >= MAX_RESUMES) {
+      setLimitBanner(true);
+      return true;
+    }
     return false;
   };
 
   /* actions */
   const handleCreate = async (title) => {
     if (atLimit()) return;
+
     try {
+      setActionLoading((p) => ({ ...p, create: true }));
+
       const { data } = await axios.post(`${API_URL}/resumes`, { title });
+
       setShowModal(false);
       navigate(`/editor/${data._id}`);
-    } catch { toast.error("Failed to create resume"); }
+    } catch {
+      toast.error("Failed to create resume");
+    } finally {
+      setActionLoading((p) => ({ ...p, create: false }));
+    }
   };
 
   const handleDuplicate = async (id) => {
     if (atLimit()) return;
-    setDuplicatingId(id);
+
+    setActionLoading((p) => ({ ...p, duplicateId: id }));
+
     try {
       await axios.post(`${API_URL}/resumes/duplicate/${id}`);
       await fetchResumes();
       toast.success("Resume duplicated!");
-    } catch { toast.error("Failed to duplicate"); }
-    finally { setDuplicatingId(null); }
+    } catch {
+      toast.error("Failed to duplicate");
+    } finally {
+      setActionLoading((p) => ({ ...p, duplicateId: null }));
+    }
   };
-
   const handleDelete = (id, title) => {
-    toast(
-      (t) => (
-        <div className="flex flex-col gap-3 min-w-[200px]">
-          <div>
-            <p className="text-sm font-semibold text-slate-900">Delete this resume?</p>
-            <p className="text-xs text-slate-800 mt-0.5 truncate max-w-[180px]">"{title || "Untitled"}"</p>
-          </div>
-          <div className="flex gap-2">
-            <button onClick={() => toast.dismiss(t.id)}
-              className="flex-1 px-3 py-1.5 text-xs font-medium bg-slate-700 hover:bg-slate-600 rounded-lg text-white transition-colors">
-              Keep
-            </button>
-            <button
-              onClick={async () => {
-                try {
-                  await axios.delete(`${API_URL}/resumes/${id}`);
-                  await fetchResumes();
-                  toast.success("Resume deleted");
-                } catch { toast.error("Failed to delete"); }
-                toast.dismiss(t.id);
-              }}
-              className="flex-1 px-3 py-1.5 text-xs font-medium bg-red-600 hover:bg-red-500 rounded-lg text-white transition-colors">
-              Delete
-            </button>
-          </div>
+    toast((t) => (
+      <div className="flex flex-col gap-3 min-w-[200px]">
+        <div>
+          <p className="text-sm font-semibold text-slate-900">
+            Delete this resume?
+          </p>
+          <p className="text-xs text-slate-800 mt-0.5 truncate">
+            "{title || "Untitled"}"
+          </p>
         </div>
-      ),
-      { duration: 6000 }
-    );
+
+        <div className="flex gap-2">
+          <button
+            onClick={() => toast.dismiss(t.id)}
+            className="flex-1 px-3 py-1.5 text-xs bg-slate-700 rounded-lg text-white"
+          >
+            Keep
+          </button>
+
+          <button
+            disabled={actionLoading.deleteId === id}
+            onClick={async () => {
+              setActionLoading((p) => ({ ...p, deleteId: id }));
+              try {
+                await axios.delete(`${API_URL}/resumes/${id}`);
+                await fetchResumes();
+                toast.success("Resume deleted");
+              } catch {
+                toast.error("Failed to delete");
+              } finally {
+                setActionLoading((p) => ({ ...p, deleteId: null }));
+                toast.dismiss(t.id);
+              }
+            }}
+            className="flex-1 px-3 py-1.5 text-xs bg-red-600 rounded-lg text-white flex items-center justify-center gap-2"
+          >
+            {actionLoading.deleteId === id ? <Spinner /> : "Delete"}
+          </button>
+        </div>
+      </div>
+    ));
   };
 
   const handleUpdateTitle = async (id) => {
@@ -461,13 +595,15 @@ const ResumeDashboard = () => {
       await axios.put(`${API_URL}/resumes/${id}`, { title: editingTitle });
       setEditingId(null);
       await fetchResumes();
-    } catch { toast.error("Failed to rename"); }
+    } catch {
+      toast.error("Failed to rename");
+    }
   };
 
   if (loading) return <Loading />;
 
-  const slotPct  = Math.round((resumes.length / MAX_RESUMES) * 100);
-  const isEmpty  = filteredResumes.length === 0;
+  const slotPct = Math.round((resumes.length / MAX_RESUMES) * 100);
+  const isEmpty = filteredResumes.length === 0;
   const underCap = resumes.length < MAX_RESUMES;
 
   return (
@@ -490,18 +626,18 @@ const ResumeDashboard = () => {
       `}</style>
 
       <div className="rdb min-h-screen bg-black text-slate-100 selection:bg-violet-500/30">
-
         {/* ambient glows */}
-        <div className="fixed inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+        <div
+          className="fixed inset-0 pointer-events-none overflow-hidden"
+          aria-hidden="true"
+        >
           <div className="absolute -top-32 -left-16 w-[480px] h-[480px] rounded-full bg-violet-600/7 blur-[130px]" />
           <div className="absolute top-1/2 -right-32 w-[380px] h-[380px] rounded-full bg-blue-600/6 blur-[100px]" />
         </div>
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-
           {/* ══════════ HEADER ══════════ */}
           <header className="mb-10 lg:mb-12 opacity-0 animate-[fadeUp_0.5s_ease_0.05s_both]">
-
             {/* top row */}
             <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-5 mb-7">
               <div>
@@ -523,21 +659,35 @@ const ResumeDashboard = () => {
 
               {/* stat chips */}
               <div className="flex items-center gap-2 flex-wrap">
-                <Chip icon={FiFileText}    value={`${resumes.length}/${MAX_RESUMES}`} label="resumes"
-                  cls="text-violet-300 border-violet-500/20 bg-violet-500/8" />
-                <Chip icon={FiTrendingUp}  value={resumes.length} label="active"
-                  cls="text-blue-300 border-blue-500/20 bg-blue-500/8" />
-                <Chip icon={FiStar}        value={MAX_RESUMES - resumes.length} label="slots left"
-                  cls="text-emerald-300 border-emerald-500/20 bg-emerald-500/8" />
+                <Chip
+                  icon={FiFileText}
+                  value={`${resumes.length}/${MAX_RESUMES}`}
+                  label="resumes"
+                  cls="text-violet-300 border-violet-500/20 bg-violet-500/8"
+                />
+                <Chip
+                  icon={FiTrendingUp}
+                  value={resumes.length}
+                  label="active"
+                  cls="text-blue-300 border-blue-500/20 bg-blue-500/8"
+                />
+                <Chip
+                  icon={FiStar}
+                  value={MAX_RESUMES - resumes.length}
+                  label="slots left"
+                  cls="text-emerald-300 border-emerald-500/20 bg-emerald-500/8"
+                />
               </div>
             </div>
 
             {/* search + create */}
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="relative flex-1 group">
-                <FiSearch size={14}
+                <FiSearch
+                  size={14}
                   className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500
-                    group-focus-within:text-violet-400 transition-colors pointer-events-none" />
+                    group-focus-within:text-violet-400 transition-colors pointer-events-none"
+                />
                 <input
                   type="text"
                   placeholder="Search resumes…"
@@ -549,21 +699,21 @@ const ResumeDashboard = () => {
                     transition-all"
                 />
                 {search && (
-                  <button onClick={() => setSearch("")}
+                  <button
+                    onClick={() => setSearch("")}
                     className="absolute right-3 top-1/2 -translate-y-1/2
-                      text-slate-600 hover:text-slate-300 transition-colors">
+                      text-slate-600 hover:text-slate-300 transition-colors"
+                  >
                     <FiX size={13} />
                   </button>
                 )}
               </div>
               <button
                 onClick={() => !atLimit() && setShowModal(true)}
-                className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl whitespace-nowrap
-                  bg-gradient-to-r from-violet-600 to-blue-600
-                  hover:from-violet-500 hover:to-blue-500 active:scale-[0.97]
-                  text-sm font-semibold text-white
-                  shadow-lg shadow-violet-900/30 border border-violet-500/25 transition-all">
-                <FiPlus size={15} strokeWidth={2.5} />
+                className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl
+    bg-gradient-to-r from-violet-600 to-blue-600 text-white"
+              >
+                {actionLoading.create ? <Spinner /> : <FiPlus size={15} />}
                 New Resume
               </button>
             </div>
@@ -575,9 +725,10 @@ const ResumeDashboard = () => {
                   className="h-full rounded-full transition-all duration-700"
                   style={{
                     width: `${slotPct}%`,
-                    background: slotPct >= 80
-                      ? "linear-gradient(90deg,#f59e0b,#ef4444)"
-                      : "linear-gradient(90deg,#7c3aed,#3b82f6)",
+                    background:
+                      slotPct >= 80
+                        ? "linear-gradient(90deg,#f59e0b,#ef4444)"
+                        : "linear-gradient(90deg,#7c3aed,#3b82f6)",
                   }}
                 />
               </div>
@@ -589,9 +740,11 @@ const ResumeDashboard = () => {
 
           {/* ══════════ GRID ══════════ */}
           {isEmpty ? (
-            <div className="flex flex-col items-center justify-center min-h-[340px]
+            <div
+              className="flex flex-col items-center justify-center min-h-[340px]
               rounded-2xl border border-dashed border-white/8 bg-white/2 text-center px-6 py-16
-              opacity-0 animate-[fadeUp_0.4s_ease_0.2s_both]">
+              opacity-0 animate-[fadeUp_0.4s_ease_0.2s_both]"
+            >
               <div className="w-14 h-14 rounded-2xl bg-white/4 border border-white/8 flex items-center justify-center mb-4">
                 <FiFileText size={22} className="text-slate-600" />
               </div>
@@ -610,7 +763,8 @@ const ResumeDashboard = () => {
                     bg-gradient-to-r from-violet-600 to-blue-600
                     hover:from-violet-500 hover:to-blue-500 active:scale-[0.97]
                     text-sm font-semibold text-white
-                    shadow-lg shadow-violet-900/30 transition-all">
+                    shadow-lg shadow-violet-900/30 transition-all"
+                >
                   <FiZap size={14} />
                   Create Your First Resume
                 </button>
@@ -618,7 +772,6 @@ const ResumeDashboard = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
-
               {/* ghost "add" card */}
               {underCap && !search && (
                 <button
@@ -628,13 +781,18 @@ const ResumeDashboard = () => {
                     hover:border-violet-500/35 hover:bg-violet-500/4
                     text-slate-600 hover:text-violet-400
                     transition-all duration-300 bg-gray-950 mx-2 md:mx-0
-                    opacity-0 animate-[fadeUp_0.4s_ease_0.1s_both]">
-                  <div className="w-11 h-11 rounded-xl border-2 border-dashed border-current
+                    opacity-0 animate-[fadeUp_0.4s_ease_0.1s_both]"
+                >
+                  <div
+                    className="w-11 h-11 rounded-xl border-2 border-dashed border-current
                     flex items-center justify-center
-                    group-hover:scale-110 transition-transform duration-300">
+                    group-hover:scale-110 transition-transform duration-300"
+                  >
                     <FiPlus size={18} />
                   </div>
-                  <span className="text-xs font-semibold tracking-wide">New Resume</span>
+                  <span className="text-xs font-semibold tracking-wide">
+                    New Resume
+                  </span>
                 </button>
               )}
 
@@ -645,13 +803,14 @@ const ResumeDashboard = () => {
                   animDelay={`${(i + (underCap && !search ? 1 : 0)) * 55}ms`}
                   editingId={editingId}
                   editingTitle={editingTitle}
-                  duplicatingId={duplicatingId}
                   setEditingId={setEditingId}
                   setEditingTitle={setEditingTitle}
                   onOpen={() => navigate(`/editor/${resume._id}`)}
                   onDuplicate={() => handleDuplicate(resume._id)}
                   onDelete={() => handleDelete(resume._id, resume.title)}
                   onSaveTitle={() => handleUpdateTitle(resume._id)}
+                  duplicatingId={actionLoading.duplicateId}
+                  deletingId={actionLoading.deleteId}
                 />
               ))}
             </div>
@@ -660,20 +819,35 @@ const ResumeDashboard = () => {
 
         {/* ══ Modals / Banners ══ */}
         {showModal && (
-          <CreateModal onClose={() => setShowModal(false)} onCreate={handleCreate} />
+          <CreateModal
+            onClose={() => setShowModal(false)}
+            onCreate={handleCreate}
+          />
         )}
 
         {limitBanner && (
-          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] w-full max-w-sm px-4
-            animate-[slideUp_0.3s_cubic-bezier(.16,1,.3,1)_both]">
-            <div className="flex items-center justify-between gap-3
+          <div
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] w-full max-w-sm px-4
+            animate-[slideUp_0.3s_cubic-bezier(.16,1,.3,1)_both]"
+          >
+            <div
+              className="flex items-center justify-between gap-3
               bg-amber-950/80 border border-amber-500/25 backdrop-blur-md
-              px-4 py-3.5 rounded-2xl shadow-xl shadow-black/40">
+              px-4 py-3.5 rounded-2xl shadow-xl shadow-black/40"
+            >
               <div className="flex items-center gap-2.5 text-amber-200">
-                <FiAlertTriangle size={14} className="text-amber-400 shrink-0" />
-                <p className="text-sm font-medium">Max {MAX_RESUMES} resumes reached</p>
+                <FiAlertTriangle
+                  size={14}
+                  className="text-amber-400 shrink-0"
+                />
+                <p className="text-sm font-medium">
+                  Max {MAX_RESUMES} resumes reached
+                </p>
               </div>
-              <button onClick={() => setLimitBanner(false)} className="text-amber-500 hover:text-amber-300 transition-colors">
+              <button
+                onClick={() => setLimitBanner(false)}
+                className="text-amber-500 hover:text-amber-300 transition-colors"
+              >
                 <FiX size={14} />
               </button>
             </div>

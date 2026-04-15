@@ -144,8 +144,6 @@ const ResumeTemplate3 = ({ resumeData }) => {
         </section>
       )}
 
-     
-
       {/* --- SKILLS --- */}
       {skills?.length > 0 && (
         <section className="mb-6 print:mb-4">
@@ -156,7 +154,7 @@ const ResumeTemplate3 = ({ resumeData }) => {
                 if (!acc[skill.category]) acc[skill.category] = [];
                 acc[skill.category].push(skill.value);
                 return acc;
-              }, {})
+              }, {}),
             ).map(([category, skillList]) => (
               <p key={category} className=" text-sm">
                 <span className="font-semibold text-gray-700">{category}:</span>{" "}
@@ -164,6 +162,27 @@ const ResumeTemplate3 = ({ resumeData }) => {
               </p>
             ))}
           </div>
+        </section>
+      )}
+
+      {/* EDUCATION */}
+      {education?.length > 0 && (
+        <section className="mb-4">
+          <SectionTitle title="Education" />
+          {education.map((edu) => (
+            <div key={edu.id} className="mb-2">
+              <div className="flex justify-between text-sm font-semibold">
+                <span>{edu.school}</span>
+                <span className="text-gray-500">
+                  {edu.startDate} {edu.endDate && "-"} {edu.endDate}
+                </span>
+              </div>
+              <p className="italic text-gray-700">
+                {edu.degree}
+                {edu.marks ? ` | ${edu.marks}` : ""}
+              </p>
+            </div>
+          ))}
         </section>
       )}
 
@@ -212,8 +231,6 @@ const ResumeTemplate3 = ({ resumeData }) => {
           ))}
         </section>
       )}
-
-      
 
       {/* --- CERTIFICATIONS --- */}
       {certifications?.length > 0 && (

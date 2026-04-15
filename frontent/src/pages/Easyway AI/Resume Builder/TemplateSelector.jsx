@@ -8,10 +8,12 @@ const templates = [
   { name: "Clean Layout (No Divider Lines)", value: "Template5" },
   { name: "Professional — Skills & Projects Focus", value: "Template7" },
   { name: "Modern Two-Column Resume", value: "Template8" },
+  
   {
     name: "IndigoPro — Modern Professional Design (Part 2)",
     value: "Template10",
   },
+  { name: "BluePro(2) — Modern Professional Design", value: "Template11" }
 ];
 const TemplateSelector = ({ selectedTemplate, onChange }) => {
   return (
