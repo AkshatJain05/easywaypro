@@ -321,6 +321,9 @@ const VisualRoadmap = ({
   const start = (page - 1) * PAGE_SIZE;
   const sliced = tasks.slice(start, start + PAGE_SIZE);
 
+  const isLoading = (type, id) =>
+    actionLoading.type === type && actionLoading.id === id;
+
   return (
     <div>
       <div className="relative">
@@ -338,17 +341,17 @@ const VisualRoadmap = ({
                 transition={{ delay: idx * 0.055 }}
                 className="relative sm:pl-14 group"
               >
-                {/*  DESKTOP TOGGLE */}
+                {/* DESKTOP TOGGLE */}
                 <button
                   onClick={() => onToggle(task._id)}
-                  disabled={actionLoading === task._id}
+                  disabled={actionLoading.id === task._id}
                   className={`absolute left-0 top-4 w-10 h-10 hidden sm:flex items-center justify-center rounded-full border-2 transition-all duration-300 z-10 ${
                     task.completed
                       ? "bg-green-700 border-indigo-400 shadow-[0_0_14px_rgba(99,102,241,0.45)]"
                       : "bg-[#08080f] border-white/10 hover:border-indigo-400/60"
                   }`}
                 >
-                  {actionLoading === task._id ? (
+                  {isLoading("toggle", task._id) ? (
                     <Spinner size={16} />
                   ) : task.completed ? (
                     <FiCheck size={15} className="text-white font-bold" />
@@ -371,17 +374,17 @@ const VisualRoadmap = ({
                   }`}
                 >
                   <div className="flex items-start gap-3">
-                    {/*  MOBILE TOGGLE */}
+                    {/* MOBILE TOGGLE */}
                     <button
                       onClick={() => onToggle(task._id)}
-                      disabled={actionLoading === task._id}
+                      disabled={actionLoading.id === task._id}
                       className={`sm:hidden mt-1 w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center ${
                         task.completed
                           ? "bg-green-700 border-indigo-400"
                           : "border-white/20 hover:border-indigo-400"
                       }`}
                     >
-                      {actionLoading === task._id ? (
+                      {isLoading("toggle", task._id) ? (
                         <Spinner size={10} />
                       ) : (
                         task.completed && (
@@ -390,6 +393,7 @@ const VisualRoadmap = ({
                       )}
                     </button>
 
+                    {/* TEXT */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap mb-1">
                         <span className="text-[8px] font-black text-white/50 uppercase">
@@ -431,26 +435,28 @@ const VisualRoadmap = ({
                       )}
                     </div>
 
-                    {/* Right buttons (UNCHANGED UI) */}
+                    {/* ACTION BUTTONS */}
                     <div className="flex items-center gap-1 shrink-0">
+                      {/* EDIT */}
                       <button
                         onClick={() => onEdit(task)}
-                        disabled={actionLoading === task._id}
+                        disabled={actionLoading.id === task._id}
                         className="w-7 h-7 flex items-center justify-center rounded-lg text-white/60 hover:text-indigo-400 hover:bg-indigo-500/10 transition"
                       >
-                        {actionLoading === "edit" ? (
+                        {isLoading("edit", task._id) ? (
                           <Spinner size={12} />
                         ) : (
                           <FiEdit3 size={13} />
                         )}
                       </button>
 
+                      {/* DELETE */}
                       <button
                         onClick={() => onDelete(task._id)}
-                        disabled={actionLoading === task._id}
+                        disabled={actionLoading.id === task._id}
                         className="w-7 h-7 flex items-center justify-center rounded-lg text-white/60 hover:text-rose-400 hover:bg-rose-500/10 transition"
                       >
-                        {actionLoading === task._id ? (
+                        {isLoading("delete", task._id) ? (
                           <Spinner size={12} />
                         ) : (
                           <FiTrash2 size={13} />
@@ -511,7 +517,10 @@ const Spinner = ({ size = 16 }) => (
 export default function EasyWayPro() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [actionLoading, setActionLoading] = useState(null);
+  const [actionLoading, setActionLoading] = useState({
+    type: null,
+    id: null,
+  });
   const [activeTab, setActiveTab] = useState("roadmap");
   const [filter, setFilter] = useState("all");
   const [showNotif, setShowNotif] = useState(false);
@@ -641,7 +650,7 @@ export default function EasyWayPro() {
 
   const saveEdit = async ({ text, date, time }) => {
     try {
-      setActionLoading("edit");
+      setActionLoading({ type: "edit", id: editTask._id });
 
       const res = await axios.put(
         `${API_URL}/tasks/${editTask._id}/edit`,
@@ -652,18 +661,19 @@ export default function EasyWayPro() {
       setTasks((prev) =>
         prev.map((t) => (t._id === editTask._id ? res.data : t)),
       );
+
       setEditTask(null);
       toast.success("Task updated");
     } catch {
       toast.error("Update failed");
     } finally {
-      setActionLoading(null);
+      setActionLoading({ type: null, id: null });
     }
   };
 
   const toggleTask = async (id) => {
     try {
-      setActionLoading(id);
+      setActionLoading({ type: "toggle", id });
 
       const res = await axios.put(
         `${API_URL}/tasks/${id}/toggle`,
@@ -673,33 +683,40 @@ export default function EasyWayPro() {
 
       setTasks((prev) => prev.map((t) => (t._id === id ? res.data : t)));
 
-      if (res.data.completed) toast.success("Achievement unlocked! 🏆");
+      if (res.data.completed) {
+        toast.success("Achievement unlocked! 🏆");
+      }
     } catch {
       toast.error("Update failed");
     } finally {
-      setActionLoading(null);
+      setActionLoading({ type: null, id: null });
     }
   };
 
   const deleteTask = async (id) => {
     try {
-      setActionLoading(id);
+      setActionLoading({ type: "delete", id });
 
-      await axios.delete(`${API_URL}/tasks/${id}`, { withCredentials: true });
+      await axios.delete(`${API_URL}/tasks/${id}`, {
+        withCredentials: true,
+      });
 
       setTasks((prev) => prev.filter((t) => t._id !== id));
       toast.success("Task removed");
     } catch {
       toast.error("Delete failed");
     } finally {
-      setActionLoading(null);
+      setActionLoading({ type: null, id: null });
     }
   };
+
   const clearAll = async () => {
     try {
-      setActionLoading("clear");
+      setActionLoading({ type: "clear", id: null });
 
-      await axios.delete(`${API_URL}/tasks/clear`, { withCredentials: true });
+      await axios.delete(`${API_URL}/tasks/clear`, {
+        withCredentials: true,
+      });
 
       setTasks([]);
       setConfirmClear(false);
@@ -707,7 +724,7 @@ export default function EasyWayPro() {
     } catch {
       toast.error("Action forbidden");
     } finally {
-      setActionLoading(null);
+      setActionLoading({ type: null, id: null });
     }
   };
 
@@ -857,10 +874,10 @@ export default function EasyWayPro() {
                   </button>
                   <button
                     onClick={clearAll}
-                    disabled={actionLoading === "clear"}
-                    className="flex-1 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-400 text-white text-sm font-bold transition flex items-center justify-center"
+                    disabled={actionLoading.type === "clear"}
+                    className="flex-1 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-400 text-white text-sm font-bold transition flex items-center justify-center disabled:opacity-60"
                   >
-                    {actionLoading === "clear" ? (
+                    {actionLoading.type === "clear" ? (
                       <Spinner size={16} />
                     ) : (
                       "Delete all"
@@ -1284,7 +1301,8 @@ export default function EasyWayPro() {
                                           : "border-white/10 text-white/50 hover:border-indigo-500/40"
                                       }`}
                                     >
-                                      {actionLoading === t._id ? (
+                                      {actionLoading.type === "toggle" &&
+                                      actionLoading.id === t._id ? (
                                         <Spinner size={12} />
                                       ) : (
                                         <FiCheck size={15} />
