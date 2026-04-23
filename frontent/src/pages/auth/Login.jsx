@@ -9,6 +9,7 @@ import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router-dom";
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 axios.defaults.withCredentials = true;
@@ -23,10 +24,15 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
+  const location = useLocation();
+
+  // where user came from
+  const from = location.state?.from?.pathname || "/";
+
   // Redirect if logged in
   useEffect(() => {
-    if (user) navigate("/");
-  }, [user, navigate]);
+    if (user) return; // do nothing
+  }, [user]);
 
   // Handle login
   const handleSubmit = async (e) => {
@@ -35,7 +41,10 @@ const Login = () => {
       const resultAction = await dispatch(login({ email, password }));
       if (login.fulfilled.match(resultAction)) {
         toast.success("Login successful!");
-        navigate("/");
+
+        setTimeout(() => {
+          navigate(from, { replace: true });
+        }, 1000);
       } else {
         toast.error(resultAction.payload || "Login failed");
       }
@@ -65,7 +74,7 @@ const Login = () => {
           size: "large",
           width: 265,
           shape: "pill",
-        }
+        },
       );
     };
 
@@ -80,13 +89,15 @@ const Login = () => {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/auth/google`,
         { tokenId: response.credential },
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       if (res.data.user) {
         await dispatch(fetchUser());
         toast.success(`Welcome ${res.data.user.name}`);
-        navigate("/");
+        setTimeout(() => {
+          navigate(from, { replace: true });
+        }, 1000);
       } else {
         toast.error("Google login failed");
       }
@@ -100,7 +111,6 @@ const Login = () => {
   return (
     <ScrollReveal from="bottom">
       <div className="min-h-[90vh] flex items-center justify-center bg-gradient-to-br from-slate-950 to-black relative overflow-hidden px-4">
-
         {/* Background Glow */}
         <div className="absolute w-[500px] h-[500px] bg-indigo-500/20 blur-[120px] rounded-full top-[-100px] left-[-100px] animate-pulse"></div>
         <div className="absolute w-[400px] h-[400px] bg-yellow-500/10 blur-[100px] rounded-full bottom-[-100px] right-[-100px] animate-pulse"></div>

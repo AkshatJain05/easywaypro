@@ -11,9 +11,15 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <Provider store={store}>
-        <Toaster position="top-center"/>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 3000, //  auto close in 3 sec
+          }}
+        />
+
         <App />
       </Provider>
     </BrowserRouter>
-  </StrictMode>
+  </StrictMode>,
 );

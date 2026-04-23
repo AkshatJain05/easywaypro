@@ -50,6 +50,8 @@ import DocDetails from "./pages/Study Material/Docs (Notes)/DetailDocs.jsx";
 import AdminDocs from "./pages/Admin/AdminDocs.jsx";
 import ResumeDashboard from "./pages/Easyway AI/Resume Builder/ResumeDashboard.jsx";
 
+import PublicRoute from "./component/PublicRoute.jsx";
+
 function App() {
   return (
     <>
