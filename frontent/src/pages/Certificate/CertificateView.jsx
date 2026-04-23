@@ -67,9 +67,7 @@ export default function CertificateView() {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center h-screen w-full bg-gray-100">
         <Loading />
-      </div>
     );
 
   if (!certificate) return null;
