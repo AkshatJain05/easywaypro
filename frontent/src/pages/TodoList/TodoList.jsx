@@ -205,11 +205,20 @@ const Pagination = ({ page, total, pageSize, onChange }) => {
 };
 
 // ─── Task Form Modal ──────────────────────────────────────────────────────────
-const TaskFormModal = ({ onClose, onSubmit, initial = null }) => {
+const TaskFormModal = ({
+  onClose,
+  onSubmit,
+  initial = null,
+  actionLoading,
+}) => {
   const [text, setText] = useState(initial?.text || "");
   const [date, setDate] = useState(initial?.date || "");
   const [time, setTime] = useState(initial?.time || "");
   const isEdit = !!initial;
+
+  const isSubmitting =
+    actionLoading?.type === "add" ||
+    (actionLoading?.type === "edit" && actionLoading?.id === initial?._id);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -226,6 +235,7 @@ const TaskFormModal = ({ onClose, onSubmit, initial = null }) => {
         className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
         onClick={onClose}
       />
+
       <motion.div
         initial={{ y: 32, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -234,6 +244,7 @@ const TaskFormModal = ({ onClose, onSubmit, initial = null }) => {
         className="fixed inset-x-0 bottom-0 sm:inset-0 z-50 flex items-end sm:items-center justify-center px-4 pb-6 sm:pb-0"
       >
         <div className="bg-[#0f0f1e] border border-white/[0.08] rounded-t-3xl sm:rounded-3xl p-6 w-full max-w-md shadow-2xl">
+          {/* Header */}
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2">
               {isEdit ? (
@@ -245,13 +256,17 @@ const TaskFormModal = ({ onClose, onSubmit, initial = null }) => {
                 {isEdit ? "Edit task" : "New task"}
               </span>
             </div>
+
             <button
               onClick={onClose}
-              className="p-1.5 hover:bg-white/5 rounded-lg transition"
+              disabled={isSubmitting}
+              className="p-1.5 hover:bg-white/5 rounded-lg transition disabled:opacity-50"
             >
               <FiX size={13} />
             </button>
           </div>
+
+          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-3">
             <input
               type="text"
@@ -259,8 +274,10 @@ const TaskFormModal = ({ onClose, onSubmit, initial = null }) => {
               placeholder="Describe your objective…"
               value={text}
               onChange={(e) => setText(e.target.value)}
-              className="w-full bg-white/[0.03] border border-white/[0.06] rounded-2xl px-4 py-3.5 text-sm text-white placeholder-white/20 focus:border-indigo-500/50 outline-none transition"
+              disabled={isSubmitting}
+              className="w-full bg-white/[0.03] border border-white/[0.06] rounded-2xl px-4 py-3.5 text-sm text-white placeholder-white/20 focus:border-indigo-500/50 outline-none transition disabled:opacity-60"
             />
+
             <div className="grid grid-cols-2 gap-3">
               <div className="relative">
                 <FiCalendar
@@ -271,9 +288,11 @@ const TaskFormModal = ({ onClose, onSubmit, initial = null }) => {
                   type="date"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="w-full bg-white/[0.03] border border-white/[0.06] rounded-2xl pl-9 pr-3 py-3.5 text-xs text-white outline-none focus:border-indigo-500/50 transition"
+                  disabled={isSubmitting}
+                  className="w-full bg-white/[0.03] border border-white/[0.06] rounded-2xl pl-9 pr-3 py-3.5 text-xs text-white outline-none focus:border-indigo-500/50 transition disabled:opacity-60"
                 />
               </div>
+
               <div className="relative">
                 <FiClock
                   className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"
@@ -283,15 +302,24 @@ const TaskFormModal = ({ onClose, onSubmit, initial = null }) => {
                   type="time"
                   value={time}
                   onChange={(e) => setTime(e.target.value)}
-                  className="w-full bg-white/[0.03] border border-white/[0.06] rounded-2xl pl-9 pr-3 py-3.5 text-xs text-white outline-none focus:border-indigo-500/50 transition"
+                  disabled={isSubmitting}
+                  className="w-full bg-white/[0.03] border border-white/[0.06] rounded-2xl pl-9 pr-3 py-3.5 text-xs text-white outline-none focus:border-indigo-500/50 transition disabled:opacity-60"
                 />
               </div>
             </div>
+
+            {/* SUBMIT BUTTON */}
             <button
               type="submit"
-              className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-black rounded-2xl text-sm transition-all active:scale-[0.98] shadow-lg shadow-indigo-600/20 flex items-center justify-center gap-2"
+              disabled={isSubmitting}
+              className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-black rounded-2xl text-sm transition-all active:scale-[0.98] shadow-lg shadow-indigo-600/20 flex items-center justify-center gap-2 disabled:opacity-60"
             >
-              {isEdit ? (
+              {isSubmitting ? (
+                <span className="flex items-center gap-2">
+                  <Spinner size={16} />
+                  {isEdit ? "Saving..." : "Deploying..."}
+                </span>
+              ) : isEdit ? (
                 <>
                   <FiSave size={14} /> Save changes
                 </>
@@ -635,16 +663,22 @@ export default function EasyWayPro() {
 
   const addTask = async ({ text, date, time }) => {
     try {
+      setActionLoading({ type: "add", id: null });
+
       const res = await axios.post(
         `${API_URL}/tasks`,
         { text, date, time },
         { withCredentials: true },
       );
+
       setTasks((prev) => [res.data, ...prev]);
       setShowForm(false);
-      toast.success("Task deployed ");
+
+      toast.success("Task deployed");
     } catch {
       toast.error("Server error");
+    } finally {
+      setActionLoading({ type: null, id: null });
     }
   };
 
@@ -893,6 +927,7 @@ export default function EasyWayPro() {
           <TaskFormModal
             onClose={() => setShowForm(false)}
             onSubmit={addTask}
+            actionLoading={actionLoading}
           />
         )}
         {editTask && (
@@ -900,6 +935,7 @@ export default function EasyWayPro() {
             onClose={() => setEditTask(null)}
             onSubmit={saveEdit}
             initial={editTask}
+            actionLoading={actionLoading}
           />
         )}
       </AnimatePresence>
