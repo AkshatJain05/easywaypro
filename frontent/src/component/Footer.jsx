@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { MdArrowOutward } from "react-icons/md";
 import { FaYoutube, FaGithub, FaLinkedin, FaInstagram } from "react-icons/fa";
+import {  MdVerified } from "react-icons/md";
 import logoEasyway from "../assets/logoEasyway.png"
 
 
@@ -105,12 +106,19 @@ function Footer() {
               </ul>
             </div>
 
-            <div className="col-span-2 sm:col-span-1 space-y-5">
+           <div className="col-span-2 sm:col-span-1 space-y-5">
               <h3 className="text-[11px] font-bold uppercase tracking-[0.25em] text-white/90">Join Our Mission</h3>
               <div className="p-4 rounded-2xl bg-gradient-to-br from-white/[0.03] to-transparent border border-white/5 space-y-3">
                 <p className="text-[11px] text-gray-400 italic">Want to contribute notes or lectures?</p>
+                
+                {/* Contact Us Button */}
                 <Link to="/contact-us" className="w-full py-2 px-3 bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/20 text-sky-400 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-2">
                   Contact Us <MdArrowOutward />
+                </Link>
+
+                {/* New Verify Certificate Button */}
+                <Link to="/verify-paid-course-certificate" className="w-full py-2 px-3 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-400 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-2">
+                  Verify Paid Courses Certificate <MdVerified />
                 </Link>
               </div>
             </div>

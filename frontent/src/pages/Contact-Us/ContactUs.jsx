@@ -35,7 +35,7 @@ function ContactUs() {
 
   return (
     <ScrollReveal from="bottom">
-      <section className="px-4 py-6 flex flex-col items-center text-white">
+      <section className="px-4 py-6 flex bg-[#030009] flex-col items-center text-white">
 
         {/* Heading */}
         <div className="text-center max-w-2xl">

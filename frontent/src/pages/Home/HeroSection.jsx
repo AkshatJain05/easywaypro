@@ -172,10 +172,10 @@ function HeroSection() {
                   ✦ Explore AI Tools
                 </button>
                 <button
-                  onClick={() => navigate("/study-material")}
+                  onClick={() => navigate("/courses")}
                   className="btn-secondary px-6 py-2.5 rounded-xl text-sm font-semibold text-gray-300 border border-white/[0.1] bg-white/[0.03]"
                 >
-                  Explore Study Material →
+                  Explore Courses →
                 </button>
               </div>
 

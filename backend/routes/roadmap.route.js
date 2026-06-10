@@ -2,14 +2,14 @@
 import express from "express";
 import { Roadmap } from "../models/roadmap.model.js";
 import { Progress } from "../models/Progress.model.js";
-import { protect, isAdmin } from "../middlewares/auth.middlerware.js";
+import { protect, isAdmin,teacherOrAdmin } from "../middlewares/auth.middlerware.js";
 
 const router = express.Router();
 
 /* -------------------------------------------------------------------------- */
 /*                            ADMIN: ADD NEW ROADMAP                          */
 /* -------------------------------------------------------------------------- */
-router.post("/", protect, isAdmin, async (req, res) => {
+router.post("/", protect,teacherOrAdmin, async (req, res) => {
   try {
     const { title, description, months } = req.body;
 
@@ -257,7 +257,7 @@ router.get("/", async (req, res) => {
 });
 
 // Admin Edit
-router.put("/:id", protect, isAdmin, async (req, res) => {
+router.put("/:id", protect, teacherOrAdmin, async (req, res) => {
   try {
     const { title, description, months } = req.body;
     const roadmap = await Roadmap.findByIdAndUpdate(

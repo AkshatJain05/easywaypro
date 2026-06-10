@@ -30,6 +30,14 @@ import adminRouter from "./routes/admin.route.js"
 import quizRouter from "./routes/quiz.route.js"
 import docRoutes from "./routes/docs.route.js";
 
+import courseRoutes from "./routes/course.route.js";
+import purchaseRoutes from "./routes/purchase.route.js";
+import dashboardRoutes from "./routes/dashboard.route.js";
+import adminDashboardRoutes from "./routes/adminDashboard.route.js";
+import certificateRoutes from "./routes/certificate.route.js";
+import attendanceRoutes from "./routes/attendance.route.js";
+import noteRouter from "./routes/note.route.js";
+
 app.use("/api/auth",userRouter);
 app.use("/api/resources",resouceRouter);
 app.use("/api/roadmap",roadmapRouter);
@@ -41,6 +49,15 @@ app.use("/api/contacts", contactRouter);
 app.use("/api/admin",adminRouter);
 app.use("/api/quiz",quizRouter);
 app.use("/api/docs", docRoutes);
+
+app.use("/api/courses", courseRoutes);
+app.use("/api/purchase", purchaseRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/admin/course", adminDashboardRoutes);
+app.use("/api/certificates", certificateRoutes);
+app.use("/api/attendance", attendanceRoutes);
+app.use("/api/notes", noteRouter);
+
 
 
 // Connect DB first, then start server

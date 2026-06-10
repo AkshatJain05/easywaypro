@@ -54,7 +54,7 @@ const RoadmapCard = ({ roadmap, index }) => {
     >
       <Link
         to={`/roadmap/${roadmap._id}`}
-        className={`group flex flex-col h-full bg-white/2   border ${meta.ring} rounded-2xl p-5 hover:bg-white/2 hover:border-cyan-400 transition-all duration-300`}
+        className={`group flex flex-col h-full bg-gray-950   border ${meta.ring} rounded-2xl p-5 hover:bg-slate-950 hover:border-cyan-400 transition-all duration-300`}
       >
         {/* Top row */}
         <div className="flex items-start justify-between gap-3 mb-3">
@@ -178,7 +178,7 @@ export default function RoadmapList() {
   if (loading) return <Loading/>;
 
   return (
-    <div className="min-h-screen  text-white font-sans px-4 sm:px-8 py-8 selection:bg-sky-500/25">
+    <div className="min-h-screen bg-[#030009]   text-white font-sans px-4 sm:px-8 py-8 selection:bg-sky-500/25">
       <div className="max-w-7xl mx-auto">
 
         {/* ── Page header ── */}

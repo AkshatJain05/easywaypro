@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout, fetchUser } from "../redux/authSlice";
 import { Link, useNavigate } from "react-router-dom";
-import { MdLogin, MdLogout, MdPerson, MdCardMembership } from "react-icons/md";
+import { MdLogout, MdPerson, MdCardMembership } from "react-icons/md";
+import { FiLayout, FiBook, FiAward } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function UserMenu() {
@@ -14,71 +15,62 @@ export default function UserMenu() {
   const menuRef = useRef(null);
   const btnRef = useRef(null);
 
-  const initial = (user?.name || "U")[0].toUpperCase();
-
+  // 1. Fetch user only if idle
   useEffect(() => {
     if (status === "idle") dispatch(fetchUser());
   }, [dispatch, status]);
 
+  // 2. Efficient Event Handling
+  const closeMenu = useCallback(() => setOpen(false), []);
+
   useEffect(() => {
+    if (!open) return; // Only add listener when menu is open
+
     const handleClick = (e) => {
-      if (!menuRef.current || !btnRef.current) return;
-      if (!menuRef.current.contains(e.target) && !btnRef.current.contains(e.target)) {
-        setOpen(false);
+      if (menuRef.current && !menuRef.current.contains(e.target) && !btnRef.current.contains(e.target)) {
+        closeMenu();
       }
     };
-    const handleKey = (e) => e.key === "Escape" && setOpen(false);
+    const handleKey = (e) => e.key === "Escape" && closeMenu();
+
     document.addEventListener("mousedown", handleClick);
     document.addEventListener("keydown", handleKey);
     return () => {
       document.removeEventListener("mousedown", handleClick);
       document.removeEventListener("keydown", handleKey);
     };
-  }, []);
+  }, [open, closeMenu]);
+
+  const initial = useMemo(() => (user?.name || "U")[0].toUpperCase(), [user?.name]);
 
   if (status === "loading" || status === "idle") {
-    return (
-      <div className="h-9 w-9 rounded-full bg-slate-800 animate-pulse border border-white/5"></div>
-    );
+    return <div className="h-9 w-9 rounded-full bg-slate-800 animate-pulse border border-white/5" />;
   }
 
-  // ── LOGGED OUT STATE ──
   if (!user) {
     return (
-      <div className="flex items-center">
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => navigate("/login")}
-          className="hidden md:flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-blue-900 to-indigo-700 text-white text-xs font-black uppercase tracking-widest rounded-xl shadow-lg shadow-blue-500/20 hover:brightness-110 transition-all"
-        >
-          Login
-        </motion.button>
-        <button
-          onClick={() => navigate("/login")}
-          className="md:hidden p-2 text-white active:scale-90 transition-transform"
-        >
-          <MdLogin size={25} />
-        </button>
-      </div>
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        onClick={() => navigate("/login")}
+        className="px-5 py-2 bg-white text-black text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-slate-200 transition-all"
+      >
+        Login
+      </motion.button>
     );
   }
 
-  // ── LOGGED IN STATE ──
   return (
     <div className="relative">
       <motion.button
         ref={btnRef}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setOpen((v) => !v)}
-        className="relative group flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-cyan-500 p-[2px] shadow-lg shadow-cyan-500/10 cursor-pointer overflow-hidden"
+        onClick={() => setOpen((prev) => !prev)}
+        className="flex items-center justify-center h-9 w-9 rounded-full bg-gradient-to-tr from-amber-500 to-orange-400 p-[2px]"
       >
-        <div className="h-full w-full rounded-full bg-slate-950 flex items-center justify-center overflow-hidden">
+        <div className="h-full w-full rounded-full bg-black flex items-center justify-center overflow-hidden">
           {user?.profilePhoto ? (
             <img src={user.profilePhoto} alt={user.name} className="h-full w-full object-cover" />
           ) : (
-            <span className="text-sm font-bold text-white">{initial}</span>
+            <span className="text-xs font-bold text-white">{initial}</span>
           )}
         </div>
       </motion.button>
@@ -87,37 +79,28 @@ export default function UserMenu() {
         {open && (
           <motion.div
             ref={menuRef}
-            initial={{ opacity: 0, y: 10, scale: 0.98 }}
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.98 }}
-            className="absolute z-[200] right-0 mt-3 w-64 rounded-2xl bg-slate-950/98 border border-white/10 shadow-2xl backdrop-blur-2xl overflow-hidden"
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            transition={{ duration: 0.1 }}
+            className="absolute z-[200] right-0 mt-3 w-64 rounded-2xl bg-black border border-slate-700 shadow-2xl overflow-hidden"
           >
-            {/* Header */}
             <div className="px-5 py-4 border-b border-white/5 bg-white/[0.02]">
-              <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Account</p>
-              <p className="truncate text-sm font-bold text-white mt-1 group cursor-default">
-                {user?.name}
-              </p>
-              <p className="text-[11px] text-slate-400 truncate">{user?.email}</p>
+              <p className="text-sm font-bold text-white truncate">{user?.name}</p>
+              <p className="text-[11px] text-slate-500 truncate">{user?.email}</p>
             </div>
 
-            {/* Menu Items */}
             <div className="p-2">
-              <MenuLink to="/profile" icon={<MdPerson size={18} />} label="My Profile" onClick={() => setOpen(false)} />
-              <MenuLink to="/certificates" icon={<MdCardMembership size={18} />} label="Certificates" onClick={() => setOpen(false)} />
-              
+              <MenuLink to="/dashboard" icon={<FiLayout />} label="Dashboard" onClick={closeMenu} />
+              <MenuLink to="/my-courses" icon={<FiBook />} label="My Courses" onClick={closeMenu} />
+              <MenuLink to="/certificates" icon={<MdCardMembership />} label="Certificates" onClick={closeMenu} />
               <div className="my-2 border-t border-white/5" />
-              
+              <MenuLink to="/profile" icon={<MdPerson />} label="Edit Profile" onClick={closeMenu} />
               <button
-                onClick={() => {
-                  setOpen(false);
-                  dispatch(logout());
-                  navigate("/");
-                }}
-                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-400 hover:bg-red-500/10 rounded-xl transition-all cursor-pointer"
+                onClick={() => { dispatch(logout()); closeMenu(); }}
+                className="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold text-red-400 hover:bg-red-500/5 rounded-xl transition-all"
               >
-                <MdLogout size={18} />
-                <span>Logout Session</span>
+                <MdLogout size={16} /> Logout
               </button>
             </div>
           </motion.div>
@@ -127,16 +110,13 @@ export default function UserMenu() {
   );
 }
 
-// Helper component for menu links
-function MenuLink({ to, icon, label, onClick }) {
-  return (
-    <Link
-      to={to}
-      onClick={onClick}
-      className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-xl transition-all"
-    >
-      <span className="text-slate-500">{icon}</span>
-      {label}
-    </Link>
-  );
-}
+const MenuLink = React.memo(({ to, icon, label, onClick }) => (
+  <Link
+    to={to}
+    onClick={onClick}
+    className="flex items-center gap-3 px-4 py-3 text-xs font-bold text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all"
+  >
+    <span className="text-slate-600">{icon}</span>
+    {label}
+  </Link>
+));

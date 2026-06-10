@@ -33,12 +33,16 @@ const UserSchema = new mongoose.Schema(
       enum: ["student", "teacher", "admin"],
       default: "student",
     },
+    lastLogin: {
+      type: Date,
+      default: Date.now, // Defaults to registration date if they haven't re-authenticated
+    },
 
     // Forgot Password Fields
     resetToken: String,
     resetTokenExpire: Date,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Encrypt password before saving

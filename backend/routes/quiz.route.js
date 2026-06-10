@@ -1,5 +1,5 @@
 import express from "express";
-import { isAdmin, protect } from "../middlewares/auth.middlerware.js";
+import { isAdmin, protect ,teacherOrAdmin} from "../middlewares/auth.middlerware.js";
 
 import {
   createQuiz,
@@ -30,7 +30,7 @@ router.get("/user-certificates", protect, userCertification);
 // Get certificate by certificateId
 router.get("/certificate/:id", userCertificationById);
 
-router.post("/create", protect, isAdmin, createQuiz);
+router.post("/create", protect, teacherOrAdmin, createQuiz);
 
 router.get("/complete-quiz", protect, completedQuiz);
 

@@ -33,11 +33,11 @@ const HomePage = () => {
   ];
 
   return (
-    <div className="min-h-screen  text-white relative overflow-hidden selection:bg-cyan-500/30">
+    <div className="min-h-screen  text-white relative overflow-hidden bg-gray-950 selection:bg-black">
       
       {/* ── BACKGROUND AMBIENCE ── */}
-      <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-blue-600/10 blur-[140px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-500/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-[#030009]  blur-[140px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-[#030009] blur-[120px] rounded-full pointer-events-none" />
 
       {/* ── TOP NAVIGATION ── */}
       <div className="max-w-7xl mx-auto px-6 py-8">
@@ -58,7 +58,7 @@ const HomePage = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-[0.2em] mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-black border border-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-[0.2em] mb-6">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>

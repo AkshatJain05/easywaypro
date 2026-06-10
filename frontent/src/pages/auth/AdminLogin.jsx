@@ -5,11 +5,12 @@ import { adminLogin } from "../../redux/authSlice";
 import { toast } from "react-hot-toast";
 import { MdEmail, MdShield } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { motion } from "framer-motion"; // Use motion for better feedback
+import { FaEye, FaEyeSlash, FaChalkboardTeacher } from "react-icons/fa";
+import { motion } from "framer-motion";
 import ScrollReveal from "../../component/ScllorAnimation";
 
 function Login() {
+  const [role, setRole] = useState("admin"); // 'admin' | 'teacher'
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -23,15 +24,18 @@ function Login() {
     setLoading(true);
 
     try {
-      const resultAction = await dispatch(adminLogin({ email, password }));
+      const resultAction = await dispatch(adminLogin({ email, password, role }));
       if (adminLogin.fulfilled.match(resultAction)) {
-        toast.success("Access Granted. Welcome Admin.");
-        navigate("/admin/users");
+        toast.success(`Access Granted. Welcome ${role === "admin" ? "Admin" : "Teacher"}.`);
+        
+        // Dynamically guide landing route based on structural role authentication
+        const targetPath = role === "admin" ? "/admin/users" : "/admin/courses";
+        navigate(targetPath);
       } else {
-        toast.error(resultAction.payload || "Unauthorized Access");
+        toast.error(resultAction.payload || "Unauthorized Access Context");
       }
     } catch (err) {
-      toast.error("Server connection failed");
+      toast.error("Security gateway communication timeout");
     } finally {
       setLoading(false);
     }
@@ -39,102 +43,125 @@ function Login() {
 
   return (
     <ScrollReveal from="bottom">
-      <div className="min-h-screen w-full px-5 flex justify-center items-center  relative overflow-hidden">
-        {/* Background Decorative Element */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-yellow-500/50 to-transparent" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-yellow-500/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="min-h-screen w-full bg-[#050507] px-5 flex justify-center items-center relative overflow-hidden font-sans antialiased select-none">
+        
+        {/* Subtle Atmospheric Vector Flare */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-white/[0.01] blur-[140px] rounded-full pointer-events-none" />
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          className="max-w-[420px] w-full relative group"
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          className="max-w-[400px] w-full relative"
         >
-          {/* Card Border Glow */}
-          <div className="absolute inset-0 blur-xl opacity-0 group-hover:opacity-100 transition-opacity rounded-[2rem]" />
-
           <form
             onSubmit={handleSubmit}
-            className="relative w-full text-center border border-white/10 rounded-[2rem] px-6 sm:px-10 py-12 bg-[#0a0a0a]/80 backdrop-blur-xl shadow-2xl"
+            className="w-full text-center border border-white/[0.04] rounded-2xl px-6 sm:px-8 py-10 bg-[#09090b] shadow-2xl relative z-10"
           >
-            {/* Admin Icon */}
-            <div className="mx-auto w-16 h-16 bg-yellow-500/10 border border-yellow-500/20 rounded-2xl flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(234,179,8,0.1)]">
-              <MdShield className="text-blue-500 text-3xl" />
+            {/* Dynamic Console Emblem */}
+            <div className="mx-auto w-12 h-12 bg-white text-black rounded-xl flex items-center justify-center mb-5 shadow-sm transition-all duration-300">
+              {role === "admin" ? (
+                <MdShield className="text-xl" />
+              ) : (
+                <FaChalkboardTeacher className="text-xl" />
+              )}
             </div>
 
-            <h1 className="text-white font-black text-3xl tracking-tight">
-              Admin <span className="text-blue-500 italic">Panel</span>
+            <h1 className="text-white font-bold text-xl tracking-tight uppercase">
+              Console <span className="text-zinc-500 font-light">Gateway</span>
             </h1>
-            <p className="text-gray-500 text-xs uppercase tracking-widest mt-2 font-bold">
-              Secure Authorization Required
+            <p className="text-zinc-500 text-[10px] uppercase tracking-widest mt-1.5 font-semibold">
+              Secure Authorization Matrix
             </p>
 
-            <div className="mt-10 space-y-4 text-left">
-              {/* Email Field */}
-              <div className="space-y-2">
-                <label className="text-[10px] text-gray-300 font-bold ml-4 uppercase tracking-wider">
-                  Email Address
+            {/* Premium Role Segment Selector */}
+            <div className="mt-8 p-1 bg-[#0d0d12] border border-white/[0.04] rounded-lg grid grid-cols-2 relative">
+              <button
+                type="button"
+                onClick={() => { setRole("admin"); setEmail(""); setPassword(""); }}
+                className={`py-2 text-[11px] font-semibold tracking-wider uppercase rounded-md transition-all relative z-10 cursor-pointer ${
+                  role === "admin" ? "text-black bg-white shadow-sm" : "text-zinc-500 hover:text-zinc-300"
+                }`}
+              >
+                Administrator
+              </button>
+              <button
+                type="button"
+                onClick={() => { setRole("teacher"); setEmail(""); setPassword(""); }}
+                className={`py-2 text-[11px] font-semibold tracking-wider uppercase rounded-md transition-all relative z-10 cursor-pointer ${
+                  role === "teacher" ? "text-black bg-white shadow-sm" : "text-zinc-500 hover:text-zinc-300"
+                }`}
+              >
+                Faculty Staff
+              </button>
+            </div>
+
+            {/* Input Stack */}
+            <div className="mt-6 space-y-4 text-left">
+              {/* Email Address */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] text-zinc-500 font-bold uppercase tracking-wide ml-1">
+                  Identity Core Email
                 </label>
-                <div className="flex items-center w-full bg-white/[0.03] border border-white/5 h-14 rounded-2xl focus-within:border-blue-500/50 focus-within:ring-4 focus-within:ring-yellow-500/10 transition-all px-4 gap-3">
-                  <MdEmail className="text-gray-500 text-xl" />
+                <div className="flex items-center w-full bg-[#0d0d12] border border-white/[0.06] h-12 rounded-lg focus-within:border-white/20 transition-all px-3.5 gap-3">
+                  <MdEmail className="text-zinc-500 text-lg shrink-0" />
                   <input
                     type="email"
-                    placeholder="admin@easyway.pro"
+                    placeholder={role === "admin" ? "admin@easyway.pro" : "teacher@easyway.pro"}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="bg-transparent text-white placeholder-gray-700 outline-none text-sm w-full h-full"
+                    className="bg-transparent text-white placeholder-zinc-700 outline-none text-xs w-full h-full font-medium"
                     required
                   />
                 </div>
               </div>
 
-              {/* Password Field */}
-              <div className="space-y-2">
-                <label className="text-[10px] text-gray-300 font-bold ml-4 uppercase tracking-wider">
-                  Access Key
+              {/* Password Access Key */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] text-zinc-500 font-bold uppercase tracking-wide ml-1">
+                  Access Security Token
                 </label>
-                <div className="flex items-center w-full bg-white/[0.03] border border-white/5 h-14 rounded-2xl focus-within:border-blue-500/50 focus-within:ring-4 focus-within:ring-yellow-500/10 transition-all px-4 gap-3">
-                  <RiLockPasswordFill className="text-gray-500 text-xl" />
+                <div className="flex items-center w-full bg-[#0d0d12] border border-white/[0.06] h-12 rounded-lg focus-within:border-white/20 transition-all px-3.5 gap-3">
+                  <RiLockPasswordFill className="text-zinc-500 text-lg shrink-0" />
                   <input
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="bg-transparent text-white placeholder-gray-700 outline-none text-sm w-full h-full tracking-widest"
+                    className="bg-transparent text-white placeholder-zinc-700 outline-none text-xs w-full h-full font-medium tracking-wider"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="text-gray-600 hover:text-blue-500 transition-colors"
+                    className="text-zinc-600 hover:text-white transition-colors cursor-pointer"
                   >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showPassword ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* Submit Button */}
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+            {/* Submit Action Dispatcher */}
+            <button
               type="submit"
               disabled={loading}
-              className="mt-10 w-full h-14 rounded-2xl text-gray-100 font-black text-sm uppercase tracking-widest bg-blue-600 hover:bg-blue-500 shadow-[0_10px_20px_rgba(234,179,8,0.2)] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="mt-8 w-full h-12 rounded-lg text-black font-semibold text-xs uppercase tracking-wider bg-white hover:bg-zinc-200 disabled:bg-zinc-900 disabled:text-zinc-600 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
             >
               {loading ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                  Verifying...
+                  <div className="w-3 h-3 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                  <span>Validating credentials...</span>
                 </>
               ) : (
-                "Authorize Access"
+                <span>Authorize & Mount Session</span>
               )}
-            </motion.button>
+            </button>
 
-            {/* Security Warning */}
-            <p className="mt-8 text-[10px] text-gray-600 flex items-center justify-center gap-1">
-              <span className="w-1 h-1 rounded-full bg-red-500 animate-pulse" />
-              Unauthorized access attempts are logged.
+            {/* Security Warning Log Stamp */}
+            <p className="mt-6 text-[9px] text-zinc-600 flex items-center justify-center gap-1.5">
+              <span className="w-1 h-1 rounded-full bg-zinc-700 shrink-0" />
+              <span>All authentication handshake routes are logged.</span>
             </p>
           </form>
         </motion.div>

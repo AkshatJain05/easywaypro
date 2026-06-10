@@ -888,7 +888,7 @@ export default function Profile() {
       </AnimatePresence>
 
       {/* Global CSS for the scrollbar (Add to your global CSS or inside a <style> tag) */}
-      <style jsx>{`
+      <style jsx="true">{`
         .custom-scrollbar::-webkit-scrollbar {
           width: 4px;
         }

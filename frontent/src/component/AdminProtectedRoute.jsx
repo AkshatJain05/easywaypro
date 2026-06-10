@@ -4,13 +4,18 @@ import Loading from "./Loading";
 
 export default function ProtectedRoute() {
   const { user, initialized } = useSelector((state) => state.auth);
-  //  console.log("Auth State:", { user, initialized });
 
+  // Keep execution suspended until user context initialization handshakes complete
   if (!initialized) return <Loading />;
 
-  if (!user || user.role !== "admin") {
+  // Define structured group authorization layers
+  const authorizedRoles = ["admin", "teacher"];
+
+  // Guard Clause: Validate presence and evaluate permission context keys
+  if (!user || !authorizedRoles.includes(user?.role?.toLowerCase())) {
     return <Navigate to="/admin/login" replace />;
   }
 
+  // Authorize rendering pipeline for mounted child paths
   return <Outlet />;
 }

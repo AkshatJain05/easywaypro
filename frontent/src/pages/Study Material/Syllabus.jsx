@@ -46,8 +46,8 @@ export default function SyllabusLinks() {
   return (
     <div className="min-h-screen  text-white py-6 px-6 sm:px-12 lg:px-24 relative overflow-hidden">
       {/* Background Decorative Glows */}
-      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/10 blur-[120px] rounded-full" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[400px] h-[400px] bg-cyan-500/10 blur-[100px] rounded-full" />
+      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-800/10 blur-[120px] rounded-full" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[400px] h-[400px] bg-cyan-800/10 blur-[100px] rounded-full" />
 
       {/* Back Button */}
       <motion.button

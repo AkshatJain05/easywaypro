@@ -1,5 +1,5 @@
 import express from "express";
-import { isAdmin, protect } from "../middlewares/auth.middlerware.js";
+import { isAdmin, protect, teacherOrAdmin} from "../middlewares/auth.middlerware.js";
 import { addNewResources, deleteResources, getAllResources } from "../controllers/resource.controller.js";
 
 const router = express.Router();
@@ -8,7 +8,7 @@ const router = express.Router();
 router.get("/", getAllResources);
 
 // POST a new resource (admin)
-router.post("/",protect,isAdmin,addNewResources );
+router.post("/",protect,teacherOrAdmin,addNewResources );
 
 // DELETE /api/resources/:id
 router.delete("/:id",protect,isAdmin,deleteResources );

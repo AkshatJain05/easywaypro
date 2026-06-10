@@ -45,7 +45,7 @@ export default function QuizList({ quizzes, onSelect }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.1 }}
-            className="group relative flex flex-col bg-[#02010a] border border-white/20 rounded-[2rem] p-6 hover:border-indigo-500/30 hover:bg-white/[0.03] transition-all duration-500 shadow-2xl hover:shadow-indigo-500/10"
+            className="group relative flex flex-col bg-slate-950 border border-white/20 rounded-[2rem] p-6 hover:border-indigo-500/30 hover:bg-white/[0.03] transition-all duration-500 shadow-2xl hover:shadow-indigo-500/10"
           >
             {/* Card Content */}
             <div className="flex-1">

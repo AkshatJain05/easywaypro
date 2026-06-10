@@ -197,7 +197,7 @@ export default function RoadmapAdmin() {
         </div>
       )}
 
-      <h1 className="text-2xl md:text-4xl font-extrabold text-center mb-6 bg-gradient-to-r from-blue-800 via-blue-400 to-blue-800 bg-clip-text text-transparent">
+      <h1 className="text-2xl md:text-4xl font-extrabold text-center mb-6 bg-gradient-to-r from-blue-800 via-cyan-600 to-blue-800 bg-clip-text text-transparent">
         ⚙️ Admin Roadmap Manager
       </h1>
 
@@ -232,14 +232,15 @@ export default function RoadmapAdmin() {
       {activeTab === "add" && (
         <form
           onSubmit={handleSubmit}
-          className="bg-gray-950 border border-gray-800 rounded-2xl p-4 space-y-6 shadow-lg shadow-green-500/10"
+          className="bg-gradient-to-r from-black via-gray-950 to-black border border-gray-800 rounded-2xl p-4 space-y-6 shadow-lg shadow-green-500/10"
         >
           <div>
             <label className="block mb-2">Title</label>
             <input
               type="text"
-              className="w-full p-2 rounded-md bg-gray-900 border border-gray-700"
+              className="w-full p-2 rounded-md bg-gray-950 border border-gray-700"
               value={title}
+              placeholder="Enter Title"
               onChange={(e) => setTitle(e.target.value)}
             />
           </div>
@@ -247,8 +248,9 @@ export default function RoadmapAdmin() {
           <div>
             <label className="block mb-2">Description</label>
             <textarea
-              className="w-full p-2 rounded-md bg-gray-900 border border-gray-700"
+              className="w-full p-2 rounded-md bg-gray-950 border border-gray-700"
               value={description}
+              placeholder="Enter Description"
               onChange={(e) => setDescription(e.target.value)}
             />
           </div>
@@ -257,7 +259,7 @@ export default function RoadmapAdmin() {
           {months.map((month, mi) => (
             <div
               key={mi}
-              className="border border-gray-700 rounded-md p-4 bg-gray-950 mb-4"
+              className="border border-gray-700 rounded-md p-4 bg-black mb-4"
             >
               <div className="flex justify-between items-center mb-2">
                 <input
@@ -269,7 +271,7 @@ export default function RoadmapAdmin() {
                     newMonths[mi].month = e.target.value;
                     setMonths(newMonths);
                   }}
-                  className="p-2 rounded-md bg-gray-900 border border-gray-700 w-1/2"
+                  className="p-2 rounded-md bg-gray-950 border border-gray-700 w-1/2"
                 />
                 <button
                   type="button"
@@ -297,7 +299,7 @@ export default function RoadmapAdmin() {
                           newMonths[mi].steps[si].day = e.target.value;
                           setMonths(newMonths);
                         }}
-                        className="p-2 rounded-md bg-gray-900 border border-gray-700 sm:w-24 w-full"
+                        className="p-2 rounded-md bg-gray-950 border border-gray-700 sm:w-24 w-full"
                       />
                       <input
                         type="text"
@@ -308,7 +310,7 @@ export default function RoadmapAdmin() {
                           newMonths[mi].steps[si].topic = e.target.value;
                           setMonths(newMonths);
                         }}
-                        className="p-2 rounded-md bg-gray-900 border border-gray-700 flex-1"
+                        className="p-2 rounded-md bg-gray-950 border border-gray-700 flex-1"
                       />
                     </div>
                     <button
@@ -332,7 +334,7 @@ export default function RoadmapAdmin() {
                             e.target.value;
                           setMonths(newMonths);
                         }}
-                        className="p-2 rounded-md bg-gray-900 border border-gray-700 flex-1"
+                        className="p-2 rounded-md bg-gray-950 border border-gray-700 flex-1"
                       />
                       <button
                         type="button"
@@ -366,7 +368,7 @@ export default function RoadmapAdmin() {
           <button
             type="button"
             onClick={addMonth}
-            className="bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded-md w-full sm:w-auto"
+            className="bg-gray-900 hover:bg-gray-600 px-3 py-1 rounded-md w-full sm:w-auto"
           >
             + Add Month
           </button>
@@ -395,10 +397,10 @@ export default function RoadmapAdmin() {
 
       {/* List */}
       {activeTab === "list" && (
-        <div className="bg-gray-950 border border-gray-800 rounded-2xl p-6 mt-6 shadow-lg shadow-green-500/10 overflow-x-auto">
-          <table className="min-w-full border border-gray-800 text-sm md:text-base">
+        <div className="bg-gradient-to-r from-black via-gray-950 to-black border border-gray-800 rounded-2xl p-6 mt-6 shadow-lg shadow-green-500/10 overflow-x-auto">
+          <table className="min-w-full border border-gray-800 rounded-2xl text-xs md:text-base">
             <thead>
-              <tr className="bg-gray-800 text-left">
+              <tr className="bg-black text-left ">
                 <th className="p-3 border-b border-gray-700">Title</th>
                 <th className="p-3 border-b border-gray-700 hidden sm:table-cell text-center">
                   Description
@@ -411,7 +413,7 @@ export default function RoadmapAdmin() {
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="text-sm">
               {roadmaps.map((r) => (
                 <tr
                   key={r._id}

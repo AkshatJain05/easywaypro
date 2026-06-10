@@ -61,13 +61,13 @@ export default function ManageResources() {
     <div className="max-w-6xl mx-auto space-y-6 pb-10 px-4 md:px-0 overflow-x-hidden">
       
       {/* ── Quick Add Form ── */}
-      <div className="bg-[#0d0d12] border border-white/5 rounded-3xl p-5 md:p-6 shadow-xl">
+      <div className="bg-gradient-to-r from-black via-gray-950 to-black border border-slate-800 rounded-3xl p-5 md:p-6 shadow-xl">
         <h1 className="text-xl font-black tracking-tighter mb-4">RESOURCES</h1>
         <form onSubmit={addResource} className="flex flex-col lg:flex-row gap-3">
           <input 
             type="text" placeholder="Title" value={form.title}
             onChange={e => setForm({...form, title: e.target.value})}
-            className="flex-1 bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500/50"
+            className="flex-1 bg-white/[0.03] border border-white/2 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500/50"
           />
           <div className="flex flex-wrap gap-3">
             <input 
@@ -77,7 +77,7 @@ export default function ManageResources() {
             />
             <select 
               value={form.type} onChange={e => setForm({...form, type: e.target.value})}
-              className="w-28 bg-white/[0.03] border border-white/10 rounded-xl px-2 py-3 text-sm outline-none text-white/50"
+              className="w-28 bg-white/[0.03] border border-white/3 rounded-xl px-2 py-3 text-sm outline-none text-white/50"
             >
               <option value="notes" className="bg-black text-white">Notes</option>
               <option value="pyq" className="bg-black text-white">PYQ</option>
@@ -99,7 +99,7 @@ export default function ManageResources() {
       </div>
 
       {/* ── Search & Filters ── */}
-      <div className="flex flex-col md:flex-row gap-4 items-center bg-[#0d0d12] border border-white/5 rounded-2xl p-2 md:p-3">
+      <div className="flex flex-col md:flex-row gap-4 items-center bg-gradient-to-r from-black via-gray-950 to-black border border-slate-800 rounded-2xl p-2 md:p-3">
         <div className="relative flex-1 w-full">
           <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20" />
           <input 
@@ -108,7 +108,7 @@ export default function ManageResources() {
             className="w-full bg-transparent pl-12 pr-4 py-2 text-sm outline-none placeholder:text-white/20"
           />
         </div>
-        <div className="flex gap-1 bg-white/5 p-1 rounded-xl w-full md:w-auto overflow-x-auto hide-scrollbar">
+        <div className="flex gap-1 bg-white/7 p-1 rounded-xl w-full md:w-auto overflow-x-auto hide-scrollbar">
           {['all', 'notes', 'pyq', 'video'].map(f => (
             <button 
               key={f} onClick={() => setActiveFilter(f)}
@@ -125,24 +125,24 @@ export default function ManageResources() {
       {/* ── Table / List ── */}
       <div className=" border border-white/5 rounded-[2rem] overflow-hidden shadow-2xl">
         {/* Table Header (Hidden on Mobile) */}
-        <div className="hidden md:grid grid-cols-12 gap-4 px-8 py-4 bg-white/[0.02] border-b border-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-white/20">
+        <div className="hidden md:grid grid-cols-12 gap-4 px-8 py-4 bg-gradient-to-r from-black via-gray-950 to-black border-b border-slate-700 text-[10px] font-black uppercase tracking-[0.2em] text-white/20">
           <div className="col-span-5">Content</div>
           <div className="col-span-3">Subject</div>
           <div className="col-span-2 text-center">Type</div>
           <div className="col-span-2 text-right">Action</div>
         </div>
 
-        <div className="divide-y divide-white/[0.03]">
+        <div className="divide-y divide-gradient-to-r from-black via-gray-950 to-black">
           <AnimatePresence>
             {filtered.map((res) => (
               <motion.div 
                 layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 key={res._id}
-                className="flex flex-col md:grid md:grid-cols-12 gap-4 px-6 md:px-8 py-5 items-start md:items-center hover:bg-white/[0.01] transition-colors group relative"
+                className="flex flex-col md:grid md:grid-cols-12 gap-4 px-6 md:px-8 py-5 items-start md:items-center  hover:bg-white/[0.01] transition-colors group relative border-slate-800"
               >
                 {/* Title Section */}
                 <div className="col-span-5 flex items-center gap-4 w-full min-w-0">
-                  <div className={`shrink-0 p-3 rounded-xl bg-white/5 ${res.type === 'video' ? 'text-red-500/50' : 'text-blue-500/50'}`}>
+                  <div className={`shrink-0 p-3 rounded-xl bg-white/2 ${res.type === 'video' ? 'text-red-500/50' : 'text-blue-500/50'}`}>
                     {res.type === 'video' ? <FaVideo size={14}/> : <FaFileAlt size={14}/>}
                   </div>
                   <div className="min-w-0 flex-1">

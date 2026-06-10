@@ -24,7 +24,6 @@ const register = async (req, res) => {
   }
 };
 
-// ================== LOGIN ==================
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -37,13 +36,18 @@ const login = async (req, res) => {
     if (!isMatch)
       return res.status(400).json({ message: "Invalid email or password" });
 
+    // ── TARGET LOCATION: REPLACE OLD SAVE TRACKING HERE ──────────
+    user.lastLogin = new Date();
+    await user.save({ validateBeforeSave: false }); // 👈 Stops validation errors on other fields
+    // ─────────────────────────────────────────────────────────────
+
     const token = generateToken(user._id);
 
     res.cookie("jwt", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // HTTPS only on Render
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // cross-site allowed in prod
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      secure: process.env.NODE_ENV === "production", 
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", 
+      maxAge: 24 * 60 * 60 * 1000, 
     });
 
     res.json({
@@ -54,6 +58,7 @@ const login = async (req, res) => {
         email: user.email,
         profilePhoto: user.profilePhoto,
         role: user.role,
+        lastLogin: user.lastLogin, 
       },
     });
   } catch (error) {
@@ -61,21 +66,40 @@ const login = async (req, res) => {
   }
 };
 
+
 // ================== ADMIN LOGIN ==================
 const adminLogin = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body; // 'role' parameter passed dynamically from the segment switcher
 
     const user = await User.findOne({ email });
-    if (!user)
+    if (!user) {
       return res.status(400).json({ message: "Invalid email or password" });
+    }
 
-    if (user.role !== "admin")
-      return res.status(403).json({ message: "Access denied. Not an admin." });
+    // 1. Structural Check: Ensure the user's role belongs to the authorized group matrix
+    const authorizedRoles = ["admin", "teacher"];
+    if (!authorizedRoles.includes(user.role)) {
+      return res.status(403).json({ message: "Access denied. Unauthorized role permissions." });
+    }
+
+    // 2. Cross-Verification: Validate that the client form intent matches the true database profile schema
+    if (role && user.role !== role.toLowerCase()) {
+      return res.status(403).json({ 
+        message: `Access denied. Selected identity profile does not match your credentials.` 
+      });
+    }
 
     const isMatch = await user.matchPassword(password);
-    if (!isMatch)
+    if (!isMatch) {
       return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    // ── TELEMETRY INJECTION ──
+    // Captures access telemetry safely, bypassing restrictive schema modification rules
+    user.lastLogin = new Date();
+    await user.save({ validateBeforeSave: false }); 
+    // ─────────────────────────
 
     const token = generateToken(user._id);
 
@@ -86,20 +110,25 @@ const adminLogin = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
 
+    // Dynamic clean naming text for the payload formatting output block
+    const userDisplayRole = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+
     res.json({
-      message: "Admin Login successful",
+      message: `${userDisplayRole} Login successful`,
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
         profilePhoto: user.profilePhoto,
         role: user.role,
+        lastLogin: user.lastLogin, // Populates frontend dashboard tracking indicators flawlessly
       },
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // ================== LOGOUT ==================
 const logout = async (req, res) => {

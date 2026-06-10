@@ -11,6 +11,8 @@ import syllabus from "../../assets/syllabusImg.png";
 import algorithmVisualizer from "../../assets/algorithmVisualizer.png";
 import Certificates from "../../assets/certificatefeature.png";
 import Docs from "../../assets/docs.png";
+import Course from "../../assets/course.png";
+
 
 const studyMaterialList = [
   { name: "Roadmaps",               link: "/roadmap",               img: roadmap,              tag: "Learning Path" },
@@ -22,6 +24,7 @@ const studyMaterialList = [
   { name: "Algorithm Visualizer",   link: "/algorithm-visualizer",  img: algorithmVisualizer,  tag: "Interactive"   },
   { name: "Quizzes (Certificate)",  link: "/quizzes",               img: Certificates,         tag: "Earn Cert"     },
   { name: "Documentation Hub",      link: "/docs",                  img: Docs,                 tag: "Reference"     },
+  { name: "Course",                 link: "/courses",               img: Course,                 tag: "Learning"     },
 ];
 
 function StudyMaterial() {
