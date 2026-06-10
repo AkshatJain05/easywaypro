@@ -22,7 +22,7 @@ export default function VerifyCertificate() {
     setCertificate(null)
 
     try {
-      const response = await axios.get(`${BASE_URL}/api/certificates/verify/${certId.trim()}`)
+      const response = await axios.get(`${BASE_URL}/certificates/verify/${certId.trim()}`)
       
       if (response.data.success) {
         setCertificate(response.data.certificate)
@@ -39,7 +39,7 @@ export default function VerifyCertificate() {
 
   const handleDownload = async (courseId, title) => {
     try {
-      const response = await axios.get(`${BASE_URL}/api/certificates/download/${courseId}`, {
+      const response = await axios.get(`${BASE_URL}/certificates/download/${courseId}`, {
         responseType: 'blob',
         withCredentials: true
       })
@@ -53,7 +53,7 @@ export default function VerifyCertificate() {
       document.body.removeChild(link)
       window.URL.revokeObjectURL(blobUrl)
     } catch (err) {
-      window.open(`${BASE_URL}/api/certificates/download/${courseId}`, '_blank')
+      window.open(`${BASE_URL}/certificates/download/${courseId}`, '_blank')
     }
   }
 
@@ -71,7 +71,7 @@ export default function VerifyCertificate() {
         <div className="text-center space-y-3 relative">
           <button 
             onClick={() => window.history.back()} 
-            className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white  hover:bg-slate-900 border border-slate-800/80 px-3 py-2 rounded-xl transition-all active:scale-95 cursor-pointer group/btn"
+            className=" flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white  hover:bg-slate-900 border border-slate-800/80 px-3 py-2 rounded-xl transition-all active:scale-95 cursor-pointer group/btn"
           >
             <FiArrowLeft className="transition-transform group-hover/btn:-translate-x-0.5" size={14} />
             <span className="hidden sm:inline">Back</span>
