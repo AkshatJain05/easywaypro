@@ -3,7 +3,7 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   FaTrash, FaPlus, FaSearch, FaExternalLinkAlt, 
-  FaFileAlt, FaVideo, FaChevronRight 
+  FaFileAlt, FaVideo, FaChevronRight, FaChevronLeft 
 } from "react-icons/fa";
 import Loading from "../../component/Loading";
 
@@ -14,6 +14,10 @@ export default function ManageResources() {
   const [fetchLoading, setFetchLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
+  
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
   const API_URL = import.meta.env.VITE_API_URL;
 
   const fetchResources = async () => {
@@ -34,6 +38,16 @@ export default function ManageResources() {
       return matchesSearch && matchesType;
     });
   }, [resources, searchTerm, activeFilter]);
+
+  // Reset page when search/filter changes
+  useEffect(() => { setCurrentPage(1); }, [searchTerm, activeFilter]);
+
+  const paginatedData = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return filtered.slice(start, start + itemsPerPage);
+  }, [filtered, currentPage]);
+
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
 
   const addResource = async (e) => {
     e.preventDefault();
@@ -124,7 +138,6 @@ export default function ManageResources() {
 
       {/* ── Table / List ── */}
       <div className=" border border-white/5 rounded-[2rem] overflow-hidden shadow-2xl">
-        {/* Table Header (Hidden on Mobile) */}
         <div className="hidden md:grid grid-cols-12 gap-4 px-8 py-4 bg-gradient-to-r from-black via-gray-950 to-black border-b border-slate-700 text-[10px] font-black uppercase tracking-[0.2em] text-white/20">
           <div className="col-span-5">Content</div>
           <div className="col-span-3">Subject</div>
@@ -132,15 +145,14 @@ export default function ManageResources() {
           <div className="col-span-2 text-right">Action</div>
         </div>
 
-        <div className="divide-y divide-gradient-to-r from-black via-gray-950 to-black">
-          <AnimatePresence>
-            {filtered.map((res) => (
+        <div className="divide-y divide-white/5">
+          <AnimatePresence mode="wait">
+            {paginatedData.map((res) => (
               <motion.div 
                 layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 key={res._id}
-                className="flex flex-col md:grid md:grid-cols-12 gap-4 px-6 md:px-8 py-5 items-start md:items-center  hover:bg-white/[0.01] transition-colors group relative border-slate-800"
+                className="flex flex-col md:grid md:grid-cols-12 gap-4 px-6 md:px-8 py-5 items-start md:items-center hover:bg-white/[0.01] transition-colors group relative border-slate-800"
               >
-                {/* Title Section */}
                 <div className="col-span-5 flex items-center gap-4 w-full min-w-0">
                   <div className={`shrink-0 p-3 rounded-xl bg-white/2 ${res.type === 'video' ? 'text-red-500/50' : 'text-blue-500/50'}`}>
                     {res.type === 'video' ? <FaVideo size={14}/> : <FaFileAlt size={14}/>}
@@ -154,22 +166,16 @@ export default function ManageResources() {
                     </a>
                   </div>
                 </div>
-
-                {/* Subject Section */}
                 <div className="col-span-3 md:block flex justify-between w-full md:w-auto">
                   <span className="md:hidden text-[9px] font-black uppercase text-white/20">Subject</span>
                   <span className="text-xs font-medium text-white/50">{res.subject}</span>
                 </div>
-
-                {/* Type Badge */}
                 <div className="col-span-2 flex md:justify-center w-full md:w-auto justify-between">
                   <span className="md:hidden text-[9px] font-black uppercase text-white/20">Category</span>
                   <span className="text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-white/10 text-white/40 bg-white/5">
                     {res.type}
                   </span>
                 </div>
-
-                {/* Actions */}
                 <div className="col-span-2 flex justify-end gap-2 w-full md:w-auto pt-2 md:pt-0 border-t border-white/5 md:border-none">
                   <button 
                     onClick={() => deleteResource(res._id)}
@@ -185,6 +191,29 @@ export default function ManageResources() {
               </motion.div>
             ))}
           </AnimatePresence>
+          
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between px-6 py-4 bg-black/20">
+              <span className="text-[10px] font-black uppercase text-white/20">Page {currentPage} of {totalPages}</span>
+              <div className="flex gap-2">
+                <button 
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(p => p - 1)}
+                  className="p-2 rounded-lg bg-white/5 disabled:opacity-30 hover:bg-white/10 transition-all"
+                >
+                  <FaChevronLeft size={12}/>
+                </button>
+                <button 
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage(p => p + 1)}
+                  className="p-2 rounded-lg bg-white/5 disabled:opacity-30 hover:bg-white/10 transition-all"
+                >
+                  <FaChevronRight size={12}/>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

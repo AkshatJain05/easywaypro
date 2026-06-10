@@ -68,7 +68,7 @@ function Login() {
             </div>
 
             <h1 className="text-white font-bold text-xl tracking-tight uppercase">
-              Console <span className="text-zinc-500 font-light">Gateway</span>
+              Easyway Pro <div className="text-zinc-500  font-semibold text-xs"> (Admin Login)</div>
             </h1>
             <p className="text-zinc-500 text-[10px] uppercase tracking-widest mt-1.5 font-semibold">
               Secure Authorization Matrix

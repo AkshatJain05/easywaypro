@@ -38,7 +38,6 @@ export const login = createAsyncThunk(
         email,
         password,
       });
-
       return res.data.user;
     } catch (error) {
       return rejectWithValue(handleApiError(error));
@@ -55,7 +54,6 @@ export const adminLogin = createAsyncThunk(
         email,
         password,
       });
-
       return res.data.user;
     } catch (error) {
       return rejectWithValue(handleApiError(error));
@@ -81,10 +79,7 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     user: null,
-
-    // ✅ FAKE TOKEN (for UI only, not real JWT)
     token: null,
-
     status: "idle",
     initialized: false,
     error: null,
@@ -104,8 +99,6 @@ const authSlice = createSlice({
         state.user = action.payload;
         state.status = "succeeded";
         state.initialized = true;
-
-        // ✅ cookie session exists → set fake token flag
         state.token = "cookie-session";
       })
       .addCase(fetchUser.rejected, (state) => {
@@ -116,17 +109,35 @@ const authSlice = createSlice({
       })
 
       // ---------------- LOGIN ----------------
+      .addCase(login.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
       .addCase(login.fulfilled, (state, action) => {
         state.user = action.payload;
-        state.token = "cookie-session"; // ✅ simulate login
+        state.token = "cookie-session";
         state.status = "succeeded";
+        state.error = null;
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
       })
 
       // ---------------- ADMIN LOGIN ----------------
+      .addCase(adminLogin.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
       .addCase(adminLogin.fulfilled, (state, action) => {
         state.user = action.payload;
-        state.token = "cookie-session"; // ✅ same system
+        state.token = "cookie-session";
         state.status = "succeeded";
+        state.error = null;
+      })
+      .addCase(adminLogin.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
       })
 
       // ---------------- LOGOUT ----------------
