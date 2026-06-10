@@ -3,6 +3,7 @@ import { generateToken } from "../utils/generateToken.js";
 import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
 import dotenv from "dotenv";
+import nodemailer from "nodemailer";
 
 dotenv.config();
 
