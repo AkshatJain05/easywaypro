@@ -17,16 +17,22 @@ const HomePage = () => {
     {
       title: "Sorting Algorithms",
       tag: "Interactive",
-      description: "Visualize Bubble, Merge, Quick, and Insertion Sort with real-time speed control.",
-      icon: <FaSort className="text-5xl text-cyan-400 group-hover:drop-shadow-[0_0_15px_rgba(34,211,238,0.5)] transition-all" />,
+      description:
+        "Visualize Bubble, Merge, Quick, and Insertion Sort with real-time speed control.",
+      icon: (
+        <FaSort className="text-5xl text-cyan-400 group-hover:drop-shadow-[0_0_15px_rgba(34,211,238,0.5)] transition-all" />
+      ),
       link: "/sorting",
       color: "from-cyan-500/20 to-blue-500/5",
     },
     {
       title: "Tree Structures",
       tag: "Animated",
-      description: "Explore AVL, Red-Black, and Binary Search Trees with step-by-step logic tracing.",
-      icon: <FaCodeBranch className="text-5xl text-purple-400 group-hover:drop-shadow-[0_0_15px_rgba(192,132,252,0.5)] transition-all" />,
+      description:
+        "Explore AVL, Red-Black, and Binary Search Trees with step-by-step logic tracing.",
+      icon: (
+        <FaCodeBranch className="text-5xl text-purple-400 group-hover:drop-shadow-[0_0_15px_rgba(192,132,252,0.5)] transition-all" />
+      ),
       link: "/trees",
       color: "from-purple-500/20 to-indigo-500/5",
     },
@@ -34,10 +40,8 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen  text-white relative overflow-hidden bg-gray-950 selection:bg-black">
-      
-      {/* ── BACKGROUND AMBIENCE ── */}
-      <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-[#030009]  blur-[140px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-[#030009] blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-purple-950/30 blur-[180px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-fuchsia-950/25 blur-[160px] rounded-full pointer-events-none" />
 
       {/* ── TOP NAVIGATION ── */}
       <div className="max-w-7xl mx-auto px-6 py-8">
@@ -51,9 +55,8 @@ const HomePage = () => {
       </div>
 
       <div className="max-w-6xl mx-auto px-6 pb-20 flex flex-col items-center">
-        
         {/* ── HERO SECTION ── */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
@@ -63,19 +66,20 @@ const HomePage = () => {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
             </span>
-            Algorithm Lab 
+            Algorithm Lab
           </div>
-          
+
           <h1 className="flex flex-wrap justify-center items-center gap-2 text-3xl md:text-4xl font-black tracking-tighter mb-2 bg-gradient-to-b from-white to-slate-500 bg-clip-text text-transparent leading-[1.1] md:pl-13">
-            Explore Algorithms <br /> 
+            Explore Algorithms <br />
             <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
               Visually.
             </span>
           </h1>
-          
+
           <p className="text-slate-400 text-sm md:text-md max-w-2xl mx-auto leading-relaxed">
-            Master complex data structures and algorithms through high-fidelity interactive 
-            animations. Designed for visual learners and competitive programmers.
+            Master complex data structures and algorithms through high-fidelity
+            interactive animations. Designed for visual learners and competitive
+            programmers.
           </p>
         </motion.div>
 
@@ -93,8 +97,10 @@ const HomePage = () => {
                 className={`group relative block h-full p-8 rounded-[2.5rem] bg-white/[0.04] border border-white/5 hover:border-white/20 transition-all overflow-hidden shadow-2xl hover:shadow-cyan-500/10`}
               >
                 {/* Background Gradient Hover */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-                
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+                />
+
                 <div className="relative z-10">
                   <div className="flex justify-between items-start mb-8">
                     <div className="p-2 rounded-2xl bg-white/[0.03] border border-white/10 group-hover:scale-110 group-hover:bg-white/[0.08] transition-all duration-500">
@@ -125,7 +131,7 @@ const HomePage = () => {
         </div>
 
         {/* ── FOOTER FOOTPRINT ── */}
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}

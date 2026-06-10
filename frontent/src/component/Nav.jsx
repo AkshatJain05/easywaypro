@@ -85,7 +85,7 @@ function Nav() {
 
       {/* Drawer */}
       <aside
-        className={`fixed top-0 right-0 h-full w-[300px] z-[160] flex flex-col transition-transform duration-300 ease-in-out xl:hidden ${
+        className={`fixed top-0 right-0 h-full w-[290px] z-[160] flex flex-col transition-transform duration-300 ease-in-out xl:hidden ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
         style={{ background: "linear-gradient(160deg, #0a0a14 0%, #07070f 100%)" }}
@@ -97,10 +97,10 @@ function Nav() {
         {/* Sidebar header */}
         <div className="flex items-center justify-between px-6 pt-6 pb-5 border-b border-white/6 relative">
           <NavLink to="/" className="select-none">
-            <span className="text-lg font-black tracking-tighter bg-gradient-to-r from-cyan-400 to-indigo-500 bg-clip-text text-transparent">
+            {/* <span className="text-lg font-black tracking-tighter bg-gradient-to-r from-cyan-400 to-indigo-500 bg-clip-text text-transparent">
               Easyway
-            </span>
-            <span className="text-white text-lg font-extrabold tracking-tighter ml-0.5">Pro</span>
+            </span> */}
+            <span className="text-white text-lg font-extrabold tracking-tighter ml-0.5">Menu</span>
           </NavLink>
           <button
             onClick={() => setOpen(false)}
