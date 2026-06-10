@@ -251,15 +251,16 @@ const forgetPassword = async (req, res) => {
     const resetURL = `https://easywaypro.onrender.com/reset-password/${resetToken}`;
 
     //  Create Nodemailer transporter (Gmail)
-    const transporter = nodemailer.createTransport({
-      service: "Gmail",
-      port: 465, // SSL port
-      secure: true, // SSL/TLS from start
-      auth: {
-        user: process.env.EMAIL_USER, // Gmail address
-        pass: process.env.EMAIL_PASS, // Gmail App Password
-      },
-    });
+      const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS, // Use a 16-character Google App Password
+        },
+        connectionTimeout: 30000, // 15 seconds to wait for connection
+      });
 
     //  Compose email (styled HTML)
     const message = `
