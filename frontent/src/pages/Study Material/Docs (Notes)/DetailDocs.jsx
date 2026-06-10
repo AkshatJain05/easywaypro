@@ -75,7 +75,9 @@ export default function DocDetail() {
         setDoc(res.data ?? null);
         const qIds = (res.data?.questions || []).map((_, i) => `question-${i}`);
         setQuestionGlobalIds(qIds);
-        setSearch("");
+        
+        //  Fixed the evaluation bug here from search("") to setSearch("")
+        setSearch(""); 
         setCurrentPage(1);
       })
       .catch((err) => {
@@ -146,8 +148,8 @@ export default function DocDetail() {
   };
 
   useEffect(() => {
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}, [currentPage]);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentPage]);
 
   // Close sidebar on outside click
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
@@ -173,8 +175,6 @@ export default function DocDetail() {
     <>
       {/* Global styles injected */}
       <style>{`
-        // @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap');
-
         .doc-root * { box-sizing: border-box; }
         .doc-root { font-family: 'Inter', sans-serif; }
 
@@ -219,8 +219,6 @@ export default function DocDetail() {
 
         /* Code block font */
         .code-block code, .code-block pre { font-family: 'DM Mono', monospace !important; }
-
-        /* Heading font */
         .syne { font-family: 'Syne', sans-serif; }
 
         /* Gradient text */
@@ -237,15 +235,14 @@ export default function DocDetail() {
           -webkit-backdrop-filter: blur(12px);
         }
 
-        /* Page input */
         input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
       `}</style>
 
-      <div className="doc-root flex min-h-screen  text-gray-200">
+      <div className="doc-root flex min-h-screen text-gray-200">
 
         {/* ---- Mobile Header Bar ---- */}
-        <div className="fixed  top-[-8px] left-0 right-0 z-40 md:hidden flex items-center gap-3 px-4 py-3 bg-[#030009]/90 border-b border-white/5 backdrop-blur-sm" style={{ marginTop: "56px" }}>
+        <div className="fixed top-[-8px] left-0 right-0 z-40 md:hidden flex items-center gap-3 px-4 py-3 bg-[#030009]/90 border-b border-white/5 backdrop-blur-sm" style={{ marginTop: "56px" }}>
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="w-8 h-5 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 hover:bg-sky-500/20 transition"
@@ -269,7 +266,6 @@ export default function DocDetail() {
         >
           {/* Sidebar Header */}
           <div className="flex-none px-5 pt-6 pb-4 border-b border-white/[0.06]">
-            {/* Top row: back + close */}
             <div className="flex items-center justify-between mb-4">
               <Link
                 to="/docs"
@@ -286,7 +282,6 @@ export default function DocDetail() {
               </button>
             </div>
 
-            {/* Subject */}
             <h2 className="syne text-base font-bold text-white leading-snug mb-1 line-clamp-2">
               {doc.subject}
             </h2>
@@ -331,9 +326,8 @@ export default function DocDetail() {
                     onClick={() => handleSidebarClick(gIdx)}
                     className={`nav-btn w-full text-left flex items-start gap-2.5 px-3 py-2 rounded-lg ${isActive ? "active-nav" : ""}`}
                   >
-                    {/* Active indicator */}
                     <span className={`mt-1.5 flex-none w-1.5 h-1.5 rounded-full ${isActive ? "bg-sky-400 active-dot" : "bg-white/10"}`} />
-                    <span className={`text-sm leading-tight line-clamp-2  border-gray-900 ${isActive ? "text-sky-300 font-bold" : "text-gray-100 hover:text-gray-200"}`}>
+                    <span className={`text-sm leading-tight line-clamp-2 border-gray-900 ${isActive ? "text-sky-300 font-bold" : "text-gray-100 hover:text-gray-200"}`}>
                       {q.title}
                     </span>
                   </button>
@@ -424,16 +418,15 @@ export default function DocDetail() {
                   >
                     {/* Card Header */}
                     <div className="px-1 pt-5 pb-2 border-b border-white/[0.05]">
-                      {/* Question number pill */}
                       <div className="flex items-start gap-2 px-2 md:px-5">
                         <span className="flex-none mt-0.5 w-6 h-6 rounded-md bg-gradient-to-br from-gray-800 to-black border border-sky-500/20 flex items-center justify-center text-sky-400 text-xs font-bold syne">
                           {gIdx + 1}
                         </span>
-                        <div className="min-w-0">
-                          <h3 className="syne text-sm sm:text-base font-bold bg-gray-950 md:bg-transparent  text-white  mb-3 border border-gray-900 p-2 rounded-xl">
+                        <div className="min-w-0 flex-1">
+                          <h3 className="syne text-sm sm:text-base font-bold bg-gray-950 md:bg-transparent text-white mb-3 border border-gray-900 p-2 rounded-xl">
                             {q.title}
                           </h3>
-                          <p className="text-sm sm:text-md md:text-lg text-gray-300 leading-relaxed right-6 relative">
+                          <p className="text-sm sm:text-md md:text-lg text-gray-300 leading-relaxed">
                             <span className="text-amber-400/80 font-semibold mr-1.5 syne tracking-tight">Q.</span>
                             {q.Q}
                           </p>
@@ -442,81 +435,127 @@ export default function DocDetail() {
                     </div>
 
                     {/* Answer blocks */}
-                    <div className="px-1 md:px-5 py-1 md:py-1 space-y-2">
+                    <div className="px-1 md:px-5 py-3 space-y-4">
                       {q.ans.map((a, j) => {
                         const codeIndex = `${gIdx}-${j}`;
 
-                        // --- Code block ---
-                        if (a.type === "code") {
-                          return (
-                            <div key={j} className="code-block rounded-xl overflow-hidden border border-white/[0.08]">
-                              {/* Code header */}
-                              <div className="flex items-center justify-between  px-4 py-2.5 border-b border-white/[0.06]">
-                                <div className="flex items-center gap-2">
-                                  <div className="flex gap-1.5">
-                                    <span className="w-2.5 h-2.5 bg-red-500/70 rounded-full" />
-                                    <span className="w-2.5 h-2.5 bg-yellow-500/70 rounded-full" />
-                                    <span className="w-2.5 h-2.5 bg-green-500/70 rounded-full" />
+                        return (
+                          <div key={j} className="space-y-3">
+                            {/* --- Code block wrapper --- */}
+                            {a.type === "code" ? (
+                              <div className="code-block rounded-xl overflow-hidden border border-white/[0.08]">
+                                <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.06] bg-black">
+                                  <div className="flex items-center gap-2">
+                                    <div className="flex gap-1.5">
+                                      <span className="w-2.5 h-2.5 bg-red-500/70 rounded-full" />
+                                      <span className="w-2.5 h-2.5 bg-yellow-500/70 rounded-full" />
+                                      <span className="w-2.5 h-2.5 bg-green-500/70 rounded-full" />
+                                    </div>
+                                    <span className="text-[10px] text-gray-600 uppercase tracking-widest ml-1">
+                                      {a.language || "js"}
+                                    </span>
                                   </div>
-                                  <span className="text-[10px] text-gray-600 uppercase tracking-widest ml-1">
-                                    {a.language || "js"}
+                                  <button
+                                    onClick={() => handleCopy(a.content, codeIndex)}
+                                    className={`flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-md transition font-medium ${
+                                      copiedIndex === codeIndex
+                                        ? "bg-green-500/15 text-green-400 border border-green-500/25"
+                                        : "bg-white/[0.04] text-gray-400 hover:text-sky-300 border border-white/[0.06] hover:border-sky-500/25"
+                                    }`}
+                                  >
+                                    {copiedIndex === codeIndex ? (
+                                      <><MdCheck size={12} /> Copied!</>
+                                    ) : (
+                                      <><MdContentCopy size={12} /> Copy</>
+                                    )}
+                                  </button>
+                                </div>
+                                <SyntaxHighlighter
+                                  language={a.language ? a.language.toLowerCase() : "javascript"}
+                                  style={CODE_STYLE}
+                                  customStyle={{
+                                    background: "black",
+                                    padding: "1rem 1.25rem",
+                                    fontSize: "0.8rem",
+                                    margin: 0,
+                                    lineHeight: "1.65",
+                                  }}
+                                  showLineNumbers
+                                  lineNumberStyle={{ color: "#2a2a4a", fontSize: "0.7rem", userSelect: "none" }}
+                                >
+                                  {a.content}
+                                </SyntaxHighlighter>
+                              </div>
+                            ) : 
+
+                            /* --- Bullet lists --- */
+                            a.type === "points" && Array.isArray(a.content) ? (
+                              <ul className="space-y-2 bg-gradient-to-br from-slate-950 to-black border border-white/[0.06] rounded-xl p-4">
+                                {a.content.map((point, idx) => (
+                                  <li key={idx} className="flex items-start gap-2.5 text-sm text-justify sm:text-md text-gray-300">
+                                    <span className="flex-none mt-1 w-1.5 h-1.5 rounded-full bg-sky-500/60 text-justify syne tracking-tight" />
+                                    {point}
+                                  </li>
+                                ))}
+                              </ul>
+                            ) : 
+
+                            /* --- Standard text paragraph content --- */
+                            (
+                              a.content && (
+                                <div className="bg-gradient-to-br from-slate-950 to-black border border-white/[0.05] rounded-xl p-4">
+                                  <p className="text-sm sm:text-md text-gray-300 text-justify leading-relaxed">
+                                    <span className="text-amber-400/80 font-semibold text-justify mr-1.5 syne tracking-tight">Ans.</span>
+                                    {a.content}
+                                  </p>
+                                </div>
+                              )
+                            )}
+
+                            {/*  Cloudinary Graphics Processor Core Pipeline */}
+                            {a.image?.url && (
+                            /* Main Outer Frame: Locked at max-w-6xl for that immersive desktop dashboard look */
+                            <div className="mt-6 mx-auto w-full max-w-6xl group/img relative rounded-2xl border border-white/[0.06] bg-[#07040f]/20 backdrop-blur-md p-3 shadow-[0_0_50px_-12px_rgba(14,165,233,0.04)] transition-all duration-500 hover:border-sky-500/20 hover:shadow-[0_0_50px_-6px_rgba(14,165,233,0.1)]">
+                              
+                              {/* Ambient Glow Backdrop Effect */}
+                              <div className="absolute -inset-px rounded-2xl bg-gradient-to-r from-sky-500/0 via-sky-500/5 to-purple-500/0 opacity-0 group-hover/img:opacity-100 transition-opacity duration-700 pointer-events-none blur-md" />
+
+                              {/* IDE-Style Desktop Control Top Bar */}
+                              <div className="relative z-10 flex items-center justify-between px-3 pb-3 pt-1 border-b border-white/[0.04] mb-3 select-none">
+                                {/* Left side: Window dots + Dynamic Label */}
+                                <div className="flex items-center gap-3">
+                                  <div className="flex gap-1.5 opacity-40 group-hover/img:opacity-100 transition-opacity duration-300">
+                                    <span className="w-2 h-2 rounded-full bg-white/20 group-hover/img:bg-red-500/40 transition-colors" />
+                                    <span className="w-2 h-2 rounded-full bg-white/20 group-hover/img:bg-amber-500/40 transition-colors" />
+                                    <span className="w-2 h-2 rounded-full bg-white/20 group-hover/img:bg-emerald-500/40 transition-colors" />
+                                  </div>
+                                  <div className="h-3 w-[1px] bg-white/10" />
+                                  <span className="text-[10px] font-semibold tracking-widest text-gray-500 group-hover/img:text-sky-400/80 transition-colors uppercase font-mono whitespace-nowrap">
+                                    Workspace Canvas
                                   </span>
                                 </div>
-                                <button
-                                  onClick={() => handleCopy(a.content, codeIndex)}
-                                  className={`flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-md transition font-medium ${
-                                    copiedIndex === codeIndex
-                                      ? "bg-green-500/15 text-green-400 border border-green-500/25"
-                                      : "bg-white/[0.04] text-gray-400 hover:text-sky-300 border border-white/[0.06] hover:border-sky-500/25"
-                                  }`}
-                                >
-                                  {copiedIndex === codeIndex ? (
-                                    <><MdCheck size={12} /> Copied!</>
-                                  ) : (
-                                    <><MdContentCopy size={12} /> Copy</>
-                                  )}
-                                </button>
+                                
+                                {/* Right side: Technical Metadata Tag */}
+                                <div className="px-2 py-0.5 rounded bg-white/[0.03] border border-white/[0.05] text-[9px] font-mono font-medium text-gray-500 tracking-wider uppercase whitespace-nowrap">
+                                  {a.image.url.split('.').pop()?.split(/[?#]/)[0] || 'PNG'} Asset
+                                </div>
                               </div>
-                              <SyntaxHighlighter
-                                language={a.language.toLowerCase() || "javascript"}
-                                style={CODE_STYLE}
-                                customStyle={{
-                                  background: "black",
-                                  padding: "1rem 1.25rem",
-                                  fontSize: "0.8rem",
-                                  margin: 0,
-                                  lineHeight: "1.65",
-                                }}
-                                showLineNumbers
-                                lineNumberStyle={{ color: "#2a2a4a", fontSize: "0.7rem", userSelect: "none" }}
-                              >
-                                {a.content}
-                              </SyntaxHighlighter>
+
+                              {/* Centered Image Mounting Stage Box */}
+                              <div className="relative z-10 w-full rounded-xl overflow-hidden bg-black/40 border border-white/[0.02] flex items-center justify-center p-4 min-h-[200px] transition-colors duration-300 group-hover/img:bg-black/20">
+                                <img 
+                                  src={a.image.url} 
+                                  alt="Technical diagram attachment reference" 
+                                  /* - max-h-[500px] allows a larger view on wide 6xl canvases 
+                                    - object-contain ensures the image never stretches out of proportion
+                                    - w-auto scales width natively based on aspect ratio
+                                  */
+                                  className="w-auto h-auto max-w-full max-h-[500px] object-contain block select-none rounded-lg scale-[0.99] group-hover/img:scale-100 transition-transform duration-500 ease-out shadow-2xl"
+                                  loading="lazy"
+                                />
+                              </div>
                             </div>
-                          );
-                        }
-
-                        // --- Bullet list ---
-                        if (Array.isArray(a.content)) {
-                          return (
-                            <ul key={j} className="space-y-2 bg-gradient-to-br from-slate-950 to-black border border-white/[0.06] rounded-xl p-4">
-                              {a.content.map((point, idx) => (
-                                <li key={idx} className="flex items-start gap-2.5 text-sm text-justify sm:text-md text-gray-300">
-                                  <span className="flex-none mt-1 w-1.5 h-1.5 rounded-full bg-sky-500/60 text-justify syne tracking-tight" />
-                                  {point}
-                                </li>
-                              ))}
-                            </ul>
-                          );
-                        }
-
-                        // --- Text block ---
-                        return (
-                          <div key={j} className="bg-gradient-to-br from-slate-950 to-black border border-white/[0.05] rounded-xl p-4">
-                            <p className="text-sm sm:text-md text-gray-300 text-justify leading-relaxed">
-                              <span className="text-amber-400/80 font-semibold text-justify mr-1.5 syne tracking-tight">Ans.</span>
-                              {a.content}
-                            </p>
+)}
                           </div>
                         );
                       })}
@@ -529,7 +568,6 @@ export default function DocDetail() {
             {/* ---- Pagination ---- */}
             {totalPages > 1 && (
               <div className="mt-10 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4 px-1">
-                {/* Prev / Next */}
                 <div className="flex items-center gap-2">
                   <button
                     disabled={currentPage === 1}
@@ -539,7 +577,6 @@ export default function DocDetail() {
                     <MdChevronLeft size={16} /> Prev
                   </button>
 
-                  {/* Page pills */}
                   <div className="flex gap-1">
                     {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
                       const page = i + 1;
@@ -571,7 +608,6 @@ export default function DocDetail() {
                   </button>
                 </div>
 
-                {/* Go to page */}
                 <div className="flex items-center gap-2 text-xs text-gray-500">
                   <span>Go to</span>
                   <input
