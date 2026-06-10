@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchDashboard } from '../../../redux/dashboardSlice.js'
 import { FiChevronLeft, FiChevronRight, FiBook, FiCheckCircle, FiClock, FiAward, FiDownload, FiPlay, FiSearch } from 'react-icons/fi'
+import Loading from "../../../component/Loading.jsx"
 
 export default function DashboardPage() {
   const dispatch = useDispatch()
@@ -41,11 +42,8 @@ export default function DashboardPage() {
   const currentActive = filteredPurchases.slice(indexOfFirstItem, indexOfLastItem)
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-[#050505]">
-      <div className="flex flex-col items-center gap-3">
-        <div className="w-8 h-8 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
-        <span className="text-slate-500 text-sm tracking-widest uppercase">Loading</span>
-      </div>
+    <div>
+     <Loading/>
     </div>
   )
 

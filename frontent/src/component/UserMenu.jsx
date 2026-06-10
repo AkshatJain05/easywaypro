@@ -83,9 +83,9 @@ export default function UserMenu() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.1 }}
-            className="absolute z-[200] right-0 mt-3 w-64 rounded-2xl bg-black border border-slate-700 shadow-2xl overflow-hidden"
+            className="absolute z-[200] right-0 mt-3 w-64 rounded-xl bg-[#030014]/99 border border-slate-700 shadow-2xl overflow-hidden"
           >
-            <div className="px-5 py-4 border-b border-white/5 bg-white/[0.02]">
+            <div className="px-5 py-4 border-b border-slate-800 bg-white/[0.02]">
               <p className="text-sm font-bold text-white truncate">{user?.name}</p>
               <p className="text-[11px] text-slate-500 truncate">{user?.email}</p>
             </div>

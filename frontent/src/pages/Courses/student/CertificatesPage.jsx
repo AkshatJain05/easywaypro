@@ -102,7 +102,7 @@ export default function CertificatesPage() {
 
   if (isInitialPlugging) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-slate-950">
+      <div>
         <Loading />
       </div>
     )
