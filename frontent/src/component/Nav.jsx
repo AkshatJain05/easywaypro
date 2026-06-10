@@ -158,7 +158,7 @@ function Nav() {
         </div>
       </aside>
 
-      <div className="h-16" />
+      <div className="h-13 md:h-16 " />
     </>
   );
 }
