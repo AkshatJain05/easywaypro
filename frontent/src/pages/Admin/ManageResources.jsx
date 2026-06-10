@@ -67,17 +67,17 @@ export default function ManageResources() {
           <input 
             type="text" placeholder="Title" value={form.title}
             onChange={e => setForm({...form, title: e.target.value})}
-            className="flex-1 bg-white/[0.03] border border-white/2 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500/50"
+            className="flex-1 bg-white/[0.03] border border-slate-800 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500/50"
           />
           <div className="flex flex-wrap gap-3">
             <input 
               type="text" placeholder="Subject" value={form.subject}
               onChange={e => setForm({...form, subject: e.target.value})}
-              className="flex-1 lg:w-40 bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500/50"
+              className="flex-1 lg:w-40 bg-white/[0.03] border border-slate-800 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500/50"
             />
             <select 
               value={form.type} onChange={e => setForm({...form, type: e.target.value})}
-              className="w-28 bg-white/[0.03] border border-white/3 rounded-xl px-2 py-3 text-sm outline-none text-white/50"
+              className="w-28 bg-white/[0.03] border border-slate-800 rounded-xl px-2 py-3 text-sm outline-none text-white/50"
             >
               <option value="notes" className="bg-black text-white">Notes</option>
               <option value="pyq" className="bg-black text-white">PYQ</option>
@@ -87,7 +87,7 @@ export default function ManageResources() {
           <input 
             type="text" placeholder="URL Link" value={form.link}
             onChange={e => setForm({...form, link: e.target.value})}
-            className="flex-1 bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500/50"
+            className="flex-1 bg-white/[0.03] border border-slate-800 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500/50"
           />
           <button 
             type="submit" disabled={loading}

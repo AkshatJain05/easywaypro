@@ -63,14 +63,14 @@ function DocList({ docs, loading, selectedDocId, onSelect, onDelete, deletingId,
   return (
     <div className="w-full space-y-4">
       {/* Search and Filters Strip Bar Control Board */}
-      <div className="flex items-center gap-3 bg-black/40 p-3 rounded-2xl border border-white/[0.04] w-full max-w-md">
+      <div className="flex items-center gap-3 bg-black/40 p-3 rounded-2xl border border-slate-700 w-full max-w-md">
         <MdSearch className="text-gray-500 flex-shrink-0" size={18} />
         <input 
           type="text" 
           placeholder="Filter documents by subject or keyword..." 
           value={searchTerm}
           onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
-          className="w-full bg-transparent text-xs text-white focus:outline-none placeholder-gray-600 font-mono"
+          className="w-full bg-transparent text-xs text-white focus:outline-none  font-mono"
         />
         {searchTerm && (
           <button onClick={() => setSearchTerm("")} className="text-gray-500 hover:text-white transition">
@@ -80,7 +80,7 @@ function DocList({ docs, loading, selectedDocId, onSelect, onDelete, deletingId,
       </div>
 
       {filteredDocs.length === 0 ? (
-        <div className="text-center text-gray-500 py-12 bg-black/20 rounded-xl border border-dashed border-white/5 font-mono text-xs">
+        <div className="text-center text-gray-500 py-12 bg-black/20 rounded-xl border border-dashed border-slate-700 font-mono text-xs">
           No matching documents found in target query index.
         </div>
       ) : (
@@ -128,7 +128,7 @@ function DocList({ docs, loading, selectedDocId, onSelect, onDelete, deletingId,
                       onDelete(d._id);
                     }}
                     disabled={deletingId === d._id}
-                    className="text-gray-500 hover:text-rose-400 p-2 rounded-xl bg-white/[0.01] border border-white/[0.04] hover:border-rose-500/20 transition duration-200 disabled:opacity-30 disabled:cursor-not-allowed flex-shrink-0"
+                    className="text-gray-500 hover:text-rose-400 p-2 rounded-xl bg-slate-700 border border-white/[0.04] hover:border-rose-500/20 transition duration-200 disabled:opacity-30 disabled:cursor-not-allowed flex-shrink-0"
                     title="Purge Document"
                   >
                     {deletingId === d._id ? <Spinner size="sm" /> : <MdDelete size={14} />}
@@ -428,11 +428,11 @@ export default function AdminPanel() {
   });
 
   return (
-    <div className="min-h-screen text-gray-200 font-sans p-3 sm:p-6 bg-[#040209]">
+    <div className="min-h-screen text-gray-200 font-sans p-3 sm:p-6 border-slate-900 bg-[#040209]">
       <Toaster position="top-right" reverseOrder={false} />
       
       {/* Studio Banner Header Component Control Board */}
-      <header className="max-w-7xl mx-auto mb-6 p-4 sm:p-5 rounded-2xl bg-gray-950 shadow-2xl border border-white/[0.04]">
+      <header className="max-w-7xl mx-auto mb-6 p-4 sm:p-5 rounded-2xl bg-gray-950  shadow-2xl border border-slate-800">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <h1 className="text-base sm:text-lg font-black text-white uppercase tracking-wider font-mono flex items-center gap-2">
             <span className="p-1.5 rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-400 text-xs">📝</span>
@@ -465,17 +465,17 @@ export default function AdminPanel() {
       </header>
 
       {/* Main Studio Display Workbench Frame */}
-      <div className="max-w-7xl mx-auto bg-[#090514]/20 backdrop-blur-md p-4 sm:p-6 rounded-2xl border border-white/[0.04] shadow-2xl">
+      <div className="max-w-7xl mx-auto backdrop-blur-md p-4 sm:p-6 rounded-2xl border border-slate-900 shadow-2xl">
         
         {/* VIEW 1: MASTER REPOSITORY FILE LOOKUPS LIST INDEX */}
         {viewMode === "list" && (
           <div className="space-y-5 animate-fade-in">
-            <div className="border-b border-white/[0.03] pb-2">
+            <div className="border-b border-slate-800 pb-2">
               <h2 className="text-xs font-mono font-bold text-gray-500 tracking-widest uppercase">
                 Active Master Registry Manifests
               </h2>
             </div>
-            <DocList 
+            <DocList
               docs={docs} 
               loading={loading} 
               selectedDocId={selectedDoc?._id} 
@@ -490,7 +490,7 @@ export default function AdminPanel() {
         {/* VIEW 2 & 3: ADVANCED DOCK SPLIT WORKSPACE PANEL */}
         {viewMode === "editor" && selectedDoc && (
           <div className="animate-fade-in">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 mb-5 border-b border-white/[0.04] gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 mb-5 border-b border-slate-900 gap-4">
               <div>
                 <h2 className="text-sm font-bold text-sky-400 flex items-center gap-1.5 font-mono uppercase tracking-wider">
                   <MdEdit size={16} /> 
@@ -519,26 +519,26 @@ export default function AdminPanel() {
                 <div className="lg:col-span-7 space-y-5">
                   
                   {/* Master Configuration Global Description Blocks Meta */}
-                  <div className="bg-black/30 p-4 rounded-xl border border-white/[0.03] space-y-3 shadow-lg">
+                  <div className="bg-black/30 p-4 rounded-xl border border-slate-900 space-y-3 shadow-lg">
                     <span className="block text-[10px] font-mono font-bold text-gray-500 tracking-wider uppercase">Document Configuration Meta Info</span>
                     <input 
                       type="text" 
                       placeholder="Subject Heading Context Mapping (e.g., React Lifecycle)" 
                       value={selectedDoc.subject} 
                       onChange={(e) => setSelectedDoc((prev) => ({ ...prev, subject: e.target.value }))} 
-                      className="w-full p-2.5 text-xs rounded-lg bg-zinc-950 border border-white/[0.05] focus:border-sky-500/40 focus:outline-none text-white placeholder-gray-600 font-mono" 
+                      className="w-full p-2.5 text-xs rounded-lg bg-zinc-950 border border-slate-800 focus:border-sky-500/40 focus:outline-none text-white  font-mono" 
                     />
                     <textarea 
                       placeholder="Comprehensive structural meta summary conceptual statements summary details info details metadata description data context..." 
                       value={selectedDoc.description} 
                       onChange={(e) => setSelectedDoc((prev) => ({ ...prev, description: e.target.value }))} 
-                      className="w-full p-2.5 text-xs rounded-lg bg-zinc-950 border border-white/[0.05] focus:border-sky-500/40 focus:outline-none text-white placeholder-gray-600 leading-relaxed" 
+                      className="w-full p-2.5 text-xs rounded-lg bg-zinc-950 border border-slate-800 focus:border-sky-500/40 focus:outline-none text-white leading-relaxed" 
                       rows={2} 
                     />
                   </div>
 
                   {/* Schema Forge Component Question Input Builder Window */}
-                  <div className="bg-[#03060d]/50 p-4 rounded-xl border border-white/[0.04] space-y-3 shadow-2xl relative">
+                  <div className="bg-[#03060d]/50 p-4 rounded-xl border border-slate-900 space-y-3 shadow-2xl relative">
                     <div className="flex items-center justify-between border-b border-white/[0.03] pb-2">
                       <h3 className="text-xs font-bold text-green-400 flex items-center gap-1 font-mono uppercase tracking-wider">
                         <MdAdd size={14} /> 
@@ -556,23 +556,23 @@ export default function AdminPanel() {
                       placeholder="Component Header Title Heading Group" 
                       value={questionDraft.title} 
                       onChange={(e) => setQuestionDraft((prev) => ({ ...prev, title: e.target.value }))} 
-                      className="w-full p-2.5 text-xs rounded-lg bg-zinc-950 border border-white/[0.05] focus:border-sky-500/40 focus:outline-none text-white" 
+                      className="w-full p-2.5 text-xs rounded-lg bg-zinc-950 border border-slate-800 focus:border-sky-500/40 focus:outline-none text-white" 
                     />
                     <textarea 
                       placeholder="Explicit problem specifications logic statement / text description data context (Q)" 
                       value={questionDraft.Q} 
                       onChange={(e) => setQuestionDraft((prev) => ({ ...prev, Q: e.target.value }))} 
-                      className="w-full p-2.5 text-xs rounded-lg bg-zinc-950 border border-white/[0.05] focus:border-sky-500/40 focus:outline-none text-white leading-relaxed" 
+                      className="w-full p-2.5 text-xs rounded-lg bg-zinc-950 border border-slate-800 focus:border-sky-500/40 focus:outline-none text-white leading-relaxed" 
                       rows={2} 
                     />
 
                     {/* Multi-Format Sub Answer Item Processing Arrays Blocks Row Fields */}
-                    <div className="bg-zinc-950/70 p-3.5 border border-white/[0.04] rounded-xl space-y-3">
+                    <div className="bg-zinc-950/70 p-3.5 border border-slate-900 rounded-xl space-y-3">
                       <div className="flex gap-2 flex-wrap items-center">
                         <select 
                           value={ansType} 
                           onChange={(e) => setAnsType(e.target.value)} 
-                          className="bg-black border border-white/[0.06] rounded-lg p-1.5 px-2 text-[11px] text-gray-300 focus:outline-none focus:border-sky-500/40 cursor-pointer font-mono" 
+                          className="bg-black border border-slate-800 rounded-lg p-1.5 px-2 text-[11px] text-gray-300 focus:outline-none focus:border-sky-500/40 cursor-pointer font-mono" 
                         >
                           <option value="paragraph">Paragraph Content Unit</option>
                           <option value="points">Line Item Point Matrix</option>
@@ -583,7 +583,7 @@ export default function AdminPanel() {
                           <select 
                             value={codeLanguage} 
                             onChange={(e) => setCodeLanguage(e.target.value)} 
-                            className="bg-black border border-white/[0.06] rounded-lg p-1.5 px-2 text-[11px] text-gray-300 focus:outline-none cursor-pointer font-mono" 
+                            className="bg-black border border-slate-800 rounded-lg p-1.5 px-2 text-[11px] text-gray-300 focus:outline-none cursor-pointer font-mono" 
                           >
                             <option value="javascript">JavaScript</option>
                             <option value="typescript">TypeScript</option>
@@ -597,7 +597,7 @@ export default function AdminPanel() {
                         )}
                       </div>
 
-                      <div className="relative rounded-xl overflow-hidden border border-white/[0.05] shadow-inner">
+                      <div className="relative rounded-xl overflow-hidden border border-slate-800 shadow-inner">
                         <textarea 
                           placeholder={ansType === "points" ? "Separate rows clean via carriage return item line breaks...\nRow Line Element 1\nRow Line Element 2" : "Write block raw text content strings or runtime execution command properties..."} 
                           value={ansContent} 
@@ -610,7 +610,7 @@ export default function AdminPanel() {
                       {/* Integrated Cloudinary Asset System Image Engine Modules Frame Layout */}
                       <div className="pt-1">
                         {!previewImageUrl ? (
-                          <label className="flex items-center gap-2 justify-center border border-dashed border-white/10 hover:border-sky-500/30 bg-black/30 p-2.5 rounded-xl cursor-pointer transition duration-200">
+                          <label className="flex items-center gap-2 justify-center border border-dashed border-slate-800 hover:border-sky-500/30 bg-black/30 p-2.5 rounded-xl cursor-pointer transition duration-200">
                             <FiUploadCloud className="text-gray-500" size={14} />
                             <span className="text-[11px] font-mono text-gray-500">Inject Graphic payload asset</span>
                             <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
