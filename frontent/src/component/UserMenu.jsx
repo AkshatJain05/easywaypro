@@ -52,7 +52,7 @@ export default function UserMenu() {
       <motion.button
         whileHover={{ scale: 1.05 }}
         onClick={() => navigate("/login")}
-        className="px-5 py-2 bg-white text-black text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-slate-200 transition-all"
+        className="px-5 py-2 bg-white text-black text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-slate-200 transition-all cursor-pointer"
       >
         Login
       </motion.button>
@@ -64,7 +64,7 @@ export default function UserMenu() {
       <motion.button
         ref={btnRef}
         onClick={() => setOpen((prev) => !prev)}
-        className="flex items-center justify-center h-9 w-9 rounded-full bg-gradient-to-tr from-amber-500 to-orange-400 p-[2px]"
+        className="flex items-center justify-center h-9 w-9 rounded-full bg-gradient-to-tr from-amber-500 to-orange-400 p-[2px] cursor-pointer"
       >
         <div className="h-full w-full rounded-full bg-black flex items-center justify-center overflow-hidden">
           {user?.profilePhoto ? (
