@@ -593,6 +593,8 @@ export default function AdminPanel() {
                             <option value="python">Python Script</option>
                             <option value="sql">SQL Query</option>
                             <option value="bash">Terminal Bash</option>
+                            <option value="c">C</option>
+                            <option value="cpp">C++</option>
                           </select>
                         )}
                       </div>
