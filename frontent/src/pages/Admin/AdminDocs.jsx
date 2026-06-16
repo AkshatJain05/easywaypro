@@ -429,7 +429,7 @@ export default function AdminPanel() {
 
   return (
     <div className="min-h-screen text-gray-200 font-sans p-3 sm:p-6 border-slate-900 bg-[#040209]">
-      <Toaster position="top-right" reverseOrder={false} />
+      {/* <Toaster position="top-right" reverseOrder={false} /> */}
       
       {/* Studio Banner Header Component Control Board */}
       <header className="max-w-7xl mx-auto mb-6 p-4 sm:p-5 rounded-2xl bg-gray-950  shadow-2xl border border-slate-800">
