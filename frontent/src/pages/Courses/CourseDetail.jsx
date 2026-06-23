@@ -60,6 +60,17 @@ export default function CourseDetailPage() {
       navigate("/login");
       return;
     }
+
+   if (!user?.phoneNo) {
+      toast.error("Please add your mobile number in your profile");
+
+      setTimeout(() => {
+        navigate("/profile");
+      }, 2000); // 2 seconds
+
+      return;
+    }
+
     const orderRes = await dispatch(createOrder(id));
     if (createOrder.rejected.match(orderRes)) {
       toast.error(orderRes.payload);
@@ -93,7 +104,11 @@ export default function CourseDetailPage() {
         if (verifyPayment.rejected.match(verifyRes))
           toast.error(verifyRes.payload);
       },
-      prefill: { name: uData?.name, email: uData?.email },
+       prefill: {
+        name: uData?.name,
+        email: uData?.email,
+        contact: uData?.phoneNo, // Mobile Number
+       },
       theme: { color: "#f97316" },
       modal: { ondismiss: () => toast("Payment cancelled", { icon: "ℹ️" }) },
     };
